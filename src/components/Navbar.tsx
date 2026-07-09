@@ -48,14 +48,14 @@ export default function Navbar({
             className="flex cursor-pointer items-center space-x-3 transition-opacity hover:opacity-90"
             id="nav-logo"
           >
-            <div className="flex h-11 w-11 items-center justify-center drop-shadow-sm">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center drop-shadow-sm">
               <img 
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" 
                 alt="Portal Logo" 
                 className="h-full w-full object-contain transition-transform duration-300 hover:-rotate-6 hover:scale-110"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col whitespace-nowrap">
               <span className="text-base font-display font-bold tracking-tight text-[#1D1D1F]">
                 Prof. Ajesh Joe
               </span>
@@ -66,8 +66,8 @@ export default function Navbar({
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center space-x-8 md:flex">
-            <div className="flex space-x-6">
+          <div className="hidden items-center space-x-4 lg:flex xl:space-x-8">
+            <div className="flex space-x-4 xl:space-x-6">
               {navItems.map((item) => {
                 const isActive = 
                   currentView === item.view || 
@@ -104,7 +104,7 @@ export default function Navbar({
                 id="theme-toggle-btn"
               >
                 {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                <span className="hidden sm:inline">{theme === 'dark' ? 'Light Theme' : 'Original Dark'}</span>
+                <span className="hidden xl:inline">{theme === 'dark' ? 'Light Theme' : 'Original Dark'}</span>
               </button>
 
               {/* Portal Access Badge */}
@@ -112,7 +112,8 @@ export default function Navbar({
                 <div className="flex items-center space-x-2">
                   <span className="flex items-center space-x-1 border-2 border-[#E5E5EA] bg-[#F5F5F7] px-2.5 py-1 font-sans text-[9px] uppercase tracking-[0.2em] font-black text-[#86868B]">
                     <UserCheck size={12} className="text-[#0071E3]" />
-                    <span>Role: {userRole === 'professor' ? 'Professor' : 'Student'}</span>
+                    <span className="hidden xl:inline">Role: </span>
+                    <span>{userRole === 'professor' ? 'Professor' : 'Student'}</span>
                   </span>
                   <button
                     onClick={() => {
@@ -138,7 +139,7 @@ export default function Navbar({
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center space-x-3 md:hidden">
+          <div className="flex items-center space-x-3 lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="rounded-xl p-2 text-[#86868B] hover:bg-gray-50  :bg-slate-800"
@@ -153,7 +154,7 @@ export default function Navbar({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-gray-100 bg-white px-4 pt-2 pb-4 shadow-xl transition-colors duration-300   md:hidden">
+        <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-gray-100 bg-white px-4 pt-2 pb-4 shadow-xl transition-colors duration-300 lg:hidden">
           <div className="space-y-1.5">
             {navItems.map((item) => {
               const isActive = 

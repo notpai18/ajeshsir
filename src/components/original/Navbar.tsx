@@ -13,6 +13,8 @@ interface NavbarProps {
   onRoleChange: (role: 'student' | 'professor' | null) => void;
   darkMode: boolean;
   onToggleDarkMode: () => void;
+  theme?: string;
+  toggleTheme?: () => void;
 }
 
 export default function Navbar({
@@ -21,7 +23,9 @@ export default function Navbar({
   userRole,
   onRoleChange,
   darkMode,
-  onToggleDarkMode
+  onToggleDarkMode,
+  theme,
+  toggleTheme
 }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -48,14 +52,14 @@ export default function Navbar({
             className="flex cursor-pointer items-center space-x-3 transition-opacity hover:opacity-90"
             id="nav-logo"
           >
-            <div className="flex h-11 w-11 items-center justify-center drop-shadow-sm">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center drop-shadow-sm">
               <img 
                 src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" 
                 alt="Portal Logo" 
                 className="h-full w-full object-contain transition-transform duration-300 hover:-rotate-6 hover:scale-110"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col whitespace-nowrap">
               <span className="text-base font-display font-bold tracking-tight text-white">
                 Prof. Ajesh Joe
               </span>
@@ -66,8 +70,8 @@ export default function Navbar({
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden items-center space-x-8 md:flex">
-            <div className="flex space-x-6">
+          <div className="hidden items-center space-x-4 lg:flex xl:space-x-8">
+            <div className="flex space-x-4 xl:space-x-6">
               {navItems.map((item) => {
                 const isActive = 
                   currentView === item.view || 
@@ -97,14 +101,15 @@ export default function Navbar({
             <div className="h-4 w-px bg-gray-200 dark:bg-slate-700" />
 
             <div className="flex items-center space-x-4">
-              {/* Dark mode button */}
+              {/* Theme Toggle */}
               <button
-                onClick={onToggleDarkMode}
-                className="rounded-lg border-2 border-gray-800 bg-[#111112] p-2 text-gray-400 hover:bg-[#232325] hover:text-[#F1E194] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] active:shadow-[inset_0_0px_0_rgba(0,0,0,0.5)] active:translate-y-[1px] transition-all"
+                onClick={toggleTheme || onToggleDarkMode}
+                className="flex items-center gap-2 rounded-lg border-2 border-gray-800 bg-[#111112] px-3 py-1.5 text-gray-400 hover:bg-[#232325] hover:text-[#F1E194] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] active:shadow-[inset_0_0px_0_rgba(0,0,0,0.5)] active:translate-y-[1px] transition-all"
                 aria-label="Toggle theme"
                 id="theme-toggle-btn"
               >
-                {darkMode ? <Sun size={14} /> : <Moon size={14} />}
+                {theme === 'dark' || darkMode ? <Sun size={14} /> : <Moon size={14} />}
+                <span className="hidden xl:inline font-sans text-[9px] uppercase tracking-[0.2em] font-black">{theme === 'dark' ? 'Light Theme' : 'Original Dark'}</span>
               </button>
 
               {/* Portal Access Badge */}
@@ -112,7 +117,8 @@ export default function Navbar({
                 <div className="flex items-center space-x-2">
                   <span className="flex items-center space-x-1 border-2 border-gray-800 bg-[#111112] px-2.5 py-1 font-sans text-[9px] uppercase tracking-[0.2em] font-black text-gray-400">
                     <UserCheck size={12} className="text-[#F1E194]" />
-                    <span>Role: {userRole === 'professor' ? 'Professor' : 'Student'}</span>
+                    <span className="hidden xl:inline">Role: </span>
+                    <span>{userRole === 'professor' ? 'Professor' : 'Student'}</span>
                   </span>
                   <button
                     onClick={() => {
@@ -138,14 +144,15 @@ export default function Navbar({
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center space-x-3 md:hidden">
+          <div className="flex items-center space-x-3 lg:hidden">
             <button
-              onClick={onToggleDarkMode}
-              className="rounded-xl p-2 text-gray-400 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
+              onClick={toggleTheme || onToggleDarkMode}
+              className="flex items-center gap-2 rounded-xl p-2 text-gray-400 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
               aria-label="Toggle theme"
               id="theme-toggle-mobile-btn"
             >
-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+              <span className="text-xs font-semibold">{theme === 'dark' ? 'Light Theme' : 'Original Dark'}</span>
+              {theme === 'dark' || darkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -161,7 +168,7 @@ export default function Navbar({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-b border-gray-100 bg-white px-4 pt-2 pb-4 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900 md:hidden">
+        <div className="border-b border-gray-100 bg-white px-4 pt-2 pb-4 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900 lg:hidden">
           <div className="space-y-1.5">
             {navItems.map((item) => {
               const isActive = 
