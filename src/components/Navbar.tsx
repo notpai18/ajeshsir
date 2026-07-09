@@ -66,7 +66,7 @@ export default function Navbar({
               />
             </div>
             <div className="flex flex-col whitespace-nowrap">
-              <span className="text-xl dash-serif font-bold tracking-tight text-[#1D1D1F]">
+              <span className="text-xl font-['Outfit'] font-bold tracking-tight text-[#1D1D1F]">
                 Prof. Ajesh Joe
               </span>
               <span className={`text-[11px] font-medium tracking-wide ${accentText} transition-colors duration-300`}>
@@ -88,7 +88,7 @@ export default function Navbar({
                   <button
                     key={item.label}
                     onClick={() => handleNavClick(item.view)}
-                    className={`relative py-2 text-base dash-serif transition-colors duration-200 hover:text-[#1D1D1F] ${
+                    className={`relative py-2 text-base font-['Outfit'] transition-colors duration-200 hover:text-[#1D1D1F] ${
                       isActive 
                         ? 'text-[#1D1D1F] font-bold' 
                         : 'text-[#86868B] font-medium'
