@@ -18,7 +18,8 @@ import StudentDashboard from './components/StudentDashboard';
 import ProfessorDashboard from './components/ProfessorDashboard';
 
 import type { Note, Video, PYQ, PracticeSheet, Doubt, Announcement } from './types';
-import { EXAMS, INITIAL_FAQS } from './data';
+import { EXAMS, INITIAL_FAQS, INITIAL_NOTES, INITIAL_VIDEOS, INITIAL_PYQS, INITIAL_PRACTICE_SHEETS, INITIAL_DOUBTS, INITIAL_ANNOUNCEMENTS } from './data';
+import { hasSupabase } from './lib/supabase';
 
 import {
   fetchNotes, createNote, updateNote, deleteNote, incrementNoteDownload,
@@ -61,9 +62,25 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
     error: null,
   });
 
-  // ─── Initial Data Load from Supabase ─────────────────────────────────────
+  // ─── Initial Data Load from Supabase (or local seed fallback) ────────────
   const loadAllData = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
+
+    // No Supabase configured → use local seed data
+    if (!hasSupabase) {
+      setState({
+        notes: INITIAL_NOTES,
+        videos: INITIAL_VIDEOS,
+        pyqs: INITIAL_PYQS,
+        practiceSheets: INITIAL_PRACTICE_SHEETS,
+        doubts: INITIAL_DOUBTS,
+        announcements: INITIAL_ANNOUNCEMENTS,
+        loading: false,
+        error: null,
+      });
+      return;
+    }
+
     try {
       const [notes, videos, pyqs, practiceSheets, doubts, announcements] = await Promise.all([
         fetchNotes(),
@@ -328,7 +345,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
           />
         )}
 
-        {currentView === 'about' && <AboutPage />}
+        {currentView === 'about' && <AboutPage onNavigate={setCurrentView} />}
         {currentView === 'contact' && <ContactPage />}
       </main>
 
