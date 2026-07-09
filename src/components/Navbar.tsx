@@ -25,6 +25,14 @@ export default function Navbar({
 }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const isProf = currentView === 'professor';
+  const accentText = isProf ? 'text-[#4A0E1B]' : 'text-[#0071E3]';
+  const accentBg = isProf ? 'bg-[#4A0E1B]' : 'bg-[#0071E3]';
+  const accentBorder = isProf ? 'border-[#2A080F]' : 'border-[#005bb5]';
+  const accentHoverBg = isProf ? 'hover:bg-[#2A080F]' : 'hover:bg-[#005bb5]';
+  const mobileActiveBg = isProf ? 'bg-[#F2E7E9]/50 text-[#4A0E1B]' : 'bg-blue-50/50 text-blue-600';
+  const mobileActionText = isProf ? 'text-[#4A0E1B]' : 'text-blue-600';
+
   const navItems = [
     { label: 'Home', view: 'home' as const },
     { label: 'Resources', view: userRole === 'student' ? ('student' as const) : userRole === 'professor' ? ('professor' as const) : ('selection' as const) },
@@ -59,7 +67,7 @@ export default function Navbar({
               <span className="text-base font-display font-bold tracking-tight text-[#1D1D1F]">
                 Prof. Ajesh Joe
               </span>
-              <span className="font-sans text-[9px] uppercase tracking-[0.2em] font-black text-[#0071E3]">
+              <span className={`font-sans text-[9px] uppercase tracking-[0.2em] font-black ${accentText} transition-colors duration-300`}>
                 Academic Library
               </span>
             </div>
@@ -87,7 +95,7 @@ export default function Navbar({
                   >
                     {item.label}
                     {isActive && (
-                      <span className="absolute bottom-[-22px] left-0 h-1 w-full bg-[#0071E3]" />
+                      <span className={`absolute bottom-[-22px] left-0 h-1 w-full ${accentBg} transition-colors duration-300`} />
                     )}
                   </button>
                 );
@@ -111,7 +119,7 @@ export default function Navbar({
               {userRole ? (
                 <div className="flex items-center space-x-2">
                   <span className="flex items-center space-x-1 border-2 border-[#E5E5EA] bg-[#F5F5F7] px-2.5 py-1 font-sans text-[9px] uppercase tracking-[0.2em] font-black text-[#86868B]">
-                    <UserCheck size={12} className="text-[#0071E3]" />
+                    <UserCheck size={12} className={`${accentText} transition-colors duration-300`} />
                     <span className="hidden xl:inline">Role: </span>
                     <span>{userRole === 'professor' ? 'Professor' : 'Student'}</span>
                   </span>
@@ -129,7 +137,7 @@ export default function Navbar({
               ) : (
                 <button
                   onClick={() => handleNavClick('selection')}
-                  className="rounded-lg bg-[#0071E3] px-4 py-2 text-[10px] uppercase font-black tracking-wider text-white border-2 border-[#005bb5] shadow-[inset_0_-3px_0_rgba(0,0,0,0.5)] active:shadow-[inset_0_0px_0_rgba(0,0,0,0.5)] active:translate-y-[1px] transition-all hover:bg-[#005bb5]"
+                  className={`rounded-lg ${accentBg} px-4 py-2 text-[10px] uppercase font-black tracking-wider text-white border-2 ${accentBorder} shadow-[inset_0_-3px_0_rgba(0,0,0,0.5)] active:shadow-[inset_0_0px_0_rgba(0,0,0,0.5)] active:translate-y-[1px] transition-all ${accentHoverBg}`}
                   id="nav-get-started-btn"
                 >
                   Enter Portal
@@ -168,8 +176,8 @@ export default function Navbar({
                   onClick={() => handleNavClick(item.view)}
                   className={`block w-full rounded-xl px-4 py-2.5 text-left text-sm font-medium transition-colors ${
                     isActive 
-                      ? 'bg-blue-50/50 text-blue-600  ' 
-                      : 'text-gray-600 hover:bg-gray-50  :bg-slate-800/50'
+                      ? `${mobileActiveBg}` 
+                      : 'text-gray-600 hover:bg-gray-50'
                   }`}
                   id={`mobile-nav-item-${item.label.toLowerCase().replace(' ', '-')}`}
                 >
@@ -192,7 +200,7 @@ export default function Navbar({
                     onRoleChange(null);
                     handleNavClick('selection');
                   }}
-                  className="text-xs font-semibold text-blue-600 "
+                  className={`text-xs font-semibold ${mobileActionText}`}
                   id="mobile-switch-role-btn"
                 >
                   Switch Role
