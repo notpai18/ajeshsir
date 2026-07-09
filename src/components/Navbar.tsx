@@ -30,6 +30,8 @@ export default function Navbar({
   const accentBg = isProf ? 'bg-[#4A0E1B]' : 'bg-[#0071E3]';
   const accentBorder = isProf ? 'border-[#2A080F]' : 'border-[#005bb5]';
   const accentHoverBg = isProf ? 'hover:bg-[#2A080F]' : 'hover:bg-[#005bb5]';
+  const badgeBg = isProf ? 'bg-[#F6F2EA]' : 'bg-[#F5F5F7]';
+  const badgeHoverBg = isProf ? 'hover:bg-[#EAE1D2]' : 'hover:bg-gray-200';
   const mobileActiveBg = isProf ? 'bg-[#F2E7E9]/50 text-[#4A0E1B]' : 'bg-blue-50/50 text-blue-600';
   const mobileActionText = isProf ? 'text-[#4A0E1B]' : 'text-blue-600';
 
@@ -108,7 +110,7 @@ export default function Navbar({
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="flex items-center gap-2 rounded-full border border-[#E5E5EA] bg-[#F5F5F7] px-3 py-1.5 text-xs font-medium text-[#1D1D1F] transition-all hover:bg-gray-200"
+                className={`flex items-center gap-2 rounded-full border border-[#E5E5EA] ${badgeBg} px-3 py-1.5 text-xs font-medium text-[#1D1D1F] transition-all ${badgeHoverBg}`}
                 id="theme-toggle-btn"
               >
                 {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
@@ -118,7 +120,7 @@ export default function Navbar({
               {/* Portal Access Badge */}
               {userRole ? (
                 <div className="flex items-center space-x-2">
-                  <span className="flex items-center space-x-1 border-2 border-[#E5E5EA] bg-[#F5F5F7] px-2.5 py-1 text-xs font-medium text-[#86868B] rounded-md">
+                  <span className={`flex items-center space-x-1 border-2 border-[#E5E5EA] ${badgeBg} px-2.5 py-1 text-xs font-medium text-[#86868B] rounded-md transition-colors duration-300`}>
                     <UserCheck size={14} className={`${accentText} transition-colors duration-300`} />
                     <span className="hidden xl:inline">Role: </span>
                     <span>{userRole === 'professor' ? 'Professor' : 'Student'}</span>

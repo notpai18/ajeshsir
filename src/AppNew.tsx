@@ -279,7 +279,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
   // ================= MAIN RENDER ROUTER =================
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-300">
+    <div className={`min-h-screen flex flex-col ${currentView === 'professor' ? 'bg-[#F6F2EA]' : 'bg-[#F5F5F7]'} text-[#1D1D1F] transition-colors duration-300`}>
       
       {/* Sticky Top Navbar */}
       <Navbar theme={theme} toggleTheme={toggleTheme}
