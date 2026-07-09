@@ -1,0 +1,6 @@
+{
+  "name": "Academic Resource Portal",
+  "description": "A premium, minimalist digital library and educational resource repository designed by a professor for students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
