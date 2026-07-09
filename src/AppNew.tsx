@@ -46,9 +46,32 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
   // ─── Navigation & Role ────────────────────────────────────────────────────
   const [currentView, setCurrentView] = useState<
     'home' | 'selection' | 'student' | 'professor' | 'about' | 'contact'
-  >('home');
+  >(() => {
+    try {
+      const saved = localStorage.getItem('prof_portal_view_v1');
+      return saved ? (JSON.parse(saved) as any) : 'home';
+    } catch {
+      return 'home';
+    }
+  });
 
-  const [userRole, setUserRole] = useState<'student' | 'professor' | null>(null);
+  const [userRole, setUserRole] = useState<'student' | 'professor' | null>(() => {
+    try {
+      const saved = localStorage.getItem('prof_portal_user_role_v1');
+      return saved ? (JSON.parse(saved) as any) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('prof_portal_view_v1', JSON.stringify(currentView));
+      localStorage.setItem('prof_portal_user_role_v1', JSON.stringify(userRole));
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [currentView, userRole]);
 
   // ─── Data State ───────────────────────────────────────────────────────────
   const [state, setState] = useState<AppState>({
