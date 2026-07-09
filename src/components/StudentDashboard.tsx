@@ -29,7 +29,12 @@ import {
   Pin,
   Play,
   Paperclip,
-  CheckCircle2
+  CheckCircle2,
+  Atom,
+  FlaskConical,
+  Stethoscope,
+  Hexagon,
+  Star
 } from 'lucide-react';
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
 import { VideoWatchModal } from './VideoWatchModal';
@@ -141,15 +146,31 @@ export default function StudentDashboard({
   const [doubtSubmitted, setDoubtSubmitted] = useState(false);
   const [doubtSubmitting, setDoubtSubmitting] = useState(false);
 
-  // Dynamic Lucide helper mapping for Exam Icons (all rendered in maroon on a tinted tile)
+  // Dynamic Lucide helper mapping for Exam Icons
   const renderExamIcon = (iconName?: string) => {
     switch (iconName) {
-      case 'Compass': return <Compass size={22} />;
-      case 'Award': return <Award size={22} />;
-      case 'Activity': return <Activity size={22} />;
-      case 'BookOpen': return <BookOpen size={22} />;
-      case 'GraduationCap': return <GraduationCap size={22} />;
-      default: return <BookOpen size={22} />;
+      case 'Atom': return <Atom strokeWidth={1.5} size={28} />;
+      case 'FlaskConical': return (
+        <div className="relative">
+          <FlaskConical strokeWidth={1.5} size={28} />
+          <Star strokeWidth={1.5} size={10} className="absolute -top-1 -right-1" />
+        </div>
+      );
+      case 'Stethoscope': return <Stethoscope strokeWidth={1.5} size={28} />;
+      case 'Hexagon': return <Hexagon strokeWidth={1.5} size={28} />;
+      case 'GraduationCap': return <GraduationCap strokeWidth={1.5} size={28} />;
+      default: return <BookOpen strokeWidth={1.5} size={28} />;
+    }
+  };
+
+  const getExamColor = (examId: string) => {
+    switch (examId) {
+      case 'jee-main': return '#C0713D';
+      case 'jee-advanced': return '#6B2737';
+      case 'neet': return '#6B7D5A';
+      case 'net': return '#4A5A6B';
+      case 'msc-entrance': return '#A87B2E';
+      default: return '#4A0E1B';
     }
   };
 
@@ -364,7 +385,7 @@ export default function StudentDashboard({
         {!selectedExam && (
           <div>
             <div className="mb-10 text-center">
-              <p className={MICRO}>Course repositories</p>
+              <p className="dash-mono mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#C0713D]">Course repositories</p>
               <h2 className="dash-serif mt-2 text-3xl font-semibold text-[#22201F] sm:text-4xl">Choose your examination</h2>
               <p className="mx-auto mt-3 max-w-md text-sm text-[#8A7E6F]">
                 Select your academic category below to unlock a highly organised directory of learning materials.
@@ -372,23 +393,46 @@ export default function StudentDashboard({
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {exams.map((exam) => (
-                <button
-                  key={exam.id}
-                  onClick={() => setSelectedExam(exam.id)}
-                  className={`${CARD} group w-full p-7 text-left transition-all duration-200 hover:-translate-y-1 hover:rotate-1`}
-                  id={`exam-card-${exam.id}`}
-                >
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
-                    {renderExamIcon(exam.icon)}
-                  </span>
-                  <h3 className="dash-serif mt-5 text-xl font-semibold text-[#22201F]">{exam.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#8A7E6F] line-clamp-3">{exam.description}</p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#4A0E1B] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100">
-                    Explore course <ArrowRight size={14} />
-                  </span>
-                </button>
-              ))}
+              {exams.map((exam) => {
+                const accentColor = getExamColor(exam.id);
+                return (
+                  <button
+                    key={exam.id}
+                    onClick={() => setSelectedExam(exam.id)}
+                    className="group relative flex h-full flex-col overflow-hidden rounded-[10px] border border-[#E0D4BC] bg-[#FFFEF9] p-7 text-left shadow-[0_4px_16px_rgba(58,46,31,0.06)] transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_8px_20px_rgba(58,46,31,0.1)]"
+                    id={`exam-card-${exam.id}`}
+                  >
+                    {/* Left Accent Bar */}
+                    <div 
+                      className="absolute bottom-0 left-0 top-0 w-1 transition-all duration-300 group-hover:w-[6px]"
+                      style={{ backgroundColor: accentColor }}
+                    />
+                    
+                    {/* Dog Ear Fold effect using border triangles */}
+                    <div className="absolute right-0 top-0 h-0 w-0 border-b-[24px] border-r-[24px] border-b-transparent border-r-[#FAF3E7] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute right-0 top-0 h-0 w-0 border-l-[24px] border-t-[24px] border-l-[#E0D4BC]/30 border-t-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    
+                    <span 
+                      className="mb-5 flex items-start text-left" 
+                      style={{ color: accentColor }}
+                    >
+                      {renderExamIcon(exam.icon)}
+                    </span>
+                    <h3 className="dash-serif text-[20px] font-semibold text-[#3A2E1F]">{exam.title}</h3>
+                    <p className="mb-6 mt-2 text-[14px] leading-relaxed text-[#6E6155]">{exam.description}</p>
+                    
+                    <div className="mt-auto border-t border-dashed border-[#E0D4BC] pt-4">
+                      <span 
+                        className="dash-mono inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide transition-all duration-200"
+                        style={{ color: accentColor }}
+                      >
+                        Explore course 
+                        <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2} />
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}

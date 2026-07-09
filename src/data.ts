@@ -10,25 +10,25 @@ export const EXAMS: ExamInfo[] = [
     id: 'jee-main',
     title: 'JEE Main',
     description: 'Comprehensive resources for JEE Main Physical & Organic Chemistry, including concept sheets and mock drills.',
-    icon: 'Compass'
+    icon: 'Atom'
   },
   {
     id: 'jee-advanced',
     title: 'JEE Advanced',
     description: 'Advanced-level problem-solving notes, multi-concept derivation guides, and deep-dive lectures.',
-    icon: 'Award'
+    icon: 'FlaskConical'
   },
   {
     id: 'neet',
     title: 'NEET Chemistry',
     description: 'Conceptual theory notes, formula sheets, and speed-accuracy practice booklets specialized for medical aspirants.',
-    icon: 'Activity'
+    icon: 'Stethoscope'
   },
   {
     id: 'net',
     title: 'CSIR NET',
     description: 'Postgraduate-level quantum chemistry, thermodynamics, and molecular spectroscopy resources.',
-    icon: 'BookOpen'
+    icon: 'Hexagon'
   },
   {
     id: 'msc-entrance',
