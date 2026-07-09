@@ -350,7 +350,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
         )}
 
         {currentView === 'about' && (
-          <AboutPage />
+          <AboutPage onNavigate={setCurrentView} />
         )}
 
         {currentView === 'contact' && (

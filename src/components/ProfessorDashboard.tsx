@@ -65,17 +65,17 @@ const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]'
 
 const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
   'jee-main': { bg: 'bg-[#F4E7E5]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
-  'jee-advanced': { bg: 'bg-[#F3E6EA]', text: 'text-[#7A1F2B]', dot: 'bg-[#7A1F2B]' },
-  neet: { bg: 'bg-[#E7EFE9]', text: 'text-[#2F6D4E]', dot: 'bg-[#2F6D4E]' },
-  net: { bg: 'bg-[#E5EDF2]', text: 'text-[#2B5B7A]', dot: 'bg-[#2B5B7A]' },
-  'msc-entrance': { bg: 'bg-[#F5ECD8]', text: 'text-[#8A5E1E]', dot: 'bg-[#A9772E]' }
+  'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
+  neet: { bg: 'bg-[#F7EFD9]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
+  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F]', dot: 'bg-[#22201F]' },
+  'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
 };
 
 const ANN_CAT: Record<AnnouncementCategory, { label: string; cls: string }> = {
   general: { label: 'General', cls: 'bg-[#EFE7D8] text-[#6E645A]' },
   exam: { label: 'Exam', cls: 'bg-[#F4E4E4] text-[#4A0E1B]' },
-  resource: { label: 'Resource', cls: 'bg-[#E7EFE9] text-[#2F6D4E]' },
-  schedule: { label: 'Schedule', cls: 'bg-[#E5EDF2] text-[#2B5B7A]' }
+  resource: { label: 'Resource', cls: 'bg-[#F7EFD9] text-[#8A6A16]' },
+  schedule: { label: 'Schedule', cls: 'bg-[#F4E2E5] text-[#7C2532]' }
 };
 
 /* ------------------------------------------------------------------ *
@@ -93,8 +93,8 @@ function ExamChip({ course, label }: { course: string; label: string }) {
 
 function DifficultyChip({ level }: { level: 'Easy' | 'Medium' | 'Hard' }) {
   const map = {
-    Easy: 'bg-[#E7EFE9] text-[#2F6D4E]',
-    Medium: 'bg-[#F5ECD8] text-[#8A5E1E]',
+    Easy: 'bg-[#F7EFD9] text-[#8A6A16]',
+    Medium: 'bg-[#F4E2E5] text-[#7C2532]',
     Hard: 'bg-[#F4E4E4] text-[#4A0E1B]'
   } as const;
   return <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${map[level]}`}>{level}</span>;
@@ -163,7 +163,7 @@ function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] px-6 py-14 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1E3D0] text-[#A9772E]">{icon}</div>
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] text-[#8A6A16]">{icon}</div>
       <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F]">{title}</h4>
       <p className="mt-1 max-w-sm text-sm text-[#8A7E6F]">{message}</p>
       {action && <div className="mt-5">{action}</div>}
@@ -668,7 +668,7 @@ export default function ProfessorDashboard({
                       }}
                       className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#4A443E] transition-colors hover:bg-[#F6F2EA]"
                     >
-                      <span className="text-[#A9772E]">{item.icon}</span>
+                      <span className="text-[#8A6A16]">{item.icon}</span>
                       {item.label}
                     </button>
                   ))}
@@ -720,7 +720,7 @@ export default function ProfessorDashboard({
               </div>
 
               <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#EAE1D2] bg-[#FBF7F0] px-3.5 py-3 text-[11px] text-[#8A7E6F]">
-                <Check size={14} className="text-[#2F6D4E]" />
+                <Check size={14} className="text-[#8A6A16]" />
                 Changes save automatically to this browser.
               </div>
             </div>
@@ -793,7 +793,7 @@ export default function ProfessorDashboard({
                         <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Library by exam</h3>
                         <p className="text-xs text-[#8A7E6F]">How your content is spread</p>
                       </div>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F3EAD8] text-[#A9772E]">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] text-[#8A6A16]">
                         <LayoutDashboard size={17} />
                       </span>
                     </div>
@@ -823,7 +823,7 @@ export default function ProfessorDashboard({
                     </div>
                     {pendingDoubtsCount === 0 ? (
                       <div className="flex flex-col items-center py-6 text-center">
-                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E7EFE9] text-[#2F6D4E]">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7EFD9] text-[#8A6A16]">
                           <Check size={20} />
                         </span>
                         <p className="mt-3 text-sm font-semibold text-[#22201F]">You're all caught up</p>
@@ -917,7 +917,7 @@ export default function ProfessorDashboard({
                         </td>
                         <td className="px-5 py-3.5">
                           <span className="dash-mono inline-flex items-center gap-1.5 text-sm font-medium tabular-nums text-[#4A443E]">
-                            <Download size={13} className="text-[#A9772E]" />
+                            <Download size={13} className="text-[#8A6A16]" />
                             {n.downloadCount.toLocaleString()}
                           </span>
                         </td>
@@ -1128,14 +1128,14 @@ export default function ProfessorDashboard({
                             {!doubt.isAnswered ? (
                               <span className="rounded-full bg-[#F4E4E4] px-2 py-0.5 text-[10px] font-bold text-[#4A0E1B]">Awaiting reply</span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#E7EFE9] px-2 py-0.5 text-[10px] font-bold text-[#2F6D4E]">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F7EFD9] px-2 py-0.5 text-[10px] font-bold text-[#8A6A16]">
                                 <Check size={11} /> Answered
                               </span>
                             )}
                           </div>
                         </div>
 
-                        <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#A9772E]">{doubt.subject}</p>
+                        <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">{doubt.subject}</p>
                         <p className="mt-1.5 rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
 
                         {doubt.attachmentName && (
@@ -1146,11 +1146,11 @@ export default function ProfessorDashboard({
 
                         {/* Answer / reply zone */}
                         {doubt.isAnswered && replyingDoubtId !== doubt.id ? (
-                          <div className="mt-4 rounded-xl border border-[#E7EFE9] bg-[#F4F8F5] p-4">
+                          <div className="mt-4 rounded-xl border border-[#EFE1C2] bg-[#FBF6EA] p-4">
                             <div className="flex items-start gap-2.5">
-                              <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#2F6D4E]" />
+                              <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
                               <div className="flex-1">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#2F6D4E]">Your response</p>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response</p>
                                 <p className="mt-1 text-sm leading-relaxed text-[#3A342E]">{doubt.answerText}</p>
                               </div>
                             </div>

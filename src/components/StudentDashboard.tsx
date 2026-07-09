@@ -6,7 +6,6 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search,
-  Filter,
   ArrowLeft,
   FileText,
   Video as VideoIcon,
@@ -15,7 +14,7 @@ import {
   Download,
   Eye,
   ChevronDown,
-  ChevronUp,
+  ChevronRight,
   X,
   ExternalLink,
   Send,
@@ -25,9 +24,64 @@ import {
   Activity,
   BookOpen,
   GraduationCap,
-  ArrowRight
+  ArrowRight,
+  Megaphone,
+  Pin,
+  Play,
+  Paperclip,
+  CheckCircle2
 } from 'lucide-react';
-import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement } from '../types';
+import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
+
+/* ------------------------------------------------------------------ *
+ * Design tokens — shared "Professor's Study" system (see DESIGN_SYSTEM.md)
+ * ------------------------------------------------------------------ */
+const CARD =
+  'rounded-2xl border border-[#EAE1D2] bg-white shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
+const INPUT =
+  'w-full rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] px-3.5 py-2.5 text-sm text-[#22201F] placeholder:text-[#B3A996] outline-none transition focus:border-[#4A0E1B]/50 focus:bg-white focus:ring-4 focus:ring-[#4A0E1B]/10';
+const PRIMARY_BTN =
+  'inline-flex items-center justify-center gap-2 rounded-xl bg-[#4A0E1B] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-colors hover:bg-[#380A14] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#4A0E1B]/20 disabled:opacity-50';
+const GHOST_BTN =
+  'inline-flex items-center justify-center gap-2 rounded-xl border border-[#E3D8C5] bg-white px-4 py-2.5 text-xs font-semibold text-[#4A443E] transition-colors hover:bg-[#F6F2EA]';
+const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]';
+const BACK_BTN =
+  'inline-flex items-center gap-1.5 text-xs font-bold text-[#4A0E1B] transition-colors hover:text-[#380A14]';
+const FIELD_LABEL = 'mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A7E6F]';
+const PILL_SOFT =
+  'inline-flex items-center gap-1.5 rounded-lg bg-[#F4E7E5] px-2.5 py-1.5 text-[11px] font-bold text-[#4A0E1B] transition-colors hover:bg-[#EEDAD7]';
+const PILL_GHOST =
+  'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-[#6E645A] transition-colors hover:bg-[#F6F2EA] hover:text-[#22201F]';
+const PILL_GOLD =
+  'inline-flex items-center gap-1.5 rounded-lg bg-[#F7EFD9] px-2.5 py-1.5 text-[11px] font-bold text-[#8A6A16] transition-colors hover:bg-[#F1E6C9]';
+
+const ANN_CAT: Record<AnnouncementCategory, { label: string; cls: string }> = {
+  general: { label: 'General', cls: 'bg-[#EFE7D8] text-[#6E645A]' },
+  exam: { label: 'Exam', cls: 'bg-[#F4E4E4] text-[#4A0E1B]' },
+  resource: { label: 'Resource', cls: 'bg-[#F7EFD9] text-[#8A6A16]' },
+  schedule: { label: 'Schedule', cls: 'bg-[#F4E2E5] text-[#7C2532]' }
+};
+
+function DifficultyChip({ level }: { level: 'Easy' | 'Medium' | 'Hard' }) {
+  const map = {
+    Easy: 'bg-[#F7EFD9] text-[#8A6A16]',
+    Medium: 'bg-[#F4E2E5] text-[#7C2532]',
+    Hard: 'bg-[#F4E4E4] text-[#4A0E1B]'
+  } as const;
+  return <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold ${map[level]}`}>{level}</span>;
+}
+
+function EmptyState({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] px-6 py-16 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] text-[#8A6A16]">
+        <Search size={22} />
+      </div>
+      <p className="mt-4 text-sm font-semibold text-[#22201F]">Nothing found</p>
+      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F]">{label}</p>
+    </div>
+  );
+}
 
 interface StudentDashboardProps {
   exams: ExamInfo[];
@@ -79,15 +133,15 @@ export default function StudentDashboard({
   });
   const [doubtSubmitted, setDoubtSubmitted] = useState(false);
 
-  // Dynamic Lucide helper mapping for Exam Icons
-  const renderExamIcon = (iconName: string) => {
+  // Dynamic Lucide helper mapping for Exam Icons (all rendered in maroon on a tinted tile)
+  const renderExamIcon = (iconName?: string) => {
     switch (iconName) {
-      case 'Compass': return <Compass className="h-6 w-6 text-blue-500" />;
-      case 'Award': return <Award className="h-6 w-6 text-indigo-500" />;
-      case 'Activity': return <Activity className="h-6 w-6 text-emerald-500" />;
-      case 'BookOpen': return <BookOpen className="h-6 w-6 text-teal-500" />;
-      case 'GraduationCap': return <GraduationCap className="h-6 w-6 text-purple-500" />;
-      default: return <BookOpen className="h-6 w-6 text-blue-500" />;
+      case 'Compass': return <Compass size={22} />;
+      case 'Award': return <Award size={22} />;
+      case 'Activity': return <Activity size={22} />;
+      case 'BookOpen': return <BookOpen size={22} />;
+      case 'GraduationCap': return <GraduationCap size={22} />;
+      default: return <BookOpen size={22} />;
     }
   };
 
@@ -129,8 +183,8 @@ export default function StudentDashboard({
   const filteredNotes = useMemo(() => {
     return notes.filter(note => {
       if (note.course !== selectedExam) return false;
-      const matchesSearch = note.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            note.chapter.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      const matchesSearch = note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            note.chapter.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             note.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesSubject = selectedSubject === 'All' || note.subject === selectedSubject;
       return matchesSearch && matchesSubject;
@@ -140,8 +194,8 @@ export default function StudentDashboard({
   const filteredVideos = useMemo(() => {
     return videos.filter(vid => {
       if (vid.course !== selectedExam) return false;
-      const matchesSearch = vid.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            vid.chapter.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      const matchesSearch = vid.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            vid.chapter.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             vid.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesSubject = selectedSubject === 'All' || vid.subject === selectedSubject;
       return matchesSearch && matchesSubject;
@@ -162,7 +216,7 @@ export default function StudentDashboard({
   const filteredSheets = useMemo(() => {
     return practiceSheets.filter(sheet => {
       if (sheet.course !== selectedExam) return false;
-      const matchesSearch = sheet.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      const matchesSearch = sheet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             sheet.chapter.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesSubject = selectedSubject === 'All' || sheet.subject === selectedSubject;
       return matchesSearch && matchesSubject;
@@ -183,17 +237,8 @@ export default function StudentDashboard({
     });
 
     setDoubtSubmitted(true);
-    setDoubtForm({
-      name: '',
-      email: '',
-      subject: '',
-      question: '',
-      attachmentName: ''
-    });
-
-    setTimeout(() => {
-      setDoubtSubmitted(false);
-    }, 6000);
+    setDoubtForm({ name: '', email: '', subject: '', question: '', attachmentName: '' });
+    setTimeout(() => setDoubtSubmitted(false), 6000);
   };
 
   const handleDownloadFile = (noteId: string, fileName: string) => {
@@ -203,8 +248,8 @@ export default function StudentDashboard({
 
   const triggerDownload = (fileName: string) => {
     // Elegant simulation of a local PDF download
-    const element = document.createElement("a");
-    const file = new Blob([`Simulated academic repository download for: ${fileName}.`], {type: 'text/plain'});
+    const element = document.createElement('a');
+    const file = new Blob([`Simulated academic repository download for: ${fileName}.`], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
     element.download = fileName;
     document.body.appendChild(element);
@@ -212,40 +257,51 @@ export default function StudentDashboard({
     document.body.removeChild(element);
   };
 
+  const sortedAnnouncements = useMemo(() => {
+    return [...announcements].sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [announcements]);
+
+  // Category cards (Step 2) with live counts for the selected exam
+  const categoryCards = [
+    { id: 'notes' as const, title: 'Study Notes', desc: 'Rigorous mechanism summaries and multi-concept chapter breakdowns.', icon: <BookOpen size={20} />, count: notes.filter(n => n.course === selectedExam).length, unit: 'notes' },
+    { id: 'videos' as const, title: 'Video Lectures', desc: 'Conceptual recordings exploring complex chemical and numerical ideas.', icon: <VideoIcon size={20} />, count: videos.filter(v => v.course === selectedExam).length, unit: 'lectures' },
+    { id: 'pyqs' as const, title: 'Previous Year Questions', desc: 'Original exam questions with step-by-step analytical solutions.', icon: <FileSpreadsheet size={20} />, count: pyqs.filter(p => p.course === selectedExam).length, unit: 'sets' },
+    { id: 'sheets' as const, title: 'Practice Sheets', desc: 'Chapter drills graded by complexity to build proficiency.', icon: <FileText size={20} />, count: practiceSheets.filter(s => s.course === selectedExam).length, unit: 'sheets' },
+    { id: 'doubts' as const, title: 'Doubts & FAQ', desc: 'Ask the professor a direct question or browse common answers.', icon: <HelpCircle size={20} />, count: null, unit: '' },
+    { id: 'resources' as const, title: 'Additional Resources', desc: 'Syllabus blueprints, formula sheets and reference constants.', icon: <FolderOpen size={20} />, count: null, unit: '' }
+  ];
+
   return (
-    <div className="bg-[#F5F5F7] py-12 transition-colors duration-300 text-[#1D1D1F]">
+    <div className="dash-root min-h-screen bg-[#F6F2EA] py-12 text-[#22201F]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        
-        {/* ================= READ-ONLY NOTICES STRIP ================= */}
+
+        {/* ================= PROFESSOR ANNOUNCEMENTS ================= */}
         {!selectedExam && announcements.length > 0 && (
-          <div className="mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100/50 p-4 shadow-sm relative">
-            <div className="absolute top-0 bottom-0 left-0 w-1 bg-[#0071E3]" />
-            <div className="flex items-center space-x-3 mb-3">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-[#0071E3]">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+          <div className={`${CARD} mb-8 p-5 sm:p-6`}>
+            <div className="mb-4 flex items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">
+                <Megaphone size={16} />
               </span>
-              <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] font-black text-[#0071E3]">
-                Professor Announcements
-              </h3>
+              <h3 className={MICRO}>Professor announcements</h3>
             </div>
-            <div className="space-y-3">
-              {[...announcements].sort((a, b) => {
-                if (a.pinned && !b.pinned) return -1;
-                if (!a.pinned && b.pinned) return 1;
-                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-              }).slice(0, 3).map(ann => (
-                <div key={ann.id} className="bg-white/60 rounded-lg p-3 text-sm text-[#1D1D1F] border border-white flex items-start space-x-2">
-                  {ann.pinned && (
-                    <span className="mt-0.5 text-orange-500 shrink-0">
-                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11V5.5C16 3.567 14.433 2 12.5 2C10.567 2 9 3.567 9 5.5V11L7 13V15H11V21L12.5 23L14 21V15H18V13L16 11Z"/></svg>
-                    </span>
-                  )}
-                  <div className="flex-1">
-                    <p className="font-medium text-[#1D1D1F] text-[13px]">{ann.title}</p>
-                    <p className="mt-1 text-[#86868B] text-xs leading-relaxed">{ann.body}</p>
-                    <div className="mt-2 flex items-center text-[10px] font-semibold text-[#86868B] space-x-3">
-                      <span className="bg-white px-2 py-0.5 rounded-full border border-gray-100">{new Date(ann.createdAt).toLocaleDateString()}</span>
-                      {ann.category !== 'general' && <span className="bg-blue-50 text-[#0071E3] px-2 py-0.5 rounded-full capitalize">{ann.category}</span>}
+            <div className="space-y-2.5">
+              {sortedAnnouncements.slice(0, 3).map(ann => (
+                <div key={ann.id} className="rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] p-4">
+                  <div className="flex items-start gap-2.5">
+                    {ann.pinned && <Pin size={14} className="mt-0.5 shrink-0 text-[#4A0E1B]" fill="currentColor" />}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-[#22201F]">{ann.title}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-[#5A534B]">{ann.body}</p>
+                      <div className="mt-2.5 flex items-center gap-2">
+                        <span className="dash-mono text-[11px] text-[#A79A88]">{new Date(ann.createdAt).toLocaleDateString()}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${ANN_CAT[ann.category].cls}`}>
+                          {ANN_CAT[ann.category].label}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -256,22 +312,23 @@ export default function StudentDashboard({
 
         {/* ================= BREADCRUMBS ================= */}
         {(selectedExam || activeCategory) && (
-          <nav className="mb-6 flex flex-wrap items-center space-x-2 text-[0.85rem] font-medium text-[#86868B]">
-            <button onClick={handleBackToExams} className="hover:text-[#0066CC]">Library</button>
+          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#8A7E6F]">
+            <button onClick={handleBackToExams} className="transition-colors hover:text-[#4A0E1B]">Library</button>
             {selectedExam && (
               <>
-                <span>/</span>
-                <button onClick={handleBackToCategories} className={`hover:text-[#0066CC] ${!activeCategory ? 'text-[#0066CC] font-medium' : ''}`}>
+                <ChevronRight size={13} className="text-[#C0A98B]" />
+                <button
+                  onClick={handleBackToCategories}
+                  className={`transition-colors hover:text-[#4A0E1B] ${!activeCategory ? 'text-[#4A0E1B]' : ''}`}
+                >
                   {currentExamInfo?.title}
                 </button>
               </>
             )}
             {activeCategory && (
               <>
-                <span>/</span>
-                <span className="text-[#0066CC] font-medium">
-                  {activeCategory}
-                </span>
+                <ChevronRight size={13} className="text-[#C0A98B]" />
+                <span className="capitalize text-[#4A0E1B]">{activeCategory}</span>
               </>
             )}
           </nav>
@@ -280,57 +337,32 @@ export default function StudentDashboard({
         {/* ================= STEP 1: EXAM SELECTION ================= */}
         {!selectedExam && (
           <div>
-            <div className="text-center mb-12">
-              <p className="font-sans text-[9px] uppercase tracking-[0.2em] font-black text-[#0071E3]">
-                Course Repositories
-              </p>
-              <h2 className="mt-2 text-3xl font-display font-extrabold tracking-tight text-[#1D1D1F] sm:text-4xl">
-                Choose Your Examination
-              </h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-[#86868B]">
-                Select your academic category below to unlock a highly organized directory of learning materials.
+            <div className="mb-10 text-center">
+              <p className={MICRO}>Course repositories</p>
+              <h2 className="dash-serif mt-2 text-3xl font-semibold text-[#22201F] sm:text-4xl">Choose your examination</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-[#8A7E6F]">
+                Select your academic category below to unlock a highly organised directory of learning materials.
               </p>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {exams.map((exam) => {
-                const getEmoji = (id: string) => {
-                  switch(id) {
-                    case 'jee-main': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Alembic.png';
-                    case 'jee-advanced': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Test%20Tube.png';
-                    case 'neet': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Stethoscope.png';
-                    case 'net': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Microscope.png';
-                    case 'msc-entrance': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Graduation%20Cap.png';
-                    default: return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Books.png';
-                  }
-                };
-                
-                return (
-                  <div
-                    key={exam.id}
-                    onClick={() => setSelectedExam(exam.id)}
-                    className="group relative cursor-pointer rounded-[12px] bg-[#FFFFFF] p-8 transition-all duration-300 hover:bg-[#F5F5F7] hover:-translate-y-1 hover:rotate-1 shadow-[inset_0_-4px_0_rgba(0,0,0,0.5)] active:shadow-[inset_0_0px_0_rgba(0,0,0,0.5)] active:translate-y-0"
-                    id={`exam-card-${exam.id}`}
-                  >
-                    
-                    <div className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-[12px] bg-[#F5F5F7] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-[1.05]">
-                      <img src={getEmoji(exam.id)} alt={exam.title} className="h-10 w-10 object-contain drop-shadow-[0_12px_16px_rgba(0,0,0,0.3)]" />
-                    </div>
-                    
-                    <h3 className="relative text-xl font-display font-bold tracking-tight text-[#1D1D1F] mb-3">
-                      {exam.title}
-                    </h3>
-                    <p className="relative text-sm leading-relaxed text-[#86868B] line-clamp-3">
-                      {exam.description}
-                    </p>
-                    
-                    <div className="relative mt-8 flex items-center space-x-2 text-[9px] uppercase tracking-[0.2em] font-black text-[#0071E3] opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1">
-                      <span>Explore Course</span>
-                      <ArrowRight size={14} />
-                    </div>
-                  </div>
-                );
-              })}
+              {exams.map((exam) => (
+                <button
+                  key={exam.id}
+                  onClick={() => setSelectedExam(exam.id)}
+                  className={`${CARD} group w-full p-7 text-left transition-all duration-200 hover:-translate-y-1 hover:rotate-1`}
+                  id={`exam-card-${exam.id}`}
+                >
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
+                    {renderExamIcon(exam.icon)}
+                  </span>
+                  <h3 className="dash-serif mt-5 text-xl font-semibold text-[#22201F]">{exam.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#8A7E6F] line-clamp-3">{exam.description}</p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#4A0E1B] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100">
+                    Explore course <ArrowRight size={14} />
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
         )}
@@ -338,197 +370,97 @@ export default function StudentDashboard({
         {/* ================= STEP 2: CATEGORY DASHBOARD ================= */}
         {selectedExam && !activeCategory && (
           <div>
-            {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b-2 border-[#E5E5EA] pb-8 mb-10">
-              <div className="space-y-1.5">
-                <button
-                  onClick={handleBackToExams}
-                  className="inline-flex items-center space-x-1.5 text-[0.85rem] font-medium text-blue-500 hover:text-blue-400"
-                  id="back-to-exams-btn"
-                >
-                  <ArrowLeft size={14} />
-                  <span>Back to examinations</span>
-                </button>
-                <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-[#1D1D1F]">
+            <button onClick={handleBackToExams} className={`${BACK_BTN} mb-4`} id="back-to-exams-btn">
+              <ArrowLeft size={14} /> Back to examinations
+            </button>
+
+            <div className="mb-10 border-b border-[#EAE1D2] pb-8">
+              <div className="flex items-center gap-4">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
+                  {renderExamIcon(currentExamInfo?.icon)}
+                </span>
+                <h2 className="dash-serif text-3xl font-semibold text-[#22201F] sm:text-4xl">
                   {currentExamInfo?.title} Library
                 </h2>
-                <p className="text-sm font-normal leading-relaxed text-[#86868B]">
-                  {currentExamInfo?.description}
-                </p>
               </div>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8A7E6F]">{currentExamInfo?.description}</p>
             </div>
 
-            {/* Core Resource Categories */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              
-              {/* Category 1: Notes */}
-              <div
-                onClick={() => setActiveCategory('notes')}
-                className="group cursor-pointer rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-blue-200 hover:-translate-y-0.5"
-                id="cat-card-notes"
-              >
-                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" alt="Notes" className="h-10 w-10 drop-shadow-md" />
-                <h3 className="mt-4 text-[1rem] font-semibold text-[#1D1D1F]">Study Notes</h3>
-                <p className="mt-1.5 text-[0.9rem] font-light text-[#6E6E73] leading-relaxed">
-                  Rigorous, chemical mechanism summaries and multi-concept chapter breakdowns.
-                </p>
-              </div>
-
-              {/* Category 2: Videos */}
-              <div
-                onClick={() => setActiveCategory('videos')}
-                className="group cursor-pointer rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-blue-200 hover:-translate-y-0.5"
-                id="cat-card-videos"
-              >
-                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Clapper%20Board.png" alt="Videos" className="h-10 w-10 drop-shadow-md" />
-                <h3 className="mt-4 text-[1rem] font-semibold text-[#1D1D1F]">Video Lectures</h3>
-                <p className="mt-1.5 text-[0.9rem] font-light text-[#6E6E73] leading-relaxed">
-                  Conceptual video recordings exploring complex chemical and numerical formulations.
-                </p>
-              </div>
-
-              {/* Category 3: PYQs */}
-              <div
-                onClick={() => setActiveCategory('pyqs')}
-                className="group cursor-pointer rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-blue-200 hover:-translate-y-0.5"
-                id="cat-card-pyqs"
-              >
-                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20Facing%20Up.png" alt="PYQs" className="h-10 w-10 drop-shadow-md" />
-                <h3 className="mt-4 text-[1rem] font-semibold text-[#1D1D1F]">Previous Year Questions</h3>
-                <p className="mt-1.5 text-[0.9rem] font-light text-[#6E6E73] leading-relaxed">
-                  Original exam questions alongside comprehensive step-by-step analytical solutions.
-                </p>
-              </div>
-
-              {/* Category 4: Practice Sheets */}
-              <div
-                onClick={() => setActiveCategory('sheets')}
-                className="group cursor-pointer rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-blue-200 hover:-translate-y-0.5"
-                id="cat-card-sheets"
-              >
-                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Memo.png" alt="Practice Sheets" className="h-10 w-10 drop-shadow-md" />
-                <h3 className="mt-4 text-[1rem] font-semibold text-[#1D1D1F]">Practice Sheets</h3>
-                <p className="mt-1.5 text-[0.9rem] font-light text-[#6E6E73] leading-relaxed">
-                  Selected chapter drills categorized by complexity levels to expand chemical proficiency.
-                </p>
-              </div>
-
-              {/* Category 5: Doubts */}
-              <div
-                onClick={() => setActiveCategory('doubts')}
-                className="group cursor-pointer rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-blue-200 hover:-translate-y-0.5"
-                id="cat-card-doubts"
-              >
-                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Light%20Bulb.png" alt="Doubts" className="h-10 w-10 drop-shadow-md" />
-                <h3 className="mt-4 text-[1rem] font-semibold text-[#1D1D1F]">Doubts Submission</h3>
-                <p className="mt-1.5 text-[0.9rem] font-light text-[#6E6E73] leading-relaxed">
-                  Ask a direct academic question and browse frequently answered conceptual sheets.
-                </p>
-              </div>
-
-              {/* Category 6: Additional Resources */}
-              <div
-                onClick={() => setActiveCategory('resources')}
-                className="group cursor-pointer rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-blue-200 hover:-translate-y-0.5"
-                id="cat-card-resources"
-              >
-                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png" alt="Resources" className="h-10 w-10 drop-shadow-md" />
-                <h3 className="mt-4 text-[1rem] font-semibold text-[#1D1D1F]">Additional Resources</h3>
-                <p className="mt-1.5 text-[0.9rem] font-light text-[#6E6E73] leading-relaxed">
-                  Comprehensive syllabus blueprints, mathematical reference constants, and formulas.
-                </p>
-              </div>
-
+              {categoryCards.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`${CARD} group w-full p-6 text-left transition-all duration-200 hover:-translate-y-1 hover:-rotate-1`}
+                  id={`cat-card-${cat.id}`}
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">{cat.icon}</span>
+                    {cat.count !== null && (
+                      <span className="dash-mono rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2.5 py-1 text-[11px] font-medium text-[#8A7E6F]">
+                        {cat.count} {cat.unit}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F]">{cat.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F]">{cat.desc}</p>
+                </button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* ================= STEP 3: SUB-RESOURCE PAGES ================= */}
-        
-        {/* NOTES EXPLORER */}
+        {/* ================= NOTES EXPLORER ================= */}
         {selectedExam && activeCategory === 'notes' && (
           <div>
-            {/* Header with Search and Filter */}
-            <div className="flex flex-col space-y-4 border-b-2 border-[#E5E5EA] pb-6 mb-8">
-              <div className="flex items-center justify-between">
-                <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1.5 text-[0.85rem] font-medium text-blue-500 hover:text-blue-400">
-                  <ArrowLeft size={14} />
-                  <span>Back to Categories</span>
-                </button>
-                <span className="text-[0.85rem] font-medium text-[#86868B]">{currentExamInfo?.title} • Study Notes</span>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-12">
-                <div className="relative md:col-span-8">
-                  <Search size={16} className="absolute left-3.5 top-3.5 text-[#86868B]" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search notes by title, chapter or concepts..."
-                    className="w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-[#FFFFFF]:border-blue-400"
-                  />
-                </div>
-                <div className="relative md:col-span-4">
-                  <Filter size={14} className="absolute left-3.5 top-3.5 text-[#86868B]" />
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-[#FFFFFF]:border-blue-400"
-                  >
-                    {availableSubjects.map((subject) => (
-                      <option key={subject} value={subject}>{subject} Only</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
+            <div className="mt-4 mb-6">
+              <p className={MICRO}>{currentExamInfo?.title} · Study notes</p>
+              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Study notes</h2>
             </div>
 
-            {/* List */}
-            {filteredNotes.length === 0 ? (
-              <div className="text-center py-12 rounded-[12px] border border-dashed border-[#E5E5EA]">
-                <p className="text-sm text-[#86868B]">No study notes found matching your filters.</p>
+            <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+              <div className="relative flex-1">
+                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search notes by title, chapter or concept…"
+                  className={`${INPUT} pl-10`}
+                />
               </div>
+              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={`${INPUT} sm:w-52`}>
+                {availableSubjects.map((subject) => (
+                  <option key={subject} value={subject}>{subject === 'All' ? 'All subjects' : subject}</option>
+                ))}
+              </select>
+            </div>
+
+            {filteredNotes.length === 0 ? (
+              <EmptyState label="No study notes match your search or subject filter." />
             ) : (
               <div className="space-y-8">
-                {/* Organize by Subject then Chapter */}
                 {Array.from(new Set(filteredNotes.map(n => n.subject))).map((subj) => (
-                  <div key={subj} className="space-y-4">
-                    <h3 className="border-b-2 border-[#E5E5EA] pb-2 text-lg font-bold text-[#1D1D1F]">
-                      {subj}
-                    </h3>
-                    
+                  <div key={subj}>
+                    <h3 className="dash-serif mb-4 border-b border-[#EAE1D2] pb-2 text-lg font-semibold text-[#22201F]">{subj}</h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {filteredNotes.filter(n => n.subject === subj).map((note) => (
-                        <div key={note.id} className="group rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-5 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]">
-                          <div className="flex items-start justify-between">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                              <FileText size={18} />
-                            </div>
-                            <span className="font-mono text-[9px] font-bold text-[#86868B] uppercase">
-                              {note.chapter}
-                            </span>
+                        <div key={note.id} className={`${CARD} flex flex-col p-5`}>
+                          <div className="flex items-start justify-between gap-3">
+                            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]"><FileText size={18} /></span>
+                            <span className="rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2.5 py-1 text-[10px] font-bold text-[#8A7E6F]">{note.chapter}</span>
                           </div>
-
-                          <h4 className="mt-4 text-sm font-bold text-[#1D1D1F] line-clamp-1">{note.title}</h4>
-                          <p className="mt-1 text-xs text-[#86868B] line-clamp-2">{note.description}</p>
-                          
-                          <div className="mt-5 flex items-center justify-between border-t border-gray-50 pt-4">
-                            <span className="font-mono text-[10px] text-[#86868B]">{note.fileSize} • {note.downloadCount || 0} views</span>
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={() => setActivePdfViewer({ title: note.title, fileUrl: note.fileUrl })}
-                                className="inline-flex items-center space-x-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-[#86868B] hover:bg-[#F5F5F7]:bg-slate-800"
-                              >
-                                <Eye size={12} />
-                                <span>View</span>
+                          <h4 className="mt-4 text-sm font-bold text-[#22201F]">{note.title}</h4>
+                          <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F] line-clamp-2">{note.description}</p>
+                          <div className="mt-4 flex items-center justify-between border-t border-[#F2ECDF] pt-4">
+                            <span className="dash-mono text-[11px] text-[#A79A88]">{note.fileSize} · {note.downloadCount || 0} downloads</span>
+                            <div className="flex gap-1.5">
+                              <button onClick={() => setActivePdfViewer({ title: note.title, fileUrl: note.fileUrl })} className={PILL_GHOST}>
+                                <Eye size={12} /> View
                               </button>
-                              <button
-                                onClick={() => handleDownloadFile(note.id, note.fileUrl)}
-                                className="inline-flex items-center space-x-1 rounded-lg bg-blue-500 text-white px-2.5 py-1.5 text-[11px] font-semibold hover:bg-blue-600"
-                              >
-                                <Download size={12} />
-                                <span>Download</span>
+                              <button onClick={() => handleDownloadFile(note.id, note.fileUrl)} className={PILL_SOFT}>
+                                <Download size={12} /> Download
                               </button>
                             </div>
                           </div>
@@ -542,88 +474,59 @@ export default function StudentDashboard({
           </div>
         )}
 
-        {/* LECTURES EXPLORER */}
+        {/* ================= LECTURES EXPLORER ================= */}
         {selectedExam && activeCategory === 'videos' && (
           <div>
-            <div className="flex flex-col space-y-4 border-b-2 border-[#E5E5EA] pb-6 mb-8">
-              <div className="flex items-center justify-between">
-                <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1.5 text-[0.85rem] font-medium text-blue-500 hover:text-blue-400">
-                  <ArrowLeft size={14} />
-                  <span>Back to Categories</span>
-                </button>
-                <span className="text-[0.85rem] font-medium text-[#86868B]">{currentExamInfo?.title} • Video Lectures</span>
-              </div>
+            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
+            <div className="mt-4 mb-6">
+              <p className={MICRO}>{currentExamInfo?.title} · Video lectures</p>
+              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Video lectures</h2>
+            </div>
 
-              <div className="grid gap-4 md:grid-cols-12">
-                <div className="relative md:col-span-8">
-                  <Search size={16} className="absolute left-3.5 top-3.5 text-[#86868B]" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search lectures..."
-                    className="w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-[#FFFFFF]:border-blue-400"
-                  />
-                </div>
-                <div className="relative md:col-span-4">
-                  <Filter size={14} className="absolute left-3.5 top-3.5 text-[#86868B]" />
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-[#FFFFFF]:border-blue-400"
-                  >
-                    {availableSubjects.map((subject) => (
-                      <option key={subject} value={subject}>{subject} Only</option>
-                    ))}
-                  </select>
-                </div>
+            <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+              <div className="relative flex-1">
+                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search lectures…" className={`${INPUT} pl-10`} />
               </div>
+              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={`${INPUT} sm:w-52`}>
+                {availableSubjects.map((subject) => (
+                  <option key={subject} value={subject}>{subject === 'All' ? 'All subjects' : subject}</option>
+                ))}
+              </select>
             </div>
 
             {filteredVideos.length === 0 ? (
-              <div className="text-center py-12 rounded-[12px] border border-dashed border-[#E5E5EA]">
-                <p className="text-sm text-[#86868B]">No lecture recordings found matching your filters.</p>
-              </div>
+              <EmptyState label="No lecture recordings match your search or subject filter." />
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredVideos.map((video) => (
-                  <div key={video.id} className="group overflow-hidden rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]">
-                    {/* Thumbnail placeholder with play button overlay */}
-                    <div className="relative aspect-video w-full bg-gray-100 overflow-hidden">
+                  <div key={video.id} className={`${CARD} group flex flex-col overflow-hidden`}>
+                    <div className="relative aspect-video w-full overflow-hidden bg-[#EFE7D8]">
                       <img
                         src={video.thumbnail}
                         alt={video.title}
                         referrerPolicy="no-referrer"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-102"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FFFFFF]/90 text-blue-600 shadow-[inset_0_-4px_0_rgba(0,0,0,0.5)] transform group-hover:scale-105 transition-transform">
-                          <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-0.5">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#22201F]/25 opacity-80 transition-opacity group-hover:opacity-100">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-[#4A0E1B] shadow-lg transition-transform group-hover:scale-105">
+                          <Play size={20} className="ml-0.5" fill="currentColor" />
                         </div>
                       </div>
-                      <span className="absolute bottom-2 right-2 rounded bg-black/72 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#1D1D1F] uppercase">
-                        {video.duration}
-                      </span>
+                      <span className="dash-mono absolute bottom-2 right-2 rounded-md bg-[#22201F]/80 px-1.5 py-0.5 text-[10px] font-medium text-white">{video.duration}</span>
                     </div>
 
-                    <div className="p-5">
-                      <div className="flex items-center justify-between">
-                        <span className="rounded-md bg-blue-50 px-2 py-0.5 font-mono text-[9px] font-bold text-blue-600">
-                          {video.subject}
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4E7E5] px-2.5 py-1 text-[10px] font-bold text-[#4A0E1B]">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#4A0E1B]" />{video.subject}
                         </span>
-                        <span className="font-mono text-[9px] text-[#86868B] uppercase">{video.chapter}</span>
+                        <span className={MICRO}>{video.chapter}</span>
                       </div>
-                      <h4 className="mt-3.5 text-sm font-bold text-[#1D1D1F] line-clamp-1">{video.title}</h4>
-                      <p className="mt-1 text-xs text-[#86868B] line-clamp-2">{video.description}</p>
-                      
-                      <button
-                        onClick={() => setActiveVideoModal(video)}
-                        className="mt-5 w-full inline-flex items-center justify-center space-x-2 rounded-[12px] bg-gray-900 text-white px-3 py-2.5 text-xs font-semibold hover:bg-gray-800#111112]:bg-[#FFFFFF]"
-                      >
-                        <VideoIcon size={13} />
-                        <span>Watch Lecture</span>
+                      <h4 className="mt-3.5 text-sm font-bold text-[#22201F] line-clamp-1">{video.title}</h4>
+                      <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F] line-clamp-2">{video.description}</p>
+                      <button onClick={() => setActiveVideoModal(video)} className={`${PRIMARY_BTN} mt-5 w-full`}>
+                        <VideoIcon size={14} /> Watch lecture
                       </button>
                     </div>
                   </div>
@@ -633,121 +536,67 @@ export default function StudentDashboard({
           </div>
         )}
 
-        {/* PYQ EXPLORER */}
+        {/* ================= PYQ EXPLORER ================= */}
         {selectedExam && activeCategory === 'pyqs' && (
           <div>
-            <div className="flex flex-col space-y-4 border-b-2 border-[#E5E5EA] pb-6 mb-8">
-              <div className="flex items-center justify-between">
-                <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1.5 text-[0.85rem] font-medium text-blue-500 hover:text-blue-400">
-                  <ArrowLeft size={14} />
-                  <span>Back to Categories</span>
-                </button>
-                <span className="text-[0.85rem] font-medium text-[#86868B]">{currentExamInfo?.title} • PYQs</span>
-              </div>
+            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
+            <div className="mt-4 mb-6">
+              <p className={MICRO}>{currentExamInfo?.title} · Previous year questions</p>
+              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Previous year questions</h2>
+            </div>
 
-              <div className="grid gap-3 sm:grid-cols-4">
-                <div className="relative sm:col-span-2">
-                  <Search size={16} className="absolute left-3.5 top-3 text-[#86868B]" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by chapter..."
-                    className="w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2 text-sm outline-none focus:border-blue-500 focus:bg-[#FFFFFF]:border-blue-400"
-                  />
-                </div>
-                <div>
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 px-3.5 py-2 text-sm outline-none focus:border-blue-500 focus:bg-[#FFFFFF]"
-                  >
-                    {availableSubjects.map((subject) => (
-                      <option key={subject} value={subject}>{subject === 'All' ? 'All Subjects' : subject}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <select
-                    value={selectedDifficulty}
-                    onChange={(e) => setSelectedDifficulty(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 px-3.5 py-2 text-sm outline-none focus:border-blue-500 focus:bg-[#FFFFFF]"
-                  >
-                    <option value="All">All Difficulties</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Hard">Hard</option>
-                  </select>
-                </div>
+            <div className="mb-8 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="relative lg:col-span-2">
+                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by chapter…" className={`${INPUT} pl-10`} />
               </div>
+              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={INPUT}>
+                {availableSubjects.map((subject) => (
+                  <option key={subject} value={subject}>{subject === 'All' ? 'All subjects' : subject}</option>
+                ))}
+              </select>
+              <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className={INPUT}>
+                <option value="All">All difficulties</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
             </div>
 
             {filteredPyqs.length === 0 ? (
-              <div className="text-center py-12 rounded-[12px] border border-dashed border-[#E5E5EA]">
-                <p className="text-sm text-[#86868B]">No PYQ booklets found matching your filters.</p>
-              </div>
+              <EmptyState label="No PYQ booklets match your search or filters." />
             ) : (
-              <div className="overflow-hidden rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]">
+              <div className={`${CARD} overflow-hidden`}>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
+                  <table className="w-full min-w-[720px] text-left text-sm">
                     <thead>
-                      <tr className="border-b-2 border-[#E5E5EA] bg-[#F5F5F7]/60 font-mono text-[10px] uppercase tracking-wider text-[#86868B]">
-                        <th className="px-6 py-4">Subject & Chapter</th>
-                        <th className="px-6 py-4">Year</th>
-                        <th className="px-6 py-4">Difficulty</th>
-                        <th className="px-6 py-4 text-right">Question Paper</th>
-                        <th className="px-6 py-4 text-right">Step Solution</th>
+                      <tr className="border-b border-[#EAE1D2] bg-[#FBF7F0]">
+                        <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Subject & chapter</th>
+                        <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Year</th>
+                        <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Difficulty</th>
+                        <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Question paper</th>
+                        <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Step solution</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-[#F2ECDF]">
                       {filteredPyqs.map((pyq) => (
-                        <tr key={pyq.id} className="hover:bg-[#F5F5F7]/40:bg-slate-850/20 text-xs">
-                          <td className="px-6 py-4">
-                            <span className="font-semibold text-[#1D1D1F]">{pyq.subject}</span>
-                            <span className="block text-[#86868B] text-[11px] mt-0.5">{pyq.chapter}</span>
+                        <tr key={pyq.id} className="transition-colors hover:bg-[#FBF7F0]">
+                          <td className="px-5 py-3.5">
+                            <span className="font-semibold text-[#22201F]">{pyq.subject}</span>
+                            <span className="mt-0.5 block text-xs text-[#8A7E6F]">{pyq.chapter}</span>
                           </td>
-                          <td className="px-6 py-4 font-mono font-bold text-[#86868B]">{pyq.year}</td>
-                          <td className="px-6 py-4">
-                            <span className={`inline-flex rounded-full px-2 py-0.5 text-[9px] font-semibold ${
-                              pyq.difficulty === 'Easy' ? 'bg-green-50 text-green-700' :
-                              pyq.difficulty === 'Medium' ? 'bg-amber-50 text-amber-700' :
-                              'bg-red-50 text-red-700'
-                            }`}>
-                              {pyq.difficulty}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="inline-flex space-x-1.5 justify-end">
-                              <button
-                                onClick={() => setActivePdfViewer({ title: `PYQ Question - ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })}
-                                className="p-1.5 text-[#86868B] hover:text-blue-500"
-                              >
-                                <Eye size={14} />
-                              </button>
-                              <button
-                                onClick={() => triggerDownload(pyq.questionUrl)}
-                                className="inline-flex items-center space-x-1 rounded bg-blue-50 text-blue-600 px-2 py-1 font-semibold text-[10px] hover:bg-blue-100"
-                              >
-                                <Download size={10} />
-                                <span>Question ({pyq.questionSize})</span>
-                              </button>
+                          <td className="px-5 py-3.5 dash-mono text-xs font-medium tabular-nums text-[#6E645A]">{pyq.year}</td>
+                          <td className="px-5 py-3.5"><DifficultyChip level={pyq.difficulty} /></td>
+                          <td className="px-5 py-3.5 text-right">
+                            <div className="inline-flex justify-end gap-1.5">
+                              <button onClick={() => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F4E7E5] hover:text-[#4A0E1B]"><Eye size={15} /></button>
+                              <button onClick={() => triggerDownload(pyq.questionUrl)} className={PILL_SOFT}><Download size={11} /> {pyq.questionSize}</button>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="inline-flex space-x-1.5 justify-end">
-                              <button
-                                onClick={() => setActivePdfViewer({ title: `PYQ Solution - ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })}
-                                className="p-1.5 text-[#86868B] hover:text-emerald-500"
-                              >
-                                <Eye size={14} />
-                              </button>
-                              <button
-                                onClick={() => triggerDownload(pyq.solutionUrl)}
-                                className="inline-flex items-center space-x-1 rounded bg-emerald-50 text-emerald-600 px-2 py-1 font-semibold text-[10px] hover:bg-emerald-100"
-                              >
-                                <Download size={10} />
-                                <span>Solution ({pyq.solutionSize})</span>
-                              </button>
+                          <td className="px-5 py-3.5 text-right">
+                            <div className="inline-flex justify-end gap-1.5">
+                              <button onClick={() => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F7EFD9] hover:text-[#8A6A16]"><Eye size={15} /></button>
+                              <button onClick={() => triggerDownload(pyq.solutionUrl)} className={PILL_GOLD}><Download size={11} /> {pyq.solutionSize}</button>
                             </div>
                           </td>
                         </tr>
@@ -760,81 +609,44 @@ export default function StudentDashboard({
           </div>
         )}
 
-        {/* PRACTICE SHEETS */}
+        {/* ================= PRACTICE SHEETS ================= */}
         {selectedExam && activeCategory === 'sheets' && (
           <div>
-            <div className="flex flex-col space-y-4 border-b-2 border-[#E5E5EA] pb-6 mb-8">
-              <div className="flex items-center justify-between">
-                <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1.5 text-[0.85rem] font-medium text-blue-500 hover:text-blue-400">
-                  <ArrowLeft size={14} />
-                  <span>Back to Categories</span>
-                </button>
-                <span className="text-[0.85rem] font-medium text-[#86868B]">{currentExamInfo?.title} • Practice Sheets</span>
-              </div>
+            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
+            <div className="mt-4 mb-6">
+              <p className={MICRO}>{currentExamInfo?.title} · Practice sheets</p>
+              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Practice sheets</h2>
+            </div>
 
-              <div className="grid gap-4 md:grid-cols-12">
-                <div className="relative md:col-span-8">
-                  <Search size={16} className="absolute left-3.5 top-3.5 text-[#86868B]" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by title or chapter..."
-                    className="w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-[#FFFFFF]"
-                  />
-                </div>
-                <div className="relative md:col-span-4">
-                  <Filter size={14} className="absolute left-3.5 top-3.5 text-[#86868B]" />
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-[#FFFFFF]"
-                  >
-                    {availableSubjects.map((subject) => (
-                      <option key={subject} value={subject}>{subject} Only</option>
-                    ))}
-                  </select>
-                </div>
+            <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+              <div className="relative flex-1">
+                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by title or chapter…" className={`${INPUT} pl-10`} />
               </div>
+              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={`${INPUT} sm:w-52`}>
+                {availableSubjects.map((subject) => (
+                  <option key={subject} value={subject}>{subject === 'All' ? 'All subjects' : subject}</option>
+                ))}
+              </select>
             </div>
 
             {filteredSheets.length === 0 ? (
-              <div className="text-center py-12 rounded-[12px] border border-dashed border-[#E5E5EA]">
-                <p className="text-sm text-[#86868B]">No practice drills found matching your filters.</p>
-              </div>
+              <EmptyState label="No practice drills match your search or subject filter." />
             ) : (
               <div className="grid gap-5 sm:grid-cols-2">
                 {filteredSheets.map((sheet) => (
-                  <div key={sheet.id} className="group rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-5 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]">
-                    <div className="flex items-start justify-between">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                        <FileText size={18} />
-                      </div>
-                      <span className="font-mono text-[9px] font-bold text-[#86868B] uppercase">
-                        {sheet.chapter} • {sheet.subject}
-                      </span>
+                  <div key={sheet.id} className={`${CARD} flex flex-col p-5`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EFD9] text-[#8A6A16]"><FileText size={18} /></span>
+                      <span className="rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2.5 py-1 text-[10px] font-bold text-[#8A7E6F]">{sheet.chapter} · {sheet.subject}</span>
                     </div>
-
-                    <h4 className="mt-4 text-sm font-bold text-[#1D1D1F]">{sheet.title}</h4>
-                    <p className="mt-1 text-xs text-[#86868B] leading-relaxed">{sheet.description}</p>
-                    
-                    <div className="mt-5 flex items-center justify-between border-t border-gray-50 pt-4">
-                      <span className="font-mono text-[10px] text-[#86868B]">File size: {sheet.fileSize}</span>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => setActivePdfViewer({ title: sheet.title, fileUrl: sheet.fileUrl })}
-                          className="inline-flex items-center space-x-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-[#86868B] hover:bg-[#F5F5F7]:bg-slate-800"
-                        >
-                          <Eye size={12} />
-                          <span>View</span>
-                        </button>
-                        <button
-                          onClick={() => triggerDownload(sheet.fileUrl)}
-                          className="inline-flex items-center space-x-1 rounded-lg bg-blue-500 text-white px-2.5 py-1.5 text-[11px] font-semibold hover:bg-blue-600"
-                        >
-                          <Download size={12} />
-                          <span>Download</span>
-                        </button>
+                    <h4 className="mt-4 text-sm font-bold text-[#22201F]">{sheet.title}</h4>
+                    <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F]">{sheet.description}</p>
+                    <div className="mt-4 flex items-center justify-between border-t border-[#F2ECDF] pt-4">
+                      <span className="dash-mono text-[11px] text-[#A79A88]">File size · {sheet.fileSize}</span>
+                      <div className="flex gap-1.5">
+                        <button onClick={() => setActivePdfViewer({ title: sheet.title, fileUrl: sheet.fileUrl })} className={PILL_GHOST}><Eye size={12} /> View</button>
+                        <button onClick={() => triggerDownload(sheet.fileUrl)} className={PILL_SOFT}><Download size={12} /> Download</button>
                       </div>
                     </div>
                   </div>
@@ -844,347 +656,219 @@ export default function StudentDashboard({
           </div>
         )}
 
-        {/* DOUBT SUBMISSION PAGE */}
+        {/* ================= DOUBT SUBMISSION ================= */}
         {selectedExam && activeCategory === 'doubts' && (
           <div>
-            <div className="flex items-center justify-between border-b-2 border-[#E5E5EA] pb-6 mb-8">
-              <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1 font-semibold text-xs text-blue-500 hover:text-blue-400">
-                <ArrowLeft size={12} />
-                <span>Back to Categories</span>
-              </button>
-              <span className="font-mono text-xs text-[#86868B] uppercase">{currentExamInfo?.title} • Doubt Clarification</span>
+            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
+            <div className="mt-4 mb-8">
+              <p className={MICRO}>{currentExamInfo?.title} · Doubt clarification</p>
+              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Ask a doubt</h2>
             </div>
 
-            <div className="grid gap-10 lg:grid-cols-12">
-              
-              {/* Doubt Submission Form */}
+            <div className="grid gap-8 lg:grid-cols-12">
+              {/* Doubt form */}
               <div className="lg:col-span-7">
-                <div className="rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]">
-                  <h3 className="text-base font-bold text-[#1D1D1F] mb-1.5">
-                    Submit Academic Doubt
-                  </h3>
-                  <p className="text-xs text-[#86868B] mb-6">
-                    Explain your concept difficulty or problem blocker. Professor Ajesh Joe will review and provide step-by-step guidance.
+                <div className={`${CARD} p-6`}>
+                  <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Submit an academic doubt</h3>
+                  <p className="mt-1 text-xs text-[#8A7E6F]">
+                    Explain your concept difficulty or problem blocker. Prof. Ajesh Joe will review it and provide step-by-step guidance.
                   </p>
 
                   {doubtSubmitted && (
-                    <div className="mb-6 flex items-center space-x-2.5 rounded-[12px] bg-green-50 px-4 py-3 text-xs text-green-800 border border-green-150 animate-fade-in">
-                      <span className="text-base">✓</span>
-                      <span>Doubt submitted successfully. You can monitor its response under the Professor Dashboard or refresh this page.</span>
+                    <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-[#E7D7AE] bg-[#F7EFD9] px-4 py-3 text-sm text-[#8A6A16]">
+                      <CheckCircle2 size={16} className="mt-0.5 shrink-0" />
+                      <span>Doubt submitted. The professor will review it and post a step-by-step response.</span>
                     </div>
                   )}
 
-                  <form onSubmit={handleDoubtSubmit} className="space-y-4">
+                  <form onSubmit={handleDoubtSubmit} className="mt-6 space-y-4">
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label htmlFor="student-name" className="block text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
-                          Your Name
-                        </label>
-                        <input
-                          type="text"
-                          id="student-name"
-                          required
-                          value={doubtForm.name}
-                          onChange={(e) => setDoubtForm({ ...doubtForm, name: e.target.value })}
-                          className="mt-1.5 block w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/40 px-3 py-2 text-xs outline-none focus:border-blue-500 focus:bg-[#FFFFFF]"
-                          placeholder="e.g. Siddharth"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="student-email" className="block text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
-                          Your Email
-                        </label>
-                        <input
-                          type="email"
-                          id="student-email"
-                          required
-                          value={doubtForm.email}
-                          onChange={(e) => setDoubtForm({ ...doubtForm, email: e.target.value })}
-                          className="mt-1.5 block w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/40 px-3 py-2 text-xs outline-none focus:border-blue-500 focus:bg-[#FFFFFF]"
-                          placeholder="e.g. sid@mail.com"
-                        />
-                      </div>
+                      <label className="block">
+                        <span className={FIELD_LABEL}>Your name</span>
+                        <input type="text" required value={doubtForm.name} onChange={(e) => setDoubtForm({ ...doubtForm, name: e.target.value })} className={INPUT} placeholder="e.g. Siddharth" />
+                      </label>
+                      <label className="block">
+                        <span className={FIELD_LABEL}>Your email</span>
+                        <input type="email" required value={doubtForm.email} onChange={(e) => setDoubtForm({ ...doubtForm, email: e.target.value })} className={INPUT} placeholder="e.g. sid@mail.com" />
+                      </label>
                     </div>
 
-                    <div>
-                      <label htmlFor="doubt-subject" className="block text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
-                        Subject & Topic (or Chapter)
-                      </label>
-                      <input
-                        type="text"
-                        id="doubt-subject"
-                        required
-                        value={doubtForm.subject}
-                        onChange={(e) => setDoubtForm({ ...doubtForm, subject: e.target.value })}
-                        className="mt-1.5 block w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/40 px-3 py-2 text-xs outline-none focus:border-blue-500 focus:bg-[#FFFFFF]"
-                        placeholder={`e.g. ${currentExamInfo?.title} Physics - Rotational Dynamics`}
-                      />
-                    </div>
+                    <label className="block">
+                      <span className={FIELD_LABEL}>Subject & topic (or chapter)</span>
+                      <input type="text" required value={doubtForm.subject} onChange={(e) => setDoubtForm({ ...doubtForm, subject: e.target.value })} className={INPUT} placeholder={`e.g. ${currentExamInfo?.title} — Rotational Dynamics`} />
+                    </label>
+
+                    <label className="block">
+                      <span className={FIELD_LABEL}>Your question details</span>
+                      <textarea required rows={4} value={doubtForm.question} onChange={(e) => setDoubtForm({ ...doubtForm, question: e.target.value })} className={INPUT} placeholder="State the numerical problem or concept blocker clearly…" />
+                    </label>
 
                     <div>
-                      <label htmlFor="doubt-question" className="block text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
-                        Your Question Details
-                      </label>
-                      <textarea
-                        id="doubt-question"
-                        required
-                        rows={4}
-                        value={doubtForm.question}
-                        onChange={(e) => setDoubtForm({ ...doubtForm, question: e.target.value })}
-                        className="mt-1.5 block w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/40 px-3 py-2 text-xs outline-none focus:border-blue-500 focus:bg-[#FFFFFF]"
-                        placeholder="State the numerical problem or concept blocker clearly..."
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-bold text-[#86868B] uppercase tracking-wider">
-                        Attachment (Optional)
-                      </label>
-                      <div className="mt-1.5 flex items-center space-x-3">
-                        <input
-                          type="text"
-                          readOnly
-                          value={doubtForm.attachmentName}
-                          placeholder="No file selected (Optional)"
-                          className="block w-full rounded-[12px] border-2 border-[#E5E5EA] bg-[#F5F5F7]/20 px-3 py-2 text-xs text-[#86868B]"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setDoubtForm({ ...doubtForm, attachmentName: 'doubt-concept-diagram.png' })}
-                          className="flex-shrink-0 rounded-[12px] bg-[#F5F5F7] border-2 border-[#E5E5EA] px-3 py-2 text-[11px] font-semibold text-[#86868B] hover:bg-gray-100"
-                        >
-                          Select File
+                      <span className={FIELD_LABEL}>Attachment (optional)</span>
+                      <div className="flex items-center gap-2.5">
+                        <input type="text" readOnly value={doubtForm.attachmentName} placeholder="No file selected" className={`${INPUT} text-[#8A7E6F]`} />
+                        <button type="button" onClick={() => setDoubtForm({ ...doubtForm, attachmentName: 'doubt-concept-diagram.png' })} className={`${GHOST_BTN} shrink-0`}>
+                          <Paperclip size={13} /> Select
                         </button>
                       </div>
                     </div>
 
-                    <div className="pt-2">
-                      <button
-                        type="submit"
-                        className="w-full inline-flex items-center justify-center space-x-1.5 rounded-[12px] bg-blue-600 py-2.5 text-xs font-semibold text-white hover:bg-blue-700"
-                        id="student-doubt-submit-btn"
-                      >
-                        <Send size={12} />
-                        <span>Submit Academic Doubt</span>
-                      </button>
-                    </div>
-
+                    <button type="submit" className={`${PRIMARY_BTN} w-full`} id="student-doubt-submit-btn">
+                      <Send size={13} /> Submit academic doubt
+                    </button>
                   </form>
                 </div>
               </div>
 
-              {/* Accordion FAQ Area */}
-              <div className="lg:col-span-5 space-y-6">
-                <div>
-                  <h3 className="text-base font-bold text-[#1D1D1F]">
-                    Frequently Asked Questions
-                  </h3>
-                  <p className="text-xs text-[#86868B] mt-1">
-                    Quick references regarding library downloads, syllabus revisions, and academic response timelines.
-                  </p>
-                </div>
-
-                <div className="space-y-3">
+              {/* FAQ */}
+              <div className="lg:col-span-5">
+                <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Frequently asked questions</h3>
+                <p className="mt-1 text-xs text-[#8A7E6F]">Quick references on downloads, syllabus revisions and response timelines.</p>
+                <div className="mt-5 space-y-2.5">
                   {faqs.map((faq) => {
                     const isExpanded = expandedFaqId === faq.id;
                     return (
-                      <div
-                        key={faq.id}
-                        className="rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] overflow-hidden"
-                      >
+                      <div key={faq.id} className="overflow-hidden rounded-xl border border-[#EAE1D2] bg-white">
                         <button
                           onClick={() => setExpandedFaqId(isExpanded ? null : faq.id)}
-                          className="w-full flex items-center justify-between px-4 py-3.5 text-left text-xs font-bold text-[#1D1D1F] hover:bg-[#F5F5F7]:bg-slate-850/50"
+                          className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-sm font-semibold text-[#22201F] transition-colors hover:bg-[#FBF7F0]"
                         >
                           <span>{faq.question}</span>
-                          {isExpanded ? <ChevronUp size={14} className="text-[#86868B]" /> : <ChevronDown size={14} className="text-[#86868B]" />}
+                          <ChevronDown size={16} className={`shrink-0 text-[#8A7E6F] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                         </button>
                         {isExpanded && (
-                          <div className="border-t-2 border-[#E5E5EA]/60 px-4 py-3 text-xs leading-relaxed text-[#86868B]">
-                            {faq.answer}
-                          </div>
+                          <div className="border-t border-[#F2ECDF] px-4 py-3.5 text-sm leading-relaxed text-[#5A534B]">{faq.answer}</div>
                         )}
                       </div>
                     );
                   })}
                 </div>
               </div>
-
             </div>
           </div>
         )}
 
-        {/* ADDITIONAL RESOURCES */}
+        {/* ================= ADDITIONAL RESOURCES ================= */}
         {selectedExam && activeCategory === 'resources' && (
           <div>
-            <div className="flex items-center justify-between border-b-2 border-[#E5E5EA] pb-6 mb-8">
-              <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1 font-semibold text-xs text-blue-500 hover:text-blue-400">
-                <ArrowLeft size={12} />
-                <span>Back to Categories</span>
-              </button>
-              <span className="font-mono text-xs text-[#86868B] uppercase">{currentExamInfo?.title} • Additions</span>
+            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
+            <div className="mt-4 mb-8">
+              <p className={MICRO}>{currentExamInfo?.title} · Additional resources</p>
+              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Additional resources</h2>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2">
-              
-              <div className="rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6">
-                <h3 className="text-sm font-bold text-[#1D1D1F] flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-blue-500" />
-                  Syllabus Blueprints & Topic Weights
-                </h3>
-                <p className="mt-2 text-xs text-[#86868B] leading-relaxed">
-                  A carefully mapped matrix detailing the chapter distribution, sub-topic weights, and relative question occurrence frequencies compiled from the past 10 years of entrance examinations.
+              <div className={`${CARD} flex flex-col p-6`}>
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]"><FileSpreadsheet size={20} /></span>
+                <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F]">Syllabus blueprints & topic weights</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F]">
+                  A mapped matrix of chapter distribution, sub-topic weights and question-occurrence frequencies compiled from the past 10 years of entrance examinations.
                 </p>
                 <div className="mt-5 flex justify-end">
-                  <button
-                    onClick={() => triggerDownload('syllabus-blueprints.pdf')}
-                    className="inline-flex items-center space-x-1 rounded-lg bg-blue-50 px-2.5 py-1.5 font-semibold text-[11px] text-blue-600 hover:bg-blue-100"
-                  >
-                    <Download size={11} />
-                    <span>Download Matrix (820 KB)</span>
-                  </button>
+                  <button onClick={() => triggerDownload('syllabus-blueprints.pdf')} className={PILL_SOFT}><Download size={12} /> Download matrix (820 KB)</button>
                 </div>
               </div>
 
-              <div className="rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] p-6">
-                <h3 className="text-sm font-bold text-[#1D1D1F] flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-indigo-500" />
-                  Formula & Fundamental Constant Sheets
-                </h3>
-                <p className="mt-2 text-xs text-[#86868B] leading-relaxed">
-                  A rapid-revision pocket formula PDF covering electromagnetic vectors, rotational momentums, coordinate calculus limits, and key physical constants (Planck, Boltzmann, Speed of Light).
+              <div className={`${CARD} flex flex-col p-6`}>
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F7EFD9] text-[#8A6A16]"><BookOpen size={20} /></span>
+                <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F]">Formula & fundamental constant sheets</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F]">
+                  A rapid-revision pocket PDF covering electromagnetic vectors, rotational momenta, calculus limits and key physical constants (Planck, Boltzmann, speed of light).
                 </p>
                 <div className="mt-5 flex justify-end">
-                  <button
-                    onClick={() => triggerDownload('formula-pocket-sheets.pdf')}
-                    className="inline-flex items-center space-x-1 rounded-lg bg-indigo-50 px-2.5 py-1.5 font-semibold text-[11px] text-indigo-600 hover:bg-indigo-100"
-                  >
-                    <Download size={11} />
-                    <span>Download Sheets (1.4 MB)</span>
-                  </button>
+                  <button onClick={() => triggerDownload('formula-pocket-sheets.pdf')} className={PILL_SOFT}><Download size={12} /> Download sheets (1.4 MB)</button>
                 </div>
               </div>
-
             </div>
           </div>
         )}
 
       </div>
 
-      {/* ================= Watch Video Modal Overlay ================= */}
+      {/* ================= WATCH VIDEO MODAL ================= */}
       {activeVideoModal && (
-        <div className="fixed inset-0 z-55 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="relative w-full max-w-2xl overflow-hidden rounded-[12px] bg-[#FFFFFF] shadow-2xl border-2 border-[#E5E5EA]">
-            <div className="flex items-center justify-between border-b-2 border-[#E5E5EA] px-5 py-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <button aria-label="Close" onClick={() => setActiveVideoModal(null)} className="absolute inset-0 cursor-default bg-[#22201F]/40 backdrop-blur-[2px]" />
+          <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-[#EAE1D2] bg-white shadow-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-[#EFE7D8] px-5 py-4">
               <div>
-                <span className="font-mono text-[9px] uppercase font-bold text-blue-600">{activeVideoModal.subject} • {activeVideoModal.chapter}</span>
-                <h3 className="text-sm font-bold text-[#1D1D1F]">{activeVideoModal.title}</h3>
+                <span className={MICRO}>{activeVideoModal.subject} · {activeVideoModal.chapter}</span>
+                <h3 className="dash-serif mt-0.5 text-lg font-semibold text-[#22201F]">{activeVideoModal.title}</h3>
               </div>
-              <button
-                onClick={() => setActiveVideoModal(null)}
-                className="rounded-lg p-1.5 text-[#86868B] hover:bg-gray-100:bg-slate-800"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            
-            {/* Embedded video simulation player */}
-            <div className="aspect-video w-full bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 animate-pulse">
-                <VideoIcon size={24} />
-              </div>
-              <p className="mt-4 font-sans text-sm font-semibold text-[#1D1D1F]">Interactive Lecture Player</p>
-              <p className="mt-1 font-mono text-[10px] text-slate-400 max-w-sm">
-                [Simulating stream from: {activeVideoModal.youtubeLink}]
-              </p>
-              <div className="mt-5 flex space-x-3">
-                <button
-                  onClick={() => window.open(activeVideoModal.youtubeLink, '_blank')}
-                  className="inline-flex items-center space-x-1.5 rounded-lg bg-[#FFFFFF] px-3 py-1.5 font-semibold text-[11px] text-[#1D1D1F] hover:bg-gray-100"
-                >
-                  <ExternalLink size={12} />
-                  <span>Open YouTube Link</span>
-                </button>
-              </div>
+              <button onClick={() => setActiveVideoModal(null)} className="rounded-lg p-1.5 text-[#8A7E6F] transition-colors hover:bg-[#F6F2EA] hover:text-[#22201F]"><X size={18} /></button>
             </div>
 
-            <div className="p-5 border-t-2 border-[#E5E5EA]">
-              <p className="text-xs text-[#86868B] leading-relaxed">
-                {activeVideoModal.description}
-              </p>
-              <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-[#86868B]">
-                <span>Duration: {activeVideoModal.duration}</span>
-                <span>Instructor: Prof. Ajesh Joe</span>
+            <div className="flex aspect-video w-full flex-col items-center justify-center bg-[#22201F] p-4 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#D9C2A2]/15 text-[#D9C2A2]">
+                <Play size={24} className="ml-0.5" fill="currentColor" />
+              </div>
+              <p className="mt-4 text-sm font-semibold text-white">Interactive lecture player</p>
+              <p className="dash-mono mt-1 max-w-sm text-[10px] text-white/50">[ simulating stream from {activeVideoModal.youtubeLink} ]</p>
+              <button onClick={() => window.open(activeVideoModal.youtubeLink, '_blank')} className="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-white/20">
+                <ExternalLink size={12} /> Open YouTube link
+              </button>
+            </div>
+
+            <div className="border-t border-[#EFE7D8] p-5">
+              <p className="text-sm leading-relaxed text-[#5A534B]">{activeVideoModal.description}</p>
+              <div className="dash-mono mt-4 flex items-center justify-between text-[11px] text-[#8A7E6F]">
+                <span>Duration · {activeVideoModal.duration}</span>
+                <span>Instructor · Prof. Ajesh Joe</span>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ================= PDF Simulation Reader Overlay ================= */}
+      {/* ================= PDF SIMULATION READER ================= */}
       {activePdfViewer && (
-        <div className="fixed inset-0 z-55 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="relative w-full max-w-3xl overflow-hidden rounded-[12px] bg-[#FFFFFF] shadow-2xl border-2 border-[#E5E5EA]">
-            <div className="flex items-center justify-between border-b-2 border-[#E5E5EA] px-5 py-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <button aria-label="Close" onClick={() => setActivePdfViewer(null)} className="absolute inset-0 cursor-default bg-[#22201F]/40 backdrop-blur-[2px]" />
+          <div className="relative w-full max-w-3xl overflow-hidden rounded-2xl border border-[#EAE1D2] bg-white shadow-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-[#EFE7D8] px-5 py-4">
               <div>
-                <span className="font-mono text-[9px] uppercase font-bold text-blue-600">Interactive Document Viewer</span>
-                <h3 className="text-sm font-bold text-[#1D1D1F]">{activePdfViewer.title}</h3>
+                <span className={MICRO}>Document viewer</span>
+                <h3 className="dash-serif mt-0.5 text-lg font-semibold text-[#22201F]">{activePdfViewer.title}</h3>
               </div>
-              <button
-                onClick={() => setActivePdfViewer(null)}
-                className="rounded-lg p-1.5 text-[#86868B] hover:bg-gray-100:bg-slate-800"
-              >
-                <X size={16} />
-              </button>
+              <button onClick={() => setActivePdfViewer(null)} className="rounded-lg p-1.5 text-[#8A7E6F] transition-colors hover:bg-[#F6F2EA] hover:text-[#22201F]"><X size={18} /></button>
             </div>
-            
-            {/* PDF simulation sheet */}
-            <div className="max-h-[60vh] overflow-y-auto p-8 bg-[#F5F5F7] font-sans text-[#1D1D1F]">
-              <div className="mx-auto max-w-2xl bg-[#FFFFFF] p-10 shadow-[inset_0_-4px_0_rgba(0,0,0,0.5)] border-2 border-[#E5E5EA] rounded">
-                {/* Simulated Header */}
-                <div className="border-b-2 border-[#E5E5EA] pb-4 mb-6 text-center">
-                  <h4 className="font-bold text-base text-[#1D1D1F] uppercase tracking-wider">Prof. Ajesh Joe Academic Repository</h4>
-                  <p className="font-mono text-[9px] text-[#86868B] mt-1">MODULE: {activePdfViewer.fileUrl}</p>
+
+            <div className="max-h-[60vh] overflow-y-auto bg-[#F6F2EA] p-6 sm:p-8">
+              <div className="mx-auto max-w-2xl rounded-xl border border-[#EAE1D2] bg-white p-8 sm:p-10">
+                <div className="mb-6 border-b border-[#EAE1D2] pb-4 text-center">
+                  <h4 className="dash-serif text-base font-semibold text-[#22201F]">Prof. Ajesh Joe · Academic Repository</h4>
+                  <p className="dash-mono mt-1 text-[10px] text-[#8A7E6F]">MODULE · {activePdfViewer.fileUrl}</p>
                 </div>
 
-                {/* Simulated Content */}
-                <div className="space-y-4 text-xs leading-relaxed">
-                  <p className="font-semibold text-sm text-[#1D1D1F]">I. FOUNDATIONAL THEOREMS & BOUNDARIES</p>
+                <div className="space-y-4 text-xs leading-relaxed text-[#5A534B]">
+                  <p className="text-sm font-bold text-[#22201F]">I. Foundational theorems & boundaries</p>
                   <p>
-                    Let S be a piecewise smooth, closed Gaussian surface enclosing a total algebraic charge Q_encl. By establishing the divergence properties of the electrostatic displacement vector D or field vector E, we state the global integral theorem:
+                    Let S be a piecewise-smooth, closed Gaussian surface enclosing a total algebraic charge Q_encl. By establishing the divergence properties of the electrostatic displacement vector D or field vector E, we state the global integral theorem:
                   </p>
-                  <div className="my-4 bg-[#F5F5F7] p-3 text-center font-mono text-[11px] rounded border-2 border-[#E5E5EA]">
-                    ∮_S E • dA = Q_encl / ε_0
+                  <div className="dash-mono my-4 rounded-lg border border-[#EAE1D2] bg-[#FBF7F0] p-3 text-center text-[13px] text-[#4A0E1B]">
+                    ∮_S E · dA = Q_encl / ε_0
                   </div>
-                  <p className="font-semibold text-sm text-[#1D1D1F]">II. COMPREHENSIVE PROOFS & INTEGRATIONS</p>
+                  <p className="text-sm font-bold text-[#22201F]">II. Comprehensive proofs & integrations</p>
                   <p>
                     For a spherically symmetric charge distribution of radial density ρ(r), we construct a concentric Gaussian sphere of radius r. Integrating the isotropic flux yields:
                   </p>
-                  <ul className="list-disc list-inside space-y-1.5 text-[#86868B]">
-                    <li>For r &lt; R: E(r) = Q(r) / (4πε_0 r²) where Q(r) is the integral of 4π(r')² ρ(r') dr'</li>
-                    <li>For r ≥ R: The distribution behaves strictly as a point charge concentrated at the geographic center.</li>
+                  <ul className="list-inside list-disc space-y-1.5">
+                    <li>For r &lt; R: E(r) = Q(r) / (4πε_0 r²), where Q(r) is the integral of 4π(r&#39;)² ρ(r&#39;) dr&#39;</li>
+                    <li>For r ≥ R: the distribution behaves strictly as a point charge concentrated at the centre.</li>
                   </ul>
-                  <p className="font-semibold text-sm text-[#1D1D1F]">III. KEY COMPETITIVE BLOCKERS & DERIVATIONS</p>
+                  <p className="text-sm font-bold text-[#22201F]">III. Key competitive blockers & derivations</p>
                   <p>
-                    Under examinations, problems often couple these radial integrations with dielectric boundary transitions. Recall that the tangential component of the electric field vector is always continuous across interfaces, whereas the normal component undergoes a discontinuity corresponding to the free surface charge density.
+                    Under examinations, problems often couple these radial integrations with dielectric boundary transitions. Recall that the tangential component of the electric field is always continuous across interfaces, whereas the normal component undergoes a discontinuity corresponding to the free surface charge density.
                   </p>
                 </div>
 
-                <div className="mt-8 border-t-2 border-[#E5E5EA] pt-6 text-center text-[10px] font-mono text-[#86868B]">
-                  --- End of Document Preview ---
-                </div>
+                <div className="dash-mono mt-8 border-t border-[#EAE1D2] pt-6 text-center text-[10px] text-[#8A7E6F]">— end of document preview —</div>
               </div>
             </div>
 
-            <div className="p-4 border-t-2 border-[#E5E5EA] bg-[#F5F5F7] flex justify-between items-center">
-              <span className="text-[10px] text-[#86868B]">Secure Client-Side Sandbox Preview</span>
-              <button
-                onClick={() => triggerDownload(activePdfViewer.fileUrl)}
-                className="inline-flex items-center space-x-1.5 rounded-lg bg-blue-500 text-white px-3.5 py-1.5 text-xs font-semibold hover:bg-blue-600"
-              >
-                <Download size={12} />
-                <span>Download Full PDF</span>
-              </button>
+            <div className="flex items-center justify-between border-t border-[#EFE7D8] bg-[#FBF7F0] px-5 py-3.5">
+              <span className="text-[11px] text-[#8A7E6F]">Secure client-side sandbox preview</span>
+              <button onClick={() => triggerDownload(activePdfViewer.fileUrl)} className={PRIMARY_BTN}><Download size={13} /> Download full PDF</button>
             </div>
           </div>
         </div>
