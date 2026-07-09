@@ -157,7 +157,7 @@ export const INITIAL_VIDEOS: Video[] = [
     subject: 'Chemistry',
     chapter: 'Electrostatics',
     title: 'Visualizing Gauss\'s Law & Field Lines',
-    youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeLink: 'https://www.youtube.com/watch?v=g-lWKa20Z5s',
     thumbnail: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80',
     description: 'An intuitive, geometric lecture on electric field fluxes, Gauss\'s surfaces, and electrostatic fields in conductors.',
     duration: '45:12'
@@ -168,7 +168,7 @@ export const INITIAL_VIDEOS: Video[] = [
     subject: 'Mathematics',
     chapter: 'Calculus',
     title: 'Understanding Limits & Continuity Geometrically',
-    youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeLink: 'https://www.youtube.com/watch?v=g-lWKa20Z5s',
     thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80',
     description: 'Breaking down the concept of infinitesimals, limits, and continuous curves through dynamic graph visualizations.',
     duration: '52:40'
@@ -181,7 +181,7 @@ export const INITIAL_VIDEOS: Video[] = [
     subject: 'Chemistry',
     chapter: 'Rotational Dynamics',
     title: 'Rigorous Angular Momentum Conservation Analysis',
-    youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeLink: 'https://www.youtube.com/watch?v=g-lWKa20Z5s',
     thumbnail: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=600&q=80',
     description: 'Solving complex multi-body rotation problems, rolling with slipping, and torque-free precession conceptually.',
     duration: '1:12:15'
@@ -194,7 +194,7 @@ export const INITIAL_VIDEOS: Video[] = [
     subject: 'Chemistry',
     chapter: 'Optics',
     title: 'Wave Optics: Interference & Polarization',
-    youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    youtubeLink: 'https://www.youtube.com/watch?v=g-lWKa20Z5s',
     thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80',
     description: 'Visual breakdown of coherent sources, double-slit patterns, polarization vectors, and Malus\'s Law.',
     duration: '38:50'

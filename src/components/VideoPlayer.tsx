@@ -78,7 +78,7 @@ export function VideoPlayer({ videoId, autoplay = false, onEnd, className = '' }
         ref={iframeRef}
         src={embedUrl}
         title="Lecture video"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
         onLoad={() => setLoaded(true)}

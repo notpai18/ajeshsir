@@ -79,6 +79,7 @@ export function getYoutubeEmbedUrl(
     ...(options.autoplay ? { autoplay: '1' } : {}),
     ...(options.start ? { start: String(options.start) } : {}),
     ...(options.enableJsApi !== false ? { enablejsapi: '1', origin: window.location.origin } : {}),
+    vq: 'hd1080',
   });
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
