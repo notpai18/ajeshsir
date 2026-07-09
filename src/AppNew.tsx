@@ -259,8 +259,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
 
   // ─── Main Render ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-300">
-
+    <div className={`min-h-screen flex flex-col ${currentView === 'professor' ? 'bg-[#F6F2EA]' : 'bg-[#F5F5F7]'} text-[#1D1D1F] transition-colors duration-300`}>
       {/* Sticky Top Navbar */}
       <Navbar
         theme={theme}
@@ -293,6 +292,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
             practiceSheets={state.practiceSheets}
             doubts={state.doubts}
             faqs={INITIAL_FAQS}
+            announcements={state.announcements}
             onAddDoubt={handleAddDoubt}
             onIncrementNoteDownload={handleIncrementNoteDownload}
           />

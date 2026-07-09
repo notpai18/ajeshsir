@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
   Search,
   Filter,
@@ -27,7 +27,7 @@ import {
   GraduationCap,
   ArrowRight
 } from 'lucide-react';
-import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ } from '../types';
+import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement } from '../types';
 import { FileUpload } from './FileUpload';
 import { uploadDoubtAttachment } from '../services/doubtsService';
 
@@ -39,6 +39,7 @@ interface StudentDashboardProps {
   practiceSheets: PracticeSheet[];
   doubts: Doubt[];
   faqs: FAQ[];
+  announcements: Announcement[];
   onAddDoubt: (doubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt'>) => void;
   onIncrementNoteDownload: (id: string) => void;
 }
@@ -51,6 +52,7 @@ export default function StudentDashboard({
   practiceSheets,
   doubts,
   faqs,
+  announcements,
   onAddDoubt,
   onIncrementNoteDownload
 }: StudentDashboardProps) {
@@ -233,6 +235,44 @@ export default function StudentDashboard({
     <div className="bg-[#F5F5F7] py-12 transition-colors duration-300 text-[#1D1D1F]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
+        {/* ================= READ-ONLY NOTICES STRIP ================= */}
+        {!selectedExam && announcements.length > 0 && (
+          <div className="mb-8 overflow-hidden rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100/50 p-4 shadow-sm relative">
+            <div className="absolute top-0 bottom-0 left-0 w-1 bg-[#0071E3]" />
+            <div className="flex items-center space-x-3 mb-3">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-[#0071E3]">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+              </span>
+              <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] font-black text-[#0071E3]">
+                Professor Announcements
+              </h3>
+            </div>
+            <div className="space-y-3">
+              {[...announcements].sort((a, b) => {
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+              }).slice(0, 3).map(ann => (
+                <div key={ann.id} className="bg-white/60 rounded-lg p-3 text-sm text-[#1D1D1F] border border-white flex items-start space-x-2">
+                  {ann.pinned && (
+                    <span className="mt-0.5 text-orange-500 shrink-0">
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11V5.5C16 3.567 14.433 2 12.5 2C10.567 2 9 3.567 9 5.5V11L7 13V15H11V21L12.5 23L14 21V15H18V13L16 11Z"/></svg>
+                    </span>
+                  )}
+                  <div className="flex-1">
+                    <p className="font-medium text-[#1D1D1F] text-[13px]">{ann.title}</p>
+                    <p className="mt-1 text-[#86868B] text-xs leading-relaxed">{ann.body}</p>
+                    <div className="mt-2 flex items-center text-[10px] font-semibold text-[#86868B] space-x-3">
+                      <span className="bg-white px-2 py-0.5 rounded-full border border-gray-100">{new Date(ann.createdAt).toLocaleDateString()}</span>
+                      {ann.category !== 'general' && <span className="bg-blue-50 text-[#0071E3] px-2 py-0.5 rounded-full capitalize">{ann.category}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ================= BREADCRUMBS ================= */}
         {(selectedExam || activeCategory) && (
           <nav className="mb-6 flex flex-wrap items-center space-x-2 text-[0.85rem] font-medium text-[#86868B]">
