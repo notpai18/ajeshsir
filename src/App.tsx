@@ -22,22 +22,11 @@ const LOCAL_STORAGE_KEYS = {
   PYQS: 'prof_portal_pyqs_v1',
   SHEETS: 'prof_portal_sheets_v1',
   DOUBTS: 'prof_portal_doubts_v1',
-  DARK_MODE: 'prof_portal_dark_mode_v1',
   USER_ROLE: 'prof_portal_user_role_v1',
   VIEW: 'prof_portal_view_v1'
 };
 
 export default function App() {
-  // Theme State
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.DARK_MODE);
-      return saved ? JSON.parse(saved) : false;
-    } catch {
-      return false;
-    }
-  });
-
   // View States
   const [currentView, setCurrentView] = useState<'home' | 'selection' | 'student' | 'professor' | 'about' | 'contact'>(() => {
     try {
@@ -103,23 +92,6 @@ export default function App() {
     }
   });
 
-  // Effect to toggle CSS Dark Class
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
-    try {
-      localStorage.setItem(LOCAL_STORAGE_KEYS.DARK_MODE, JSON.stringify(darkMode));
-    } catch (e) {
-      console.warn('LocalStorage save error', e);
-    }
-  }, [darkMode]);
-
   // Synchronize navigation and roles back to localStorage
   useEffect(() => {
     try {
@@ -168,10 +140,6 @@ export default function App() {
   const handleSelectRole = (selected: 'student' | 'professor') => {
     setUserRole(selected);
     setCurrentView(selected === 'student' ? 'student' : 'professor');
-  };
-
-  const handleToggleDarkMode = () => {
-    setDarkMode(!darkMode);
   };
 
   // NOTES CRUD
@@ -273,7 +241,7 @@ export default function App() {
   // ================= MAIN RENDER ROUTER =================
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#111112] text-white transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-[#F5F5F7] text-[#1D1D1F] transition-colors duration-300">
       
       {/* Sticky Top Navbar */}
       <Navbar
@@ -281,8 +249,6 @@ export default function App() {
         onNavigate={setCurrentView}
         userRole={userRole}
         onRoleChange={setUserRole}
-        darkMode={darkMode}
-        onToggleDarkMode={handleToggleDarkMode}
       />
 
       {/* Main Core View Area */}
