@@ -38,8 +38,8 @@ export default function SelectionPage({ onSelectRole }: SelectionPageProps) {
             id="role-card-student"
           >
             {/* Top Icon Area */}
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#111112] text-[#F1E194] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-colors">
-              <BookOpen size={22} />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#111112] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-colors">
+              <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Graduation%20Cap.png" alt="Student" className="h-8 w-8 drop-shadow-sm" />
             </div>
 
             {/* Typography */}
@@ -64,8 +64,8 @@ export default function SelectionPage({ onSelectRole }: SelectionPageProps) {
             id="role-card-professor"
           >
             {/* Top Icon Area */}
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#111112] text-red-500 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-colors">
-              <ShieldCheck size={22} />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#111112] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-colors">
+              <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Briefcase.png" alt="Professor" className="h-8 w-8 drop-shadow-sm" />
             </div>
 
             {/* Typography */}
