@@ -16,8 +16,6 @@ import {
   Eye,
   ChevronDown,
   ChevronUp,
-  X,
-  ExternalLink,
   Send,
   FileSpreadsheet,
   Award,
@@ -30,8 +28,54 @@ import {
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement } from '../types';
 import { FileUpload } from './FileUpload';
 import { uploadDoubtAttachment } from '../services/doubtsService';
+import { VideoWatchModal } from './VideoWatchModal';
+import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
+
+// ─── Card thumbnail helper (maxresdefault → hqdefault fallback) ───────────────
+function CardThumbnail({
+  src,
+  alt,
+  fallbackId,
+}: {
+  src: string;
+  alt: string;
+  fallbackId: string | null;
+}) {
+  const [imgSrc, setImgSrc] = React.useState(src);
+  const [errored, setErrored] = React.useState(false);
+
+  React.useEffect(() => {
+    setImgSrc(src);
+    setErrored(false);
+  }, [src]);
+
+  const handleError = () => {
+    if (!errored && fallbackId && imgSrc.includes('maxresdefault')) {
+      setImgSrc(getYoutubeThumbnail(fallbackId, 'hqdefault'));
+      setErrored(true);
+    }
+  };
+
+  if (!imgSrc) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-[#0f0f0f]">
+        <VideoIcon size={24} className="text-white/20" />
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={imgSrc}
+      alt={alt}
+      onError={handleError}
+      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+    />
+  );
+}
 
 interface StudentDashboardProps {
+
   exams: ExamInfo[];
   notes: Note[];
   videos: Video[];
@@ -618,16 +662,16 @@ export default function StudentDashboard({
               </div>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredVideos.map((video) => (
+                {filteredVideos.map((video) => {
+                  const ytId = extractYouTubeId(video.youtubeLink);
+                  const thumbSrc = ytId
+                    ? getYoutubeThumbnail(ytId, 'maxresdefault')
+                    : (video.thumbnail || '');
+                  return (
                   <div key={video.id} className="group overflow-hidden rounded-[12px] border-2 border-[#E5E5EA] bg-[#FFFFFF] shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]">
-                    {/* Thumbnail placeholder with play button overlay */}
-                    <div className="relative aspect-video w-full bg-gray-100 overflow-hidden">
-                      <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        referrerPolicy="no-referrer"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-102"
-                      />
+                    {/* Thumbnail with YouTube auto-generated image */}
+                    <div className="relative aspect-video w-full bg-[#0f0f0f] overflow-hidden">
+                      <CardThumbnail src={thumbSrc} alt={video.title} fallbackId={ytId} />
                       <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
                         <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FFFFFF]/90 text-blue-600 shadow-[inset_0_-4px_0_rgba(0,0,0,0.5)] transform group-hover:scale-105 transition-transform">
                           <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 ml-0.5">
@@ -635,7 +679,7 @@ export default function StudentDashboard({
                           </svg>
                         </div>
                       </div>
-                      <span className="absolute bottom-2 right-2 rounded bg-black/72 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#1D1D1F] uppercase">
+                      <span className="absolute bottom-2 right-2 rounded bg-black/72 px-1.5 py-0.5 font-mono text-[10px] font-bold text-white uppercase">
                         {video.duration}
                       </span>
                     </div>
@@ -652,14 +696,15 @@ export default function StudentDashboard({
                       
                       <button
                         onClick={() => setActiveVideoModal(video)}
-                        className="mt-5 w-full inline-flex items-center justify-center space-x-2 rounded-[12px] bg-gray-900 text-white px-3 py-2.5 text-xs font-semibold hover:bg-gray-800#111112]:bg-[#FFFFFF]"
+                        className="mt-5 w-full inline-flex items-center justify-center space-x-2 rounded-[12px] bg-gray-900 text-white px-3 py-2.5 text-xs font-semibold hover:bg-gray-800 transition-colors"
                       >
                         <VideoIcon size={13} />
                         <span>Watch Lecture</span>
                       </button>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -1174,54 +1219,14 @@ export default function StudentDashboard({
 
       </div>
 
-      {/* ================= Watch Video Modal Overlay ================= */}
+      {/* ================= Premium YouTube Watch Modal ================= */}
       {activeVideoModal && (
-        <div className="fixed inset-0 z-55 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="relative w-full max-w-2xl overflow-hidden rounded-[12px] bg-[#FFFFFF] shadow-2xl border-2 border-[#E5E5EA]">
-            <div className="flex items-center justify-between border-b-2 border-[#E5E5EA] px-5 py-4">
-              <div>
-                <span className="font-mono text-[9px] uppercase font-bold text-blue-600">{activeVideoModal.subject} • {activeVideoModal.chapter}</span>
-                <h3 className="text-sm font-bold text-[#1D1D1F]">{activeVideoModal.title}</h3>
-              </div>
-              <button
-                onClick={() => setActiveVideoModal(null)}
-                className="rounded-lg p-1.5 text-[#86868B] hover:bg-gray-100:bg-slate-800"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            
-            {/* Embedded video simulation player */}
-            <div className="aspect-video w-full bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-500/10 text-blue-500 animate-pulse">
-                <VideoIcon size={24} />
-              </div>
-              <p className="mt-4 font-sans text-sm font-semibold text-[#1D1D1F]">Interactive Lecture Player</p>
-              <p className="mt-1 font-mono text-[10px] text-slate-400 max-w-sm">
-                [Simulating stream from: {activeVideoModal.youtubeLink}]
-              </p>
-              <div className="mt-5 flex space-x-3">
-                <button
-                  onClick={() => window.open(activeVideoModal.youtubeLink, '_blank')}
-                  className="inline-flex items-center space-x-1.5 rounded-lg bg-[#FFFFFF] px-3 py-1.5 font-semibold text-[11px] text-[#1D1D1F] hover:bg-gray-100"
-                >
-                  <ExternalLink size={12} />
-                  <span>Open YouTube Link</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="p-5 border-t-2 border-[#E5E5EA]">
-              <p className="text-xs text-[#86868B] leading-relaxed">
-                {activeVideoModal.description}
-              </p>
-              <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-[#86868B]">
-                <span>Duration: {activeVideoModal.duration}</span>
-                <span>Instructor: Prof. Ajesh Joe</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <VideoWatchModal
+          video={activeVideoModal}
+          playlist={filteredVideos}
+          onClose={() => setActiveVideoModal(null)}
+          onSelectVideo={(v) => setActiveVideoModal(v)}
+        />
       )}
 
 

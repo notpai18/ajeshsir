@@ -32,7 +32,9 @@ import {
   Check,
   CornerDownRight,
   RotateCcw,
-  MoreVertical
+  MoreVertical,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { FileUpload } from './FileUpload';
 import {
@@ -46,6 +48,7 @@ import {
   Announcement,
   AnnouncementCategory
 } from '../types';
+import { extractYouTubeId, getYoutubeThumbnail, isValidYouTubeUrl } from '../lib/youtube';
 
 /* ------------------------------------------------------------------ *
  * Design tokens — a warm, light "professor's study" system built on
@@ -221,10 +224,99 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
+/* ─── YouTubeLinkField — smart URL input with live validation preview ───────── */
+function YouTubeLinkField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [touched, setTouched] = React.useState(false);
+  const [thumbError, setThumbError] = React.useState(false);
+
+  const videoId = extractYouTubeId(value);
+  const isValid = !!videoId;
+  const showError = touched && value.length > 0 && !isValid;
+  const showOk = touched && isValid;
+  const thumbSrc = videoId ? getYoutubeThumbnail(videoId, 'maxresdefault') : null;
+
+  return (
+    <div className="block">
+      <span className="mb-1.5 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A7E6F]">
+        YouTube URL
+        <span className="normal-case font-normal text-[#A79A88] tracking-normal">
+          — supports all formats (watch, youtu.be, embed, shorts)
+        </span>
+      </span>
+      <div className="relative">
+        <input
+          type="url"
+          className={`w-full rounded-xl border bg-[#FBF7F0] px-3.5 py-2.5 pr-10 text-sm text-[#22201F] placeholder:text-[#B3A996] outline-none transition ${
+            showError
+              ? 'border-[#B23B2E]/60 focus:border-[#B23B2E]/80 focus:ring-4 focus:ring-[#B23B2E]/10'
+              : showOk
+              ? 'border-[#2F6D4E]/60 focus:border-[#2F6D4E]/80 focus:ring-4 focus:ring-[#2F6D4E]/10 bg-white'
+              : 'border-[#E3D8C5] focus:border-[#4A0E1B]/50 focus:bg-white focus:ring-4 focus:ring-[#4A0E1B]/10'
+          }`}
+          required
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setThumbError(false);
+          }}
+          onBlur={() => setTouched(true)}
+          placeholder="https://www.youtube.com/watch?v=… or https://youtu.be/…"
+        />
+        {showOk && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#2F6D4E]">
+            <CheckCircle2 size={16} />
+          </span>
+        )}
+        {showError && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#B23B2E]">
+            <AlertCircle size={16} />
+          </span>
+        )}
+      </div>
+
+      {showError && (
+        <p className="mt-1.5 text-[11px] text-[#B23B2E]">
+          Couldn't extract a video ID from this URL. Please paste a valid YouTube link.
+        </p>
+      )}
+
+      {showOk && thumbSrc && !thumbError && (
+        <div className="mt-3 flex items-start gap-3 rounded-xl border border-[#E7EFE9] bg-[#F4F8F5] p-3">
+          <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-lg bg-[#0f0f0f]">
+            <img
+              src={thumbSrc}
+              alt="Preview"
+              className="h-full w-full object-cover"
+              onError={() => setThumbError(true)}
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <svg viewBox="0 0 24 24" fill="white" className="h-5 w-5 drop-shadow ml-0.5 opacity-90">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#2F6D4E]">
+              ✓ Valid YouTube URL
+            </p>
+            <p className="mt-0.5 font-mono text-[10px] text-[#8A7E6F] break-all">
+              Video ID: <span className="text-[#22201F] font-semibold">{videoId}</span>
+            </p>
+            <p className="mt-1 text-[10px] text-[#8A7E6F]">
+              Thumbnail auto-generated · No manual upload needed
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ *
  * Props
  * ------------------------------------------------------------------ */
 interface ProfessorDashboardProps {
+
   exams: ExamInfo[];
   notes: Note[];
   videos: Video[];
@@ -349,7 +441,7 @@ export default function ProfessorDashboard({
 
   // Forms
   const [noteForm, setNoteForm] = useState({ course: 'jee-main' as ExamType, subject: '', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
-  const [videoForm, setVideoForm] = useState({ course: 'jee-main' as ExamType, subject: '', chapter: '', title: '', youtubeLink: '', thumbnail: '', description: '', duration: '' });
+  const [videoForm, setVideoForm] = useState({ course: 'jee-main' as ExamType, subject: '', chapter: '', title: '', youtubeLink: '', description: '', duration: '' });
   const [pyqForm, setPyqForm] = useState({ course: 'jee-main' as ExamType, subject: '', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium' as 'Easy' | 'Medium' | 'Hard', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '' });
   const [sheetForm, setSheetForm] = useState({ course: 'jee-main' as ExamType, subject: '', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
   const [annForm, setAnnForm] = useState({ title: '', body: '', category: 'general' as AnnouncementCategory, pinned: false });
@@ -484,12 +576,12 @@ export default function ProfessorDashboard({
     setActiveModal('edit-note');
   };
   const openAddVideo = () => {
-    setVideoForm({ course: 'jee-main', subject: '', chapter: '', title: '', youtubeLink: '', thumbnail: '', description: '', duration: '' });
+    setVideoForm({ course: 'jee-main', subject: '', chapter: '', title: '', youtubeLink: '', description: '', duration: '' });
     setActiveTab('videos');
     setActiveModal('add-video');
   };
   const openEditVideo = (v: Video) => {
-    setVideoForm({ course: v.course, subject: v.subject, chapter: v.chapter, title: v.title, youtubeLink: v.youtubeLink, thumbnail: v.thumbnail, description: v.description, duration: v.duration });
+    setVideoForm({ course: v.course, subject: v.subject, chapter: v.chapter, title: v.title, youtubeLink: v.youtubeLink, description: v.description, duration: v.duration });
     setSelectedItemId(v.id);
     setActiveModal('edit-video');
   };
@@ -571,15 +663,20 @@ export default function ProfessorDashboard({
   };
   const handleVideoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Auto-generate thumbnail from the YouTube URL
+    const videoId = extractYouTubeId(videoForm.youtubeLink);
+    const autoThumbnail = videoId
+      ? getYoutubeThumbnail(videoId, 'maxresdefault')
+      : 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80';
     if (activeModal === 'add-video') {
       onAddVideo({
         ...videoForm,
         youtubeLink: videoForm.youtubeLink || 'https://youtube.com',
-        thumbnail: videoForm.thumbnail || 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80',
+        thumbnail: autoThumbnail,
         duration: videoForm.duration || '45:00'
       });
     } else if (selectedItemId) {
-      onEditVideo(selectedItemId, videoForm);
+      onEditVideo(selectedItemId, { ...videoForm, thumbnail: autoThumbnail });
     }
     closeModal();
   };
@@ -1473,7 +1570,7 @@ export default function ProfessorDashboard({
       )}
 
       {(activeModal === 'add-video' || activeModal === 'edit-video') && (
-        <Modal title={activeModal === 'add-video' ? 'Add video lecture' : 'Edit video lecture'} subtitle="Linked lecture shown in the student library" onClose={closeModal}>
+        <Modal title={activeModal === 'add-video' ? 'Add video lecture' : 'Edit video lecture'} subtitle="Paste a YouTube URL — the player will embed directly in the student portal" onClose={closeModal}>
           <form onSubmit={handleVideoSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <Field label="Exam / course">
@@ -1498,12 +1595,13 @@ export default function ProfessorDashboard({
             <Field label="Lecture title">
               <input className={INPUT} required value={videoForm.title} onChange={(e) => setVideoForm({ ...videoForm, title: e.target.value })} placeholder="Visualizing Gauss's Law" />
             </Field>
-            <Field label="YouTube / stream link">
-              <input className={INPUT} type="url" value={videoForm.youtubeLink} onChange={(e) => setVideoForm({ ...videoForm, youtubeLink: e.target.value })} placeholder="https://youtube.com/…" />
-            </Field>
-            <Field label="Thumbnail image URL">
-              <input className={INPUT} value={videoForm.thumbnail} onChange={(e) => setVideoForm({ ...videoForm, thumbnail: e.target.value })} placeholder="Image URL…" />
-            </Field>
+
+            {/* YouTube URL field with live validation and thumbnail preview */}
+            <YouTubeLinkField
+              value={videoForm.youtubeLink}
+              onChange={(v) => setVideoForm({ ...videoForm, youtubeLink: v })}
+            />
+
             <Field label="Description">
               <textarea className={INPUT} required rows={2} value={videoForm.description} onChange={(e) => setVideoForm({ ...videoForm, description: e.target.value })} placeholder="An intuitive, geometric lecture on…" />
             </Field>
