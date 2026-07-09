@@ -37,7 +37,6 @@ import { PDFViewer } from './pdf/PDFViewer';
 import { FileUpload } from './FileUpload';
 import { uploadDoubtAttachment } from '../services/doubtsService';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
-import { PDFViewer } from './pdf/PDFViewer';
 import type { PDFDocumentInfo } from './pdf/PDFContext';
 import { PremiumCard } from './PremiumCard';
 
