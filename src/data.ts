@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ } from './types';
+import { ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement } from './types';
 
 export const EXAMS: ExamInfo[] = [
   {
@@ -331,6 +331,33 @@ export const INITIAL_DOUBTS: Doubt[] = [
     question: 'Does the fringe width in Young\'s Double Slit Experiment change if the whole apparatus is immersed in water? How do we calculate the new fringe width?',
     isAnswered: false,
     createdAt: '2026-07-08T18:45:00Z'
+  }
+];
+
+export const INITIAL_ANNOUNCEMENTS: Announcement[] = [
+  {
+    id: 'ann-1',
+    title: 'New JEE Advanced Rotational Dynamics notes are live',
+    body: 'A fresh, rigorous set of notes on rigid-body collisions and angular impulse has just been added to the JEE Advanced library. Pair it with the Level-2 practice sheet for best results.',
+    category: 'resource',
+    pinned: true,
+    createdAt: '2026-07-08T10:00:00Z'
+  },
+  {
+    id: 'ann-2',
+    title: 'Doubt-clearing window: every Sunday, 6–8 PM',
+    body: 'From this week onwards, submitted doubts will be answered in a dedicated Sunday evening session. Post your questions before Saturday night to have them addressed first.',
+    category: 'schedule',
+    pinned: false,
+    createdAt: '2026-07-06T09:30:00Z'
+  },
+  {
+    id: 'ann-3',
+    title: 'CSIR NET aspirants: revised spectroscopy roadmap',
+    body: 'The molecular spectroscopy sequence has been reordered for a smoother build-up. Start from the quantum foundations note before attempting the contour-integration problems.',
+    category: 'exam',
+    pinned: false,
+    createdAt: '2026-07-02T14:15:00Z'
   }
 ];
 

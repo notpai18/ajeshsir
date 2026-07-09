@@ -78,3 +78,14 @@ export interface FAQ {
   answer: string;
   category: string;
 }
+
+export type AnnouncementCategory = 'general' | 'exam' | 'resource' | 'schedule';
+
+export interface Announcement {
+  id: string;
+  title: string;
+  body: string;
+  category: AnnouncementCategory;
+  pinned: boolean;
+  createdAt: string;
+}

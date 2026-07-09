@@ -13,8 +13,8 @@ import ContactPage from './components/ContactPage';
 import StudentDashboard from './components/StudentDashboard';
 import ProfessorDashboard from './components/ProfessorDashboard';
 
-import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ } from './types';
-import { EXAMS, INITIAL_NOTES, INITIAL_VIDEOS, INITIAL_PYQS, INITIAL_PRACTICE_SHEETS, INITIAL_DOUBTS, INITIAL_FAQS } from './data';
+import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement } from './types';
+import { EXAMS, INITIAL_NOTES, INITIAL_VIDEOS, INITIAL_PYQS, INITIAL_PRACTICE_SHEETS, INITIAL_DOUBTS, INITIAL_FAQS, INITIAL_ANNOUNCEMENTS } from './data';
 
 const LOCAL_STORAGE_KEYS = {
   NOTES: 'prof_portal_notes_v1',
@@ -22,6 +22,7 @@ const LOCAL_STORAGE_KEYS = {
   PYQS: 'prof_portal_pyqs_v1',
   SHEETS: 'prof_portal_sheets_v1',
   DOUBTS: 'prof_portal_doubts_v1',
+  ANNOUNCEMENTS: 'prof_portal_announcements_v1',
   USER_ROLE: 'prof_portal_user_role_v1',
   VIEW: 'prof_portal_view_v1'
 };
@@ -92,6 +93,15 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
     }
   });
 
+  const [announcements, setAnnouncements] = useState<Announcement[]>(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.ANNOUNCEMENTS);
+      return saved ? JSON.parse(saved) : INITIAL_ANNOUNCEMENTS;
+    } catch {
+      return INITIAL_ANNOUNCEMENTS;
+    }
+  });
+
   // Synchronize navigation and roles back to localStorage
   useEffect(() => {
     try {
@@ -132,6 +142,12 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
       localStorage.setItem(LOCAL_STORAGE_KEYS.DOUBTS, JSON.stringify(doubts));
     } catch {}
   }, [doubts]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEYS.ANNOUNCEMENTS, JSON.stringify(announcements));
+    } catch {}
+  }, [announcements]);
 
 
   // ================= STATE HANDLERS (CRUD) =================
@@ -237,6 +253,28 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
     setDoubts(prev => prev.filter(d => d.id !== id));
   };
 
+  // ANNOUNCEMENTS CRUD
+  const handleAddAnnouncement = (newAnnouncement: Omit<Announcement, 'id' | 'createdAt'>) => {
+    const announcement: Announcement = {
+      ...newAnnouncement,
+      id: `ann-custom-${Date.now()}`,
+      createdAt: new Date().toISOString()
+    };
+    setAnnouncements(prev => [announcement, ...prev]);
+  };
+
+  const handleEditAnnouncement = (id: string, updatedFields: Partial<Announcement>) => {
+    setAnnouncements(prev => prev.map(a => a.id === id ? { ...a, ...updatedFields } : a));
+  };
+
+  const handleDeleteAnnouncement = (id: string) => {
+    setAnnouncements(prev => prev.filter(a => a.id !== id));
+  };
+
+  const handleTogglePinAnnouncement = (id: string) => {
+    setAnnouncements(prev => prev.map(a => a.id === id ? { ...a, pinned: !a.pinned } : a));
+  };
+
 
   // ================= MAIN RENDER ROUTER =================
 
@@ -288,6 +326,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
             pyqs={pyqs}
             practiceSheets={practiceSheets}
             doubts={doubts}
+            announcements={announcements}
             onAddNote={handleAddNote}
             onEditNote={handleEditNote}
             onDeleteNote={handleDeleteNote}
@@ -302,6 +341,10 @@ export function AppNew({ theme, toggleTheme }: { theme: string, toggleTheme: () 
             onDeletePracticeSheet={handleDeletePracticeSheet}
             onReplyDoubt={handleReplyDoubt}
             onDeleteDoubt={handleDeleteDoubt}
+            onAddAnnouncement={handleAddAnnouncement}
+            onEditAnnouncement={handleEditAnnouncement}
+            onDeleteAnnouncement={handleDeleteAnnouncement}
+            onTogglePinAnnouncement={handleTogglePinAnnouncement}
           />
         )}
 
