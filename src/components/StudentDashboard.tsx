@@ -258,7 +258,7 @@ export default function StudentDashboard({
                   switch(id) {
                     case 'jee-main': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Alembic.png';
                     case 'jee-advanced': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Test%20Tube.png';
-                    case 'neet': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals%20and%20nature/Microbe.png';
+                    case 'neet': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals%20and%20nature/Stethoscope.png';
                     case 'net': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Microscope.png';
                     case 'msc-entrance': return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Graduation%20Cap.png';
                     default: return 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Books.png';
@@ -327,10 +327,8 @@ export default function StudentDashboard({
                 className="group cursor-pointer rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-gray-800 hover:-translate-y-0.5  "
                 id="cat-card-notes"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#1c1c1e] text-[#F1E194]  -[#F1E194]">
-                  <FileText size={18} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white ">📚 Study Notes</h3>
+                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" alt="Notes" className="h-10 w-10" />
+                <h3 className="mt-4 text-base font-bold text-white ">Study Notes</h3>
                 <p className="mt-1.5 text-xs text-gray-400  leading-relaxed">
                   Rigorous, mathematical proof summaries and multi-concept chapter breakdowns.
                 </p>
@@ -342,12 +340,10 @@ export default function StudentDashboard({
                 className="group cursor-pointer rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-gray-800 hover:-translate-y-0.5  "
                 id="cat-card-videos"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#1c1c1e] text-red-600  ">
-                  <VideoIcon size={18} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white ">🎥 Video Lectures</h3>
+                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Clapper%20Board.png" alt="Videos" className="h-10 w-10" />
+                <h3 className="mt-4 text-base font-bold text-white ">Video Lectures</h3>
                 <p className="mt-1.5 text-xs text-gray-400  leading-relaxed">
-                  Conceptual video recordings exploring complex physical and numerical formulations.
+                  Conceptual video recordings exploring complex chemical and numerical formulations.
                 </p>
               </div>
 
@@ -357,10 +353,8 @@ export default function StudentDashboard({
                 className="group cursor-pointer rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-gray-800 hover:-translate-y-0.5  "
                 id="cat-card-pyqs"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-emerald-50 text-emerald-600  ">
-                  <FileSpreadsheet size={18} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white ">📄 Previous Year Questions</h3>
+                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20Facing%20Up.png" alt="PYQs" className="h-10 w-10" />
+                <h3 className="mt-4 text-base font-bold text-white ">Previous Year Questions</h3>
                 <p className="mt-1.5 text-xs text-gray-400  leading-relaxed">
                   Original exam questions alongside comprehensive step-by-step analytical solutions.
                 </p>
@@ -372,12 +366,10 @@ export default function StudentDashboard({
                 className="group cursor-pointer rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-gray-800 hover:-translate-y-0.5  "
                 id="cat-card-sheets"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-indigo-50 text-indigo-600  ">
-                  <FileText size={18} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white ">📝 Practice Sheets</h3>
+                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Memo.png" alt="Practice Sheets" className="h-10 w-10" />
+                <h3 className="mt-4 text-base font-bold text-white ">Practice Sheets</h3>
                 <p className="mt-1.5 text-xs text-gray-400  leading-relaxed">
-                  Selected chapter drills categorized by complexity levels to expand mechanical proficiency.
+                  Selected chapter drills categorized by complexity levels to expand chemical proficiency.
                 </p>
               </div>
 
@@ -387,96 +379,7 @@ export default function StudentDashboard({
                 className="group cursor-pointer rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-gray-800 hover:-translate-y-0.5  "
                 id="cat-card-doubts"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-amber-50 text-amber-600  ">
-                  <HelpCircle size={18} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white ">❓ Doubts Submission</h3>
-                <p className="mt-1.5 text-xs text-gray-400  leading-relaxed">
-                  Ask a direct academic question and browse frequently answered conceptual sheets.
-                </p>
-              </div>
-
-              {/* Category 6: Additional Resources */}
-              <div
-                onClick={() => setActiveCategory('resources')}
-                className="group cursor-pointer rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-6 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)] transition-all hover:border-gray-800 hover:-translate-y-0.5  "
-                id="cat-card-resources"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-purple-50 text-purple-600  ">
-                  <FolderOpen size={18} />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-white ">📂 Additional Resources</h3>
-                <p className="mt-1.5 text-xs text-gray-400  leading-relaxed">
-                  Comprehensive syllabus blueprints, mathematical reference constants, and formulas.
-                </p>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* ================= STEP 3: SUB-RESOURCE PAGES ================= */}
-        
-        {/* NOTES EXPLORER */}
-        {selectedExam && activeCategory === 'notes' && (
-          <div>
-            {/* Header with Search and Filter */}
-            <div className="flex flex-col space-y-4 border-b-2 border-gray-800 pb-6 mb-8 ">
-              <div className="flex items-center justify-between">
-                <button onClick={handleBackToCategories} className="inline-flex items-center space-x-1 font-semibold text-xs text-gray-400 hover:text-[#F1E194]">
-                  <ArrowLeft size={12} />
-                  <span>Back to Categories</span>
-                </button>
-                <span className="font-sans uppercase tracking-[0.2em] font-black text-xs text-gray-400 uppercase">{currentExamInfo?.title} • Study Notes</span>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-12">
-                <div className="relative md:col-span-8">
-                  <Search size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search notes by title, chapter or concepts..."
-                    className="w-full rounded-[12px] border-2 border-gray-800 bg-[#111112]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-red-950 focus:bg-[#1c1c1e]   :border-blue-400"
-                  />
-                </div>
-                <div className="relative md:col-span-4">
-                  <Filter size={14} className="absolute left-3.5 top-3.5 text-gray-400" />
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="w-full appearance-none rounded-[12px] border-2 border-gray-800 bg-[#111112]/30 pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-red-950 focus:bg-[#1c1c1e]   :border-blue-400"
-                  >
-                    {availableSubjects.map((subject) => (
-                      <option key={subject} value={subject}>{subject} Only</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* List */}
-            {filteredNotes.length === 0 ? (
-              <div className="text-center py-12 rounded-[12px] border border-dashed border-gray-800 ">
-                <p className="text-sm text-gray-400 ">No study notes found matching your filters.</p>
-              </div>
-            ) : (
-              <div className="space-y-8">
-                {/* Organize by Subject then Chapter */}
-                {Array.from(new Set(filteredNotes.map(n => n.subject))).map((subj) => (
-                  <div key={subj} className="space-y-4">
-                    <h3 className="border-b-2 border-gray-800 pb-2 text-lg font-bold text-white  ">
-                      {subj}
-                    </h3>
-                    
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {filteredNotes.filter(n => n.subject === subj).map((note) => (
-                        <div key={note.id} className="group rounded-[12px] border-2 border-gray-800 bg-[#1c1c1e] p-5 shadow-[inset_0_-2px_0_rgba(0,0,0,0.5)]  ">
-                          <div className="flex items-start justify-between">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#1c1c1e] text-[#F1E194]  -[#F1E194]">
-                              <FileText size={18} />
-                            </div>
+                <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Memo.png" alt="Practice Sheets" className="h-10 w-10" />
                             <span className="font-sans uppercase tracking-[0.2em] font-black text-[9px] font-bold text-gray-400  uppercase">
                               {note.chapter}
                             </span>

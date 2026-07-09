@@ -9,7 +9,7 @@ export const EXAMS: ExamInfo[] = [
   {
     id: 'jee-main',
     title: 'JEE Main',
-    description: 'Comprehensive resources for JEE Main Physics & Mathematics, including concept sheets and mock drills.',
+    description: 'Comprehensive resources for JEE Main Physical & Organic Chemistry, including concept sheets and mock drills.',
     icon: 'Compass'
   },
   {
@@ -20,14 +20,14 @@ export const EXAMS: ExamInfo[] = [
   },
   {
     id: 'neet',
-    title: 'NEET Physics',
+    title: 'NEET Chemistry',
     description: 'Conceptual theory notes, formula sheets, and speed-accuracy practice booklets specialized for medical aspirants.',
     icon: 'Activity'
   },
   {
     id: 'net',
     title: 'CSIR NET',
-    description: 'Postgraduate-level mathematical physics, classical mechanics, and statistical thermodynamics resources.',
+    description: 'Postgraduate-level quantum chemistry, thermodynamics, and molecular spectroscopy resources.',
     icon: 'BookOpen'
   },
   {
@@ -43,7 +43,7 @@ export const INITIAL_NOTES: Note[] = [
   {
     id: 'note-jm-1',
     course: 'jee-main',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Electrostatics',
     title: 'Gauss\'s Law and Field Formulations',
     description: 'Detailed analysis of electric flux, Gaussian surfaces, and derivation of fields for symmetrical charge distributions.',
@@ -54,7 +54,7 @@ export const INITIAL_NOTES: Note[] = [
   {
     id: 'note-jm-2',
     course: 'jee-main',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Kinematics',
     title: 'Projectile Motion on Inclined Planes',
     description: 'Mathematical breakdowns of trajectory parameters, maximum range derivations, and typical competitive exam patterns.',
@@ -78,7 +78,7 @@ export const INITIAL_NOTES: Note[] = [
   {
     id: 'note-ja-1',
     course: 'jee-advanced',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Rotational Dynamics',
     title: 'Rigid Body Collisions & Angular Impulse',
     description: 'Rigorous mathematical formulations of eccentric impacts, conservation laws during collisions, and rolling constraints.',
@@ -102,7 +102,7 @@ export const INITIAL_NOTES: Note[] = [
   {
     id: 'note-nt-1',
     course: 'neet',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Optics',
     title: 'Wave Optics & Young\'s Double Slit Experiment',
     description: 'Visual derivations of fringe width, coherence criteria, phase differences, and experimental modifications.',
@@ -113,7 +113,7 @@ export const INITIAL_NOTES: Note[] = [
   {
     id: 'note-nt-2',
     course: 'neet',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Thermodynamics',
     title: 'Carnot Engine & Thermodynamic Cycles',
     description: 'Step-by-step indicator diagrams, efficiency calculations, entropy statements, and physical significance.',
@@ -126,7 +126,7 @@ export const INITIAL_NOTES: Note[] = [
   {
     id: 'note-net-1',
     course: 'net',
-    subject: 'Mathematical Physics',
+    subject: 'Mathematical Chemistry',
     chapter: 'Complex Analysis',
     title: 'Cauchy Residual Theorem and Contour Integration',
     description: 'Rigorous proof of the residue theorem and its application to evaluating complex trigonometric and improper integrals.',
@@ -154,7 +154,7 @@ export const INITIAL_VIDEOS: Video[] = [
   {
     id: 'vid-jm-1',
     course: 'jee-main',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Electrostatics',
     title: 'Visualizing Gauss\'s Law & Field Lines',
     youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -178,7 +178,7 @@ export const INITIAL_VIDEOS: Video[] = [
   {
     id: 'vid-ja-1',
     course: 'jee-advanced',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Rotational Dynamics',
     title: 'Rigorous Angular Momentum Conservation Analysis',
     youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -191,7 +191,7 @@ export const INITIAL_VIDEOS: Video[] = [
   {
     id: 'vid-nt-1',
     course: 'neet',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Optics',
     title: 'Wave Optics: Interference & Polarization',
     youtubeLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -206,7 +206,7 @@ export const INITIAL_PYQS: PYQ[] = [
   {
     id: 'pyq-jm-1',
     course: 'jee-main',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Electrostatics',
     year: 2024,
     difficulty: 'Medium',
@@ -232,7 +232,7 @@ export const INITIAL_PYQS: PYQ[] = [
   {
     id: 'pyq-ja-1',
     course: 'jee-advanced',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Rotational Dynamics',
     year: 2024,
     difficulty: 'Hard',
@@ -244,7 +244,7 @@ export const INITIAL_PYQS: PYQ[] = [
   {
     id: 'pyq-ja-2',
     course: 'jee-advanced',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Thermodynamics',
     year: 2022,
     difficulty: 'Hard',
@@ -260,7 +260,7 @@ export const INITIAL_PRACTICE_SHEETS: PracticeSheet[] = [
   {
     id: 'ps-jm-1',
     course: 'jee-main',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Electrostatics',
     title: 'Electrostatic Potential and Capacitors Drill',
     description: '45 targeted multiple-choice questions on capacitor networks, dielectric insertions, and energy storage formulas.',
@@ -282,7 +282,7 @@ export const INITIAL_PRACTICE_SHEETS: PracticeSheet[] = [
   {
     id: 'ps-ja-1',
     course: 'jee-advanced',
-    subject: 'Physics',
+    subject: 'Chemistry',
     chapter: 'Rotational Dynamics',
     title: 'Rigid Body Dynamics Level-2 Practice',
     description: 'Multi-concept integer-type and paragraph problems on rolling on moving planks and gyroscopic torque.',
@@ -296,7 +296,7 @@ export const INITIAL_DOUBTS: Doubt[] = [
     id: 'doubt-1',
     name: 'Siddharth Sharma',
     email: 'siddharth.s@student.in',
-    subject: 'JEE Advanced Physics - Rotational Dynamics',
+    subject: 'JEE Advanced Chemistry - Rotational Dynamics',
     question: 'In a cylinder rolling without slipping down a movable wedge, how do we correctly formulate the constraint relation between the wedge acceleration and the rolling center acceleration?',
     attachmentName: 'constraint-diagram.jpg',
     answerText: 'Excellent question, Siddharth. To link the accelerations: 1) Express the velocity of the contact point of the cylinder with the wedge. 2) Since there is no slipping, this point\'s relative velocity to the wedge must be zero along the tangent. 3) Differentiate this constraint relation. Remember to account for the wedge\'s horizontal acceleration when translating coordinates from the ground frame to the wedge frame. I have uploaded a comprehensive step-by-step vector derivation under the Rotational Dynamics Notes section.',
@@ -327,7 +327,7 @@ export const INITIAL_DOUBTS: Doubt[] = [
     id: 'doubt-4',
     name: 'Meera Nair',
     email: 'meera.nair@neetacademy.com',
-    subject: 'NEET Physics - Wave Optics',
+    subject: 'NEET Chemistry - Wave Optics',
     question: 'Does the fringe width in Young\'s Double Slit Experiment change if the whole apparatus is immersed in water? How do we calculate the new fringe width?',
     isAnswered: false,
     createdAt: '2026-07-08T18:45:00Z'
@@ -350,7 +350,7 @@ export const INITIAL_FAQS: FAQ[] = [
   {
     id: 'faq-3',
     question: 'Can I submit questions or doubts for topics not listed in the exams?',
-    answer: 'While you can submit academic doubts via the Doubt submission tab, priority is given to students preparing for the main syllabus categories: JEE Main, JEE Advanced, NEET Physics, CSIR NET, and M.Sc Entrance exams.',
+    answer: 'While you can submit academic doubts via the Doubt submission tab, priority is given to students preparing for the main syllabus categories: JEE Main, JEE Advanced, NEET Chemistry, CSIR NET, and M.Sc Entrance exams.',
     category: 'doubts'
   },
   {
