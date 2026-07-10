@@ -12,13 +12,6 @@ interface ResourcePageLayoutProps {
 export function ResourcePageLayout({ onBack, backLabel = 'Back to categories', hero, toolbar, children }: ResourcePageLayoutProps) {
   return (
     <div className="animate-[fadeInUp_0.4s_ease-out_forwards]">
-      <button 
-        onClick={onBack} 
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#4A0E1B] transition-colors hover:text-[#380A14] mb-4"
-      >
-        <ArrowLeft size={14} /> {backLabel}
-      </button>
-      
       {hero}
       {toolbar}
       {children}

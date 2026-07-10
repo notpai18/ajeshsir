@@ -24,7 +24,7 @@ import type { Video } from '../types';
 import { VideoPlayer } from './VideoPlayer';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
 import { PremiumCard } from './PremiumCard';
-
+import { BreadcrumbBar } from './BreadcrumbBar';
 // ─── Design constants (from design.md) ───────────────────────────────────────
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
 const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F]/60';
@@ -172,22 +172,19 @@ export function VideoWatchModal({
       >
         {/* ── Header ─────────────────────────────────────────────────────── */}
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[#D9C2A2]/30 bg-white px-4 py-3 sm:px-5">
-          {/* Breadcrumb */}
-          <nav className="flex min-w-0 items-center gap-1.5 text-xs text-[#22201F]/60">
-            <button
-              onClick={onClose}
-              className="shrink-0 font-semibold text-[#22201F] hover:text-[#4A0E1B] transition-colors"
-            >
-              Library
-            </button>
-            <ChevronRight size={12} className="shrink-0 text-[#D9C2A2]" />
-            <span className="shrink-0 font-semibold text-[#22201F]">{examLabel}</span>
-            <ChevronRight size={12} className="shrink-0 text-[#D9C2A2]" />
-            <span className="shrink-0 font-semibold text-[#22201F]">Video Lectures</span>
-            <ChevronRight size={12} className="shrink-0 text-[#D9C2A2]" />
-            <span className="min-w-0 truncate font-bold text-[#4A0E1B]">{video.title}</span>
-          </nav>
-
+          <div className="flex-1 min-w-0">
+            <BreadcrumbBar
+              items={[
+                { id: 'lib', label: 'Library', onClick: onClose },
+                { id: 'exam', label: examLabel },
+                { id: 'cat', label: 'Video Lectures' },
+                { id: 'vid', label: video.title }
+              ]}
+              backLabel="Back"
+              onBack={onClose}
+              className="m-0"
+            />
+          </div>
           {/* Controls */}
           <div className="flex shrink-0 items-center gap-1">
             {/* Toggle sidebar (mobile) */}

@@ -37,10 +37,12 @@ import {
   Star,
   LayoutGrid,
   List,
-  ArrowDownUp
+  ArrowDownUp,
+  Library,
 } from 'lucide-react';
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
 import { ResourceCard, ResourcePageLayout, ResourceHero, ResourceToolbar, ResourceEmptyState, ResourceGrid } from './resources';
+import { BreadcrumbBar } from './BreadcrumbBar';
 import { ExamHero, QuickAccessGrid, FeaturedResource, ResourceOverview, RecentUpdates, DownloadsLeaderboard, ExamSearchToolbar } from './exam';
 import { VideoWatchModal } from './VideoWatchModal';
 import { PDFViewer } from './pdf/PDFViewer';
@@ -430,36 +432,35 @@ export default function StudentDashboard({
           </div>
         )}
 
-        {/* ================= BREADCRUMBS ================= */}
+                {/* ================= BREADCRUMBS ================= */}
         {(selectedExam || activeCategory) && (
-          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#8A7E6F]">
-            <button onClick={handleBackToExams} className="transition-colors hover:text-[#4A0E1B]">Library</button>
-            {selectedExam && (
-              <>
-                <ChevronRight size={13} className="text-[#C0A98B]" />
-                <button
-                  onClick={handleBackToCategories}
-                  className={`transition-colors hover:text-[#4A0E1B] ${!activeCategory ? 'text-[#4A0E1B]' : ''}`}
-                >
-                  {currentExamInfo?.title}
-                </button>
-              </>
-            )}
-            {activeCategory && (
-              <>
-                <ChevronRight size={13} className="text-[#C0A98B]" />
-                <span className="capitalize text-[#4A0E1B]">{activeCategory}</span>
-              </>
-            )}
-          </nav>
+          <BreadcrumbBar
+            backLabel={activeCategory ? "Back to " + (currentExamInfo?.title || "Library") : "Back to Library"}
+            onBack={activeCategory ? handleBackToCategories : handleBackToExams}
+            items={[
+              { id: 'lib', label: 'Library', icon: <Library size={12} />, onClick: handleBackToExams },
+              ...(selectedExam ? [{ 
+                id: 'exam', 
+                label: currentExamInfo?.title || '', 
+                icon: <FlaskConical size={12} />, 
+                onClick: activeCategory ? handleBackToCategories : undefined 
+              }] : []),
+              ...(activeCategory ? [{ 
+                id: 'cat', 
+                label: activeCategory === 'pyqs' ? 'PYQs' : activeCategory, 
+                icon: activeCategory === 'notes' ? <BookOpen size={12} /> : 
+                      activeCategory === 'videos' ? <VideoIcon size={12} /> : 
+                      activeCategory === 'pyqs' ? <FileSpreadsheet size={12} /> :
+                      activeCategory === 'sheets' ? <FileText size={12} /> :
+                      activeCategory === 'doubts' ? <HelpCircle size={12} /> : <FolderOpen size={12} />
+              }] : [])
+            ]}
+          />
         )}
 
         {/* ================= STEP 2: CATEGORY DASHBOARD ================= */}
         {selectedExam && !activeCategory && (
           <div className="animate-[fadeInUp_0.4s_ease-out_forwards]">
-            <button onClick={handleBackToExams} className={`${BACK_BTN} mb-6`} id="back-to-exams-btn">
-              <ArrowLeft size={14} /> Back to examinations
-            </button>
 
             <ExamHero
               title={currentExamInfo?.title || ''}

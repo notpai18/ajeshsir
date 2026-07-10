@@ -10,6 +10,7 @@ import {
   PanelRight, Bookmark, BookmarkCheck, Info
 } from 'lucide-react';
 import { usePDF } from './PDFContext';
+import { BreadcrumbBar } from '../BreadcrumbBar';
 import { downloadPDF } from '../../lib/pdfUrl';
 
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0, 4.0];
@@ -138,15 +139,17 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
       role="toolbar"
       aria-label="PDF viewer toolbar"
     >
-      {/* Back / Close */}
-      <button
-        onClick={onClose}
-        className="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-[#22201F]/80 transition-colors hover:bg-[#F7F3EC] hover:text-[#4A0E1B]"
-        aria-label="Close PDF viewer"
-      >
-        <ArrowLeft size={15} />
-        <span className="hidden sm:inline dash-root">Back</span>
-      </button>
+      <div className="flex-1 flex items-center overflow-hidden">
+        <BreadcrumbBar
+          className="m-0"
+          backLabel="Back"
+          onBack={onClose}
+          items={[
+            { id: 'lib', label: 'Library', onClick: onClose },
+            { id: 'doc', label: docInfo?.title ?? 'Document' }
+          ]}
+        />
+      </div>
 
       <div className={DIVIDER} />
 
@@ -161,14 +164,6 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
       </button>
 
       <div className={DIVIDER} />
-
-      {/* Document Title */}
-      <div className="flex min-w-0 flex-1 items-center gap-2 px-1">
-        <BookOpen size={14} className="shrink-0 text-[#4A0E1B]" />
-        <span className="dash-root truncate text-xs font-semibold text-[#22201F]" title={docInfo?.title}>
-          {docInfo?.title ?? 'Document'}
-        </span>
-      </div>
 
       {/* Page navigation */}
       <div className="flex items-center gap-1">
