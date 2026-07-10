@@ -40,13 +40,15 @@ import {
   ArrowDownUp
 } from 'lucide-react';
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
+import { ResourceCard, ResourcePageLayout, ResourceHero, ResourceToolbar, ResourceEmptyState, ResourceGrid } from './resources';
+import { ExamHero, QuickAccessGrid, FeaturedResource, ResourceOverview, RecentUpdates, DownloadsLeaderboard, ExamSearchToolbar } from './exam';
 import { VideoWatchModal } from './VideoWatchModal';
 import { PDFViewer } from './pdf/PDFViewer';
 import { FileUpload } from './FileUpload';
 import { uploadDoubtAttachment } from '../services/doubtsService';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
 import type { PDFDocumentInfo } from './pdf/PDFContext';
-import { PremiumCard } from './PremiumCard';
+
 import { SUBJECTS, SUBJECT_BADGE } from '../constants/subjects';
 
 /* ------------------------------------------------------------------ *
@@ -152,8 +154,8 @@ export default function StudentDashboard({
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
 
   // Notes View & Sort States
-  const [noteViewMode, setNoteViewMode] = useState<'grid' | 'list'>('grid');
-  const [noteSort, setNoteSort] = useState<'recent' | 'popular'>('recent');
+  const [resourceViewMode, setResourceViewMode] = useState<'grid' | 'list'>('grid');
+  const [resourceSort, setResourceSort] = useState<'recent' | 'popular'>('recent');
 
   // Doubt Form State
   const [doubtForm, setDoubtForm] = useState({
@@ -452,368 +454,342 @@ export default function StudentDashboard({
           </nav>
         )}
 
-
         {/* ================= STEP 2: CATEGORY DASHBOARD ================= */}
         {selectedExam && !activeCategory && (
-          <div>
-            <button onClick={handleBackToExams} className={`${BACK_BTN} mb-4`} id="back-to-exams-btn">
+          <div className="animate-[fadeInUp_0.4s_ease-out_forwards]">
+            <button onClick={handleBackToExams} className={`${BACK_BTN} mb-6`} id="back-to-exams-btn">
               <ArrowLeft size={14} /> Back to examinations
             </button>
 
-            <div className="mb-10 border-b border-[#EAE1D2] pb-8">
-              <div className="flex items-center gap-4">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
-                  {renderExamIcon(currentExamInfo?.icon)}
-                </span>
-                <h2 className="dash-serif text-3xl font-semibold text-[#22201F] sm:text-4xl">
-                  {currentExamInfo?.title} Library
-                </h2>
-              </div>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8A7E6F]">{currentExamInfo?.description}</p>
-            </div>
+            <ExamHero
+              title={currentExamInfo?.title || ''}
+              description={currentExamInfo?.description || ''}
+              stats={{
+                notes: notes.filter(n => n.course === selectedExam).length,
+                videos: videos.filter(v => v.course === selectedExam).length,
+                pyqs: pyqs.filter(p => p.course === selectedExam).length,
+                sheets: practiceSheets.filter(s => s.course === selectedExam).length,
+                downloads: [...notes, ...pyqs, ...practiceSheets].reduce((acc, curr) => acc + (('downloadCount' in curr ? curr.downloadCount : 0) as number), 0)
+              }}
+            />
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {categoryCards.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={`${CARD} group w-full p-6 text-left transition-all duration-200 hover:-translate-y-1 hover:-rotate-1`}
-                  id={`cat-card-${cat.id}`}
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">{cat.icon}</span>
-                    {cat.count !== null && (
-                      <span className="dash-mono rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2.5 py-1 text-[11px] font-medium text-[#8A7E6F]">
-                        {cat.count} {cat.unit}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F]">{cat.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F]">{cat.desc}</p>
-                </button>
-              ))}
+            <ExamSearchToolbar
+              onSearch={setSearchQuery}
+              selectedSubject={selectedSubject}
+              onSubjectSelect={setSelectedSubject}
+            />
+
+            <QuickAccessGrid
+              categories={categoryCards}
+              onSelectCategory={setActiveCategory}
+            />
+            
+            <div className="mt-16 space-y-16">
+              <FeaturedResource 
+                item={notes.filter(n => n.course === selectedExam)[0]} 
+                onPreview={() => {
+                  const item = notes.filter(n => n.course === selectedExam)[0];
+                  if(item) setActivePdfViewer({ title: item.title, fileUrl: item.fileUrl });
+                }}
+                onDownload={() => {
+                  const item = notes.filter(n => n.course === selectedExam)[0];
+                  if(item) handleDownloadFile(item.id, item.fileUrl);
+                }}
+              />
+
+              <ResourceOverview 
+                notesCount={notes.filter(n => n.course === selectedExam).length}
+                videosCount={videos.filter(v => v.course === selectedExam).length}
+                pyqsCount={pyqs.filter(p => p.course === selectedExam).length}
+                sheetsCount={practiceSheets.filter(s => s.course === selectedExam).length}
+              />
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <RecentUpdates updates={announcements.filter(a => a.category === 'exam' || a.category === 'resource')} />
+                <DownloadsLeaderboard items={[...notes].filter(n => n.course === selectedExam).sort((a, b) => (b.downloadCount || 0) - (a.downloadCount || 0)).slice(0, 5)} />
+              </div>
             </div>
           </div>
         )}
 
-        {/* ================= NOTES EXPLORER ================= */}
+{/* ================= NOTES EXPLORER ================= */}
         {selectedExam && activeCategory === 'notes' && (
-          <div className="animate-[fadeInUp_0.4s_ease-out_forwards]">
-            <button onClick={handleBackToCategories} className={`${BACK_BTN} mb-4`}><ArrowLeft size={14} /> Back to categories</button>
-            
-            {/* 1. Premium Hero */}
-            <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-6 sm:p-8 text-white shadow-[0_12px_24px_-12px_rgba(74,14,27,0.5)] mb-8">
-              <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
-              <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D9C2A2]">
-                    {currentExamInfo?.title}
-                  </p>
-                  <h2 className="dash-serif mt-1 text-2xl md:text-3xl font-semibold">Study Notes</h2>
-                  <p className="mt-2 text-sm text-white/70 max-w-md">
-                    Access high-quality study materials, comprehensive chapter summaries, and class notes.
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-4">
-                  <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20 text-center min-w-[100px]">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#D9C2A2]">Total</p>
-                    <p className="dash-mono text-2xl font-bold mt-1">{notes.filter(n => n.course === selectedExam).length}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. Unified Toolbar & 3. Subject Navigation */}
-            <div className={`${CARD} mb-6 flex flex-col p-2 sm:flex-row sm:items-center sm:justify-between gap-2 overflow-hidden`}>
-              <div className="flex flex-1 items-center gap-1 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar pl-2">
-                {availableSubjects.map((subject) => (
-                  <button
-                    key={subject}
-                    onClick={() => setSelectedSubject(subject)}
-                    className={`whitespace-nowrap rounded-lg px-4 py-2 text-[11px] font-bold transition-all ${
-                      selectedSubject === subject
-                        ? 'bg-[#4A0E1B] text-white shadow-md'
-                        : 'text-[#6E645A] hover:bg-[#F6F2EA] hover:text-[#22201F]'
-                    }`}
-                  >
-                    {subject === 'All' ? 'All' : subject}
-                  </button>
-                ))}
-              </div>
-              
-              <div className="flex items-center gap-2 border-t border-[#F2ECDF] pt-2 sm:border-none sm:pt-0 pl-2 pr-2">
-                {/* Search */}
-                <div className="relative w-full sm:w-56 lg:w-64">
-                  <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search notes..."
-                    className="w-full rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] py-2 pl-9 pr-3 text-xs text-[#22201F] placeholder:text-[#B3A996] outline-none transition focus:border-[#4A0E1B]/50 focus:bg-white focus:ring-2 focus:ring-[#4A0E1B]/10"
-                  />
-                </div>
-                
-                {/* Sort Toggle (Visual) */}
-                <button 
-                  onClick={() => setNoteSort(s => s === 'recent' ? 'popular' : 'recent')}
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] text-[#6E645A] transition-colors hover:bg-white hover:text-[#22201F]"
-                  title={`Sort: ${noteSort === 'recent' ? 'Recently Added' : 'Most Popular'}`}
-                >
-                  <ArrowDownUp size={14} />
-                </button>
-
-                {/* View Toggle (Visual) */}
-                <div className="flex h-9 shrink-0 items-center rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] p-1">
-                  <button
-                    onClick={() => setNoteViewMode('grid')}
-                    className={`flex h-full w-8 items-center justify-center rounded-md transition-all ${noteViewMode === 'grid' ? 'bg-white text-[#4A0E1B] shadow-sm' : 'text-[#8A7E6F] hover:text-[#22201F]'}`}
-                  >
-                    <LayoutGrid size={14} />
-                  </button>
-                  <button
-                    onClick={() => setNoteViewMode('list')}
-                    className={`flex h-full w-8 items-center justify-center rounded-md transition-all ${noteViewMode === 'list' ? 'bg-white text-[#4A0E1B] shadow-sm' : 'text-[#8A7E6F] hover:text-[#22201F]'}`}
-                  >
-                    <List size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. Notes Grid & 5. Premium Note Card */}
+          <ResourcePageLayout
+            onBack={handleBackToCategories}
+            hero={
+              <ResourceHero
+                courseTitle={currentExamInfo?.title}
+                title="Study Notes"
+                description="Access high-quality study materials, comprehensive chapter summaries, and class notes."
+                totalCount={notes.filter(n => n.course === selectedExam).length}
+                totalLabel="Total Notes"
+              />
+            }
+            toolbar={
+              <ResourceToolbar
+                subjects={availableSubjects}
+                selectedSubject={selectedSubject}
+                onSubjectChange={setSelectedSubject}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                sortMode={resourceSort}
+                onSortToggle={() => setResourceSort(s => s === 'recent' ? 'popular' : 'recent')}
+                sortLabel={resourceSort === 'recent' ? 'Recently Added' : 'Most Popular'}
+                viewMode={resourceViewMode}
+                onViewModeChange={setResourceViewMode}
+              />
+            }
+          >
             {filteredNotes.length === 0 ? (
-              <EmptyState label="No study notes match your search or subject filter." />
+              <ResourceEmptyState label="No study notes match your search or subject filter." />
             ) : (
-              <div className={`grid gap-5 ${noteViewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+              <ResourceGrid viewMode={resourceViewMode}>
                 {filteredNotes.map((note) => (
-                  <div key={note.id} className={`${CARD} flex flex-col p-5 group transition-all duration-[220ms] hover:-translate-y-1 hover:shadow-[0_12px_24px_-12px_rgba(34,32,31,0.15)]`}>
-                    <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B] transition-colors group-hover:bg-[#4A0E1B] group-hover:text-white">
-                        <FileText size={18} />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-                          <span className="inline-block rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F]">
-                            {note.chapter}
-                          </span>
-                          <SubjectBadge subject={note.subject} />
-                        </div>
-                        <h4 className="text-sm font-bold text-[#22201F] truncate group-hover:text-[#4A0E1B] transition-colors">
-                          {note.title}
-                        </h4>
-                      </div>
-                    </div>
-                    
-                    <p className="mt-3 text-xs leading-relaxed text-[#8A7E6F] line-clamp-2 min-h-[2.5rem]">
-                      {note.description}
-                    </p>
-                    
-                    <div className="mt-4 flex items-center justify-between border-t border-[#F2ECDF] pt-4">
-                      <div className="flex flex-col">
-                        <span className="dash-mono text-[10px] text-[#A79A88]">{note.fileSize}</span>
-                        <span className="dash-mono text-[10px] text-[#A79A88]">{note.downloadCount || 0} downloads</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button onClick={() => setActivePdfViewer({ title: note.title, fileUrl: note.fileUrl })} className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E3D8C5] bg-white text-[#6E645A] transition-colors hover:bg-[#F6F2EA] hover:text-[#22201F]">
-                          <Eye size={14} />
-                        </button>
-                        <button onClick={() => handleDownloadFile(note.id, note.fileUrl)} className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F4E7E5] text-[#4A0E1B] transition-colors hover:bg-[#EEDAD7]">
-                          <Download size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <ResourceCard
+                    key={note.id}
+                    icon={FileText}
+                    title={note.title}
+                    description={note.description}
+                    chapter={note.chapter}
+                    subject={note.subject}
+                    metadata={[
+                      note.fileSize,
+                      `${note.downloadCount || 0} downloads`
+                    ]}
+                    actions={[
+                      {
+                        icon: Eye,
+                        label: 'View',
+                        onClick: () => setActivePdfViewer({ title: note.title, fileUrl: note.fileUrl }),
+                        variant: 'ghost'
+                      },
+                      {
+                        icon: Download,
+                        label: 'Download',
+                        onClick: () => handleDownloadFile(note.id, note.fileUrl),
+                        variant: 'primary'
+                      }
+                    ]}
+                  />
                 ))}
-              </div>
+              </ResourceGrid>
             )}
-          </div>
+          </ResourcePageLayout>
         )}
 
         {/* ================= LECTURES EXPLORER ================= */}
         {selectedExam && activeCategory === 'videos' && (
-          <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
-            <div className="mt-4 mb-6">
-              <p className={MICRO}>{currentExamInfo?.title} · Video lectures</p>
-              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Video lectures</h2>
-            </div>
-
-            <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-              <div className="relative flex-1">
-                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search lectures…" className={`${INPUT} pl-10`} />
-              </div>
-              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={`${INPUT} sm:w-52`}>
-                {availableSubjects.map((subject) => (
-                  <option key={subject} value={subject}>{subject === 'All' ? 'All subjects' : subject}</option>
-                ))}
-              </select>
-            </div>
-
+          <ResourcePageLayout
+            onBack={handleBackToCategories}
+            hero={
+              <ResourceHero
+                courseTitle={currentExamInfo?.title}
+                title="Video Lectures"
+                description="Watch curated chemistry lectures from Prof. Ajesh Joe."
+                totalCount={videos.filter(v => v.course === selectedExam).length}
+                totalLabel="Total Videos"
+              />
+            }
+            toolbar={
+              <ResourceToolbar
+                subjects={availableSubjects}
+                selectedSubject={selectedSubject}
+                onSubjectChange={setSelectedSubject}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                sortMode={resourceSort}
+                onSortToggle={() => setResourceSort(s => s === 'recent' ? 'popular' : 'recent')}
+                sortLabel={resourceSort === 'recent' ? 'Recently Added' : 'Most Popular'}
+                viewMode={resourceViewMode}
+                onViewModeChange={setResourceViewMode}
+              />
+            }
+          >
             {filteredVideos.length === 0 ? (
-              <EmptyState label="No lecture recordings match your search or subject filter." />
+              <ResourceEmptyState label="No lecture recordings match your search or subject filter." />
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <ResourceGrid viewMode={resourceViewMode}>
                 {filteredVideos.map((video) => (
-                  <div key={video.id} className={`${CARD} group flex flex-col overflow-hidden`}>
-                    <div className="relative aspect-video w-full overflow-hidden bg-[#EFE7D8]">
-                      <img
-                        src={video.thumbnail || getYoutubeThumbnail(extractYouTubeId(video.youtubeLink), 'hqdefault')}
-                        alt={video.title}
-                        referrerPolicy="no-referrer"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-[#22201F]/25 opacity-80 transition-opacity group-hover:opacity-100">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-[#4A0E1B] shadow-lg transition-transform group-hover:scale-105">
-                          <Play size={20} className="ml-0.5" fill="currentColor" />
-                        </div>
-                      </div>
-                      <span className="dash-mono absolute bottom-2 right-2 rounded-md bg-[#22201F]/80 px-1.5 py-0.5 text-[10px] font-medium text-white">{video.duration}</span>
-                    </div>
-
-                    <div className="flex flex-1 flex-col p-5">
-                      <div className="flex items-center justify-between gap-2">
-                        <SubjectBadge subject={video.subject} />
-                        <span className={MICRO}>{video.chapter}</span>
-                      </div>
-                      <h4 className="mt-3.5 text-sm font-bold text-[#22201F] line-clamp-1">{video.title}</h4>
-                      <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F] line-clamp-2">{video.description}</p>
-                      <button onClick={() => setActiveVideoModal(video)} className={`${PRIMARY_BTN} mt-5 w-full`}>
-                        <VideoIcon size={14} /> Watch lecture
-                      </button>
-                    </div>
-                  </div>
+                  <ResourceCard
+                    key={video.id}
+                    icon={VideoIcon}
+                    title={video.title}
+                    description={video.description}
+                    chapter={video.chapter}
+                    subject={video.subject}
+                    image={video.thumbnail || getYoutubeThumbnail(extractYouTubeId(video.youtubeLink), 'hqdefault')}
+                    metadata={[
+                      `Duration: ${video.duration}`
+                    ]}
+                    actions={[
+                      {
+                        icon: Play,
+                        label: 'Watch',
+                        onClick: () => setActiveVideoModal(video),
+                        variant: 'primary'
+                      },
+                      {
+                        icon: Paperclip,
+                        label: 'Bookmark',
+                        onClick: () => alert('Bookmarked'),
+                        variant: 'secondary'
+                      }
+                    ]}
+                  />
                 ))}
-              </div>
+              </ResourceGrid>
             )}
-          </div>
+          </ResourcePageLayout>
         )}
 
         {/* ================= PYQ EXPLORER ================= */}
         {selectedExam && activeCategory === 'pyqs' && (
-          <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
-            <div className="mt-4 mb-6">
-              <p className={MICRO}>{currentExamInfo?.title} · Previous year questions</p>
-              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Previous year questions</h2>
-            </div>
-
-            <div className="mb-8 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="relative lg:col-span-2">
-                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by chapter…" className={`${INPUT} pl-10`} />
-              </div>
-              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={INPUT}>
-                {availableSubjects.map((subject) => (
-                  <option key={subject} value={subject}>{subject === 'All' ? 'All' : subject}</option>
-                ))}
-              </select>
-              <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className={INPUT}>
-                <option value="All">All difficulties</option>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
-            </div>
-
+          <ResourcePageLayout
+            onBack={handleBackToCategories}
+            hero={
+              <ResourceHero
+                courseTitle={currentExamInfo?.title}
+                title="Previous Year Questions"
+                description="Original exam questions with step-by-step analytical solutions."
+                totalCount={pyqs.filter(p => p.course === selectedExam).length}
+                totalLabel="Total Sets"
+              />
+            }
+            toolbar={
+              <ResourceToolbar
+                subjects={availableSubjects}
+                selectedSubject={selectedSubject}
+                onSubjectChange={setSelectedSubject}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                sortMode={resourceSort}
+                onSortToggle={() => setResourceSort(s => s === 'recent' ? 'popular' : 'recent')}
+                sortLabel={resourceSort === 'recent' ? 'Recently Added' : 'Most Popular'}
+                viewMode={resourceViewMode}
+                onViewModeChange={setResourceViewMode}
+                extraFilters={
+                  <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className="w-full sm:w-auto rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] px-3 py-2 text-xs text-[#22201F] outline-none transition focus:border-[#4A0E1B]/50 focus:bg-white focus:ring-2 focus:ring-[#4A0E1B]/10">
+                    <option value="All">All difficulties</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                  </select>
+                }
+              />
+            }
+          >
             {filteredPyqs.length === 0 ? (
-              <EmptyState label="No PYQ booklets match your search or filters." />
+              <ResourceEmptyState label="No PYQ booklets match your search or filters." />
             ) : (
-              <div className={`${CARD} overflow-hidden`}>
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[720px] text-left text-sm">
-                    <thead>
-                      <tr className="border-b border-[#EAE1D2] bg-[#FBF7F0]">
-                        <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Subject & chapter</th>
-                        <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Year</th>
-                        <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Difficulty</th>
-                        <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Question paper</th>
-                        <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F]">Step solution</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#F2ECDF]">
-                      {filteredPyqs.map((pyq) => (
-                        <tr key={pyq.id} className="transition-colors hover:bg-[#FBF7F0]">
-                          <td className="px-5 py-3.5">
-                            <SubjectBadge subject={pyq.subject} />
-                            <span className="mt-0.5 block text-xs text-[#8A7E6F]">{pyq.chapter}</span>
-                          </td>
-                          <td className="px-5 py-3.5 dash-mono text-xs font-medium tabular-nums text-[#6E645A]">{pyq.year}</td>
-                          <td className="px-5 py-3.5"><DifficultyChip level={pyq.difficulty} /></td>
-                          <td className="px-5 py-3.5 text-right">
-                            <div className="inline-flex justify-end gap-1.5">
-                              <button onClick={() => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F4E7E5] hover:text-[#4A0E1B]"><Eye size={15} /></button>
-                              <button onClick={() => triggerDownload(pyq.questionUrl)} className={PILL_SOFT}><Download size={11} /> {pyq.questionSize}</button>
-                            </div>
-                          </td>
-                          <td className="px-5 py-3.5 text-right">
-                            <div className="inline-flex justify-end gap-1.5">
-                              <button onClick={() => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F7EFD9] hover:text-[#8A6A16]"><Eye size={15} /></button>
-                              <button onClick={() => triggerDownload(pyq.solutionUrl)} className={PILL_GOLD}><Download size={11} /> {pyq.solutionSize}</button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <ResourceGrid viewMode={resourceViewMode}>
+                {filteredPyqs.map((pyq) => (
+                  <ResourceCard
+                    key={pyq.id}
+                    icon={FileSpreadsheet}
+                    title={`${pyq.chapter} - ${pyq.year}`}
+                    description={`Previous year question paper for ${pyq.chapter} from ${pyq.year}. Difficulty: ${pyq.difficulty}.`}
+                    chapter={pyq.chapter}
+                    subject={pyq.subject}
+                    badges={[
+                      <span key="year" className="inline-flex rounded-full px-2.5 py-0.5 text-[9px] font-bold bg-[#F4E2E5] text-[#7C2532]">{pyq.year}</span>,
+                      <span key="diff" className="inline-flex rounded-full px-2.5 py-0.5 text-[9px] font-bold bg-[#F7EFD9] text-[#8A6A16]">{pyq.difficulty}</span>
+                    ]}
+                    metadata={[
+                      `Q: ${pyq.questionSize} | Sol: ${pyq.solutionSize}`,
+                      `Solutions Available`
+                    ]}
+                    actions={[
+                      {
+                        icon: Eye,
+                        label: 'View Paper',
+                        onClick: () => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl }),
+                        variant: 'ghost'
+                      },
+                      {
+                        icon: Download,
+                        label: 'Download',
+                        onClick: () => triggerDownload(pyq.questionUrl),
+                        variant: 'primary'
+                      },
+                      {
+                        icon: Eye,
+                        label: 'Solutions',
+                        onClick: () => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl }),
+                        variant: 'secondary'
+                      }
+                    ]}
+                  />
+                ))}
+              </ResourceGrid>
             )}
-          </div>
+          </ResourcePageLayout>
         )}
 
         {/* ================= PRACTICE SHEETS ================= */}
         {selectedExam && activeCategory === 'sheets' && (
-          <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
-            <div className="mt-4 mb-6">
-              <p className={MICRO}>{currentExamInfo?.title} · Practice sheets</p>
-              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Practice sheets</h2>
-            </div>
-
-            <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-              <div className="relative flex-1">
-                <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by title or chapter…" className={`${INPUT} pl-10`} />
-              </div>
-              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={`${INPUT} sm:w-52`}>
-                {availableSubjects.map((subject) => (
-                  <option key={subject} value={subject}>{subject === 'All' ? 'All' : subject}</option>
-                ))}
-              </select>
-            </div>
-
+          <ResourcePageLayout
+            onBack={handleBackToCategories}
+            hero={
+              <ResourceHero
+                courseTitle={currentExamInfo?.title}
+                title="Practice Sheets"
+                description="Chapter drills graded by complexity to build proficiency."
+                totalCount={practiceSheets.filter(s => s.course === selectedExam).length}
+                totalLabel="Total Sheets"
+              />
+            }
+            toolbar={
+              <ResourceToolbar
+                subjects={availableSubjects}
+                selectedSubject={selectedSubject}
+                onSubjectChange={setSelectedSubject}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                sortMode={resourceSort}
+                onSortToggle={() => setResourceSort(s => s === 'recent' ? 'popular' : 'recent')}
+                sortLabel={resourceSort === 'recent' ? 'Recently Added' : 'Most Popular'}
+                viewMode={resourceViewMode}
+                onViewModeChange={setResourceViewMode}
+              />
+            }
+          >
             {filteredSheets.length === 0 ? (
-              <EmptyState label="No practice drills match your search or subject filter." />
+              <ResourceEmptyState label="No practice drills match your search or subject filter." />
             ) : (
-              <div className="grid gap-5 sm:grid-cols-2">
+              <ResourceGrid viewMode={resourceViewMode}>
                 {filteredSheets.map((sheet) => (
-                  <div key={sheet.id} className={`${CARD} flex flex-col p-5`}>
-                    <div className="flex items-start justify-between gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EFD9] text-[#8A6A16]"><FileText size={18} /></span>
-                      <div className="flex flex-col items-end gap-1">
-                        <span className="rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2.5 py-1 text-[10px] font-bold text-[#8A7E6F]">{sheet.chapter}</span>
-                        <SubjectBadge subject={sheet.subject} />
-                      </div>
-                    </div>
-                    <h4 className="mt-4 text-sm font-bold text-[#22201F]">{sheet.title}</h4>
-                    <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F]">{sheet.description}</p>
-                    <div className="mt-4 flex items-center justify-between border-t border-[#F2ECDF] pt-4">
-                      <span className="dash-mono text-[11px] text-[#A79A88]">File size · {sheet.fileSize}</span>
-                      <div className="flex gap-1.5">
-                        <button onClick={() => setActivePdfViewer({ title: sheet.title, fileUrl: sheet.fileUrl })} className={PILL_GHOST}><Eye size={12} /> View</button>
-                        <button onClick={() => triggerDownload(sheet.fileUrl)} className={PILL_SOFT}><Download size={12} /> Download</button>
-                      </div>
-                    </div>
-                  </div>
+                  <ResourceCard
+                    key={sheet.id}
+                    icon={FileText}
+                    title={sheet.title}
+                    description={sheet.description}
+                    chapter={sheet.chapter}
+                    subject={sheet.subject}
+                    metadata={[
+                      `Size: ${sheet.fileSize}`
+                    ]}
+                    actions={[
+                      {
+                        icon: Eye,
+                        label: 'Open Sheet',
+                        onClick: () => setActivePdfViewer({ title: sheet.title, fileUrl: sheet.fileUrl }),
+                        variant: 'ghost'
+                      },
+                      {
+                        icon: Download,
+                        label: 'Download',
+                        onClick: () => triggerDownload(sheet.fileUrl),
+                        variant: 'primary'
+                      }
+                    ]}
+                  />
                 ))}
-              </div>
+              </ResourceGrid>
             )}
-          </div>
+          </ResourcePageLayout>
         )}
 
-        {/* ================= DOUBT SUBMISSION ================= */}
+{/* ================= DOUBT SUBMISSION ================= */}
         {selectedExam && activeCategory === 'doubts' && (
           <div>
             <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
@@ -905,41 +881,67 @@ export default function StudentDashboard({
           </div>
         )}
 
-        {/* ================= ADDITIONAL RESOURCES ================= */}
+                {/* ================= ADDITIONAL RESOURCES ================= */}
         {selectedExam && activeCategory === 'resources' && (
-          <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
-            <div className="mt-4 mb-8">
-              <p className={MICRO}>{currentExamInfo?.title} · Additional resources</p>
-              <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F]">Additional resources</h2>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className={`${CARD} flex flex-col p-6`}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]"><FileSpreadsheet size={20} /></span>
-                <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F]">Syllabus blueprints & topic weights</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F]">
-                  A mapped matrix of chapter distribution, sub-topic weights and question-occurrence frequencies compiled from the past 10 years of entrance examinations.
-                </p>
-                <div className="mt-5 flex justify-end">
-                  <button onClick={() => triggerDownload('syllabus-blueprints.pdf')} className={PILL_SOFT}><Download size={12} /> Download matrix (820 KB)</button>
-                </div>
-              </div>
-
-              <div className={`${CARD} flex flex-col p-6`}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F7EFD9] text-[#8A6A16]"><BookOpen size={20} /></span>
-                <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F]">Formula & fundamental constant sheets</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F]">
-                  A rapid-revision pocket PDF covering electromagnetic vectors, rotational momenta, calculus limits and key physical constants (Planck, Boltzmann, speed of light).
-                </p>
-                <div className="mt-5 flex justify-end">
-                  <button onClick={() => triggerDownload('formula-pocket-sheets.pdf')} className={PILL_SOFT}><Download size={12} /> Download sheets (1.4 MB)</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ResourcePageLayout
+            onBack={handleBackToCategories}
+            hero={
+              <ResourceHero
+                courseTitle={currentExamInfo?.title}
+                title="Additional Resources"
+                description="Syllabus blueprints, formula sheets, reference books and lab manuals."
+                totalCount={2}
+                totalLabel="Total Items"
+              />
+            }
+            toolbar={
+              <ResourceToolbar
+                subjects={['All']}
+                selectedSubject={'All'}
+                onSubjectChange={() => {}}
+                searchQuery={''}
+                onSearchChange={() => {}}
+                viewMode={resourceViewMode}
+                onViewModeChange={setResourceViewMode}
+              />
+            }
+          >
+            <ResourceGrid viewMode={resourceViewMode}>
+              <ResourceCard
+                icon={FileSpreadsheet}
+                title="Syllabus blueprints & topic weights"
+                description="A mapped matrix of chapter distribution, sub-topic weights and question-occurrence frequencies compiled from the past 10 years of entrance examinations."
+                chapter="General"
+                subject="All"
+                metadata={["820 KB"]}
+                actions={[
+                  {
+                    icon: Download,
+                    label: 'Download',
+                    onClick: () => triggerDownload('syllabus-blueprints.pdf'),
+                    variant: 'primary'
+                  }
+                ]}
+              />
+              <ResourceCard
+                icon={BookOpen}
+                title="Formula & fundamental constant sheets"
+                description="A rapid-revision pocket PDF covering electromagnetic vectors, rotational momenta, calculus limits and key physical constants."
+                chapter="Reference"
+                subject="All"
+                metadata={["1.4 MB"]}
+                actions={[
+                  {
+                    icon: Download,
+                    label: 'Download',
+                    onClick: () => triggerDownload('formula-pocket-sheets.pdf'),
+                    variant: 'primary'
+                  }
+                ]}
+              />
+            </ResourceGrid>
+          </ResourcePageLayout>
         )}
-
       </div>
 
       {/* ================= WATCH VIDEO MODAL (real, from main) ================= */}
