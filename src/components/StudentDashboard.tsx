@@ -482,7 +482,7 @@ export default function StudentDashboard({
 
             <QuickAccessGrid
               categories={categoryCards}
-              onSelectCategory={setActiveCategory}
+                onSelectCategory={(id: string) => setActiveCategory(id as any)}
             />
             
             <div className="mt-16 space-y-16">
@@ -879,6 +879,93 @@ export default function StudentDashboard({
                 </div>
               </div>
             </div>
+
+            {/* Answered Doubts Feed */}
+            {doubts.filter(d => d.isAnswered).length > 0 && (
+              <div className="mt-12">
+                <h3 className="dash-serif text-xl font-semibold text-[#22201F] mb-6">Recent Answered Queries</h3>
+                <div className="space-y-6">
+                  {doubts.filter(d => d.isAnswered).map(doubt => (
+                    <div key={doubt.id} className={`${CARD} p-6`}>
+                      <div className="flex flex-col gap-6">
+                        {/* Student Question (Right aligned like iMessage) */}
+                        <div className="flex justify-end">
+                          <div className="max-w-[85%] sm:max-w-[70%] rounded-2xl rounded-tr-sm bg-[#4A0E1B] text-white p-4 shadow-sm">
+                            <p className="text-xs text-white/70 mb-1 font-semibold">{doubt.name} • {doubt.subject}</p>
+                            <p className="text-sm leading-relaxed">{doubt.question}</p>
+                            {doubt.attachmentUrl && (
+                              <a href={doubt.attachmentUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-xs hover:bg-white/20 transition-colors">
+                                <FileText size={14} /> Attached File
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Professor Reply (Left aligned like iMessage) */}
+                        <div className="flex justify-start">
+                          <div className="max-w-[85%] sm:max-w-[70%] rounded-2xl rounded-tl-sm bg-[#FBF6EA] border border-[#F7EFD9] text-[#3A342E] p-4 shadow-sm">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#C9A13B] text-white font-bold text-[10px]">AJ</span>
+                              <p className="text-xs font-bold text-[#8A6A16]">Prof. Ajesh Joe</p>
+                            </div>
+                            
+                            {/* Rich Replies */}
+                            {doubt.replies && doubt.replies.length > 0 ? (
+                              <div className="space-y-4">
+                                {doubt.replies.map((reply, idx) => (
+                                  <div key={reply.id}>
+                                    <div 
+                                      className="text-sm leading-relaxed prose prose-sm max-w-none prose-p:my-1 prose-ul:my-1"
+                                      dangerouslySetInnerHTML={{ __html: reply.reply_text || '' }} 
+                                    />
+                                    {/* Images */}
+                                    {reply.image_urls && reply.image_urls.length > 0 && (
+                                      <div className="mt-3 flex flex-wrap gap-2">
+                                        {reply.image_urls.map((url, i) => (
+                                          <img key={i} src={url} alt="reply" className="h-32 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8]" />
+                                        ))}
+                                      </div>
+                                    )}
+                                    {/* Videos */}
+                                    {reply.video_urls && reply.video_urls.length > 0 && (
+                                      <div className="mt-3 space-y-2">
+                                        {reply.video_urls.map((url, i) => (
+                                          <video key={i} src={url} controls className="h-48 w-auto rounded-lg shadow-sm border border-[#EFE7D8]" />
+                                        ))}
+                                      </div>
+                                    )}
+                                    {/* Audio */}
+                                    {reply.audio_urls && reply.audio_urls.length > 0 && (
+                                      <div className="mt-3 space-y-2">
+                                        {reply.audio_urls.map((url, i) => (
+                                          <audio key={i} src={url} controls className="w-full max-w-sm" />
+                                        ))}
+                                      </div>
+                                    )}
+                                    {/* Docs */}
+                                    {reply.attachment_urls && reply.attachment_urls.length > 0 && (
+                                      <div className="mt-3 flex flex-wrap gap-2">
+                                        {reply.attachment_urls.map((url, i) => (
+                                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#EAE1D2] bg-white px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA]">
+                                            <Download size={14} /> Download Attachment {i + 1}
+                                          </a>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-sm leading-relaxed">{doubt.answerText}</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

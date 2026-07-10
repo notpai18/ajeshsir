@@ -63,6 +63,21 @@ export interface PracticeSheet {
   fileSize: string;
 }
 
+export interface DoubtReply {
+  id: string;
+  doubt_id: string;
+  professor_id: string;
+  reply_text?: string;
+  image_urls: string[];
+  video_urls: string[];
+  audio_urls: string[];
+  attachment_urls: string[];
+  created_at: string;
+  updated_at: string;
+  is_edited: boolean;
+  reply_order: number;
+}
+
 export interface Doubt {
   id: string;
   name: string;
@@ -71,10 +86,11 @@ export interface Doubt {
   question: string;
   attachmentName?: string;
   attachmentUrl?: string;
-  attachmentDataUrl?: string;   // base64 data URL of the uploaded file
+  attachmentDataUrl?: string;
   answerText?: string;
   isAnswered: boolean;
   createdAt: string;
+  replies?: DoubtReply[];
 }
 
 export interface FAQ {

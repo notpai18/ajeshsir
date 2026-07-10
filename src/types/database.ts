@@ -69,6 +69,59 @@ export type Database = {
         }
         Relationships: []
       }
+      doubt_replies: {
+        Row: {
+          attachment_urls: string[] | null
+          audio_urls: string[] | null
+          created_at: string
+          doubt_id: string
+          id: string
+          image_urls: string[] | null
+          is_edited: boolean
+          professor_id: string
+          reply_order: number
+          reply_text: string | null
+          updated_at: string
+          video_urls: string[] | null
+        }
+        Insert: {
+          attachment_urls?: string[] | null
+          audio_urls?: string[] | null
+          created_at?: string
+          doubt_id: string
+          id?: string
+          image_urls?: string[] | null
+          is_edited?: boolean
+          professor_id: string
+          reply_order?: number
+          reply_text?: string | null
+          updated_at?: string
+          video_urls?: string[] | null
+        }
+        Update: {
+          attachment_urls?: string[] | null
+          audio_urls?: string[] | null
+          created_at?: string
+          doubt_id?: string
+          id?: string
+          image_urls?: string[] | null
+          is_edited?: boolean
+          professor_id?: string
+          reply_order?: number
+          reply_text?: string | null
+          updated_at?: string
+          video_urls?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doubt_replies_doubt_id_fkey"
+            columns: ["doubt_id"]
+            isOneToOne: false
+            referencedRelation: "doubts"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       doubts: {
         Row: {
           answer_text: string | null

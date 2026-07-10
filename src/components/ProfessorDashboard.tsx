@@ -354,7 +354,7 @@ interface ProfessorDashboardProps {
   onAddPracticeSheet: (sheet: Omit<PracticeSheet, 'id' | 'fileSize'>) => void;
   onEditPracticeSheet: (id: string, sheet: Partial<PracticeSheet>) => void;
   onDeletePracticeSheet: (id: string) => void;
-  onReplyDoubt: (id: string, answerText: string) => void;
+  onReplyDoubt: (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[]; }) => void;
   onDeleteDoubt: (id: string) => void;
   onAddAnnouncement: (a: Omit<Announcement, 'id' | 'createdAt'>) => void;
   onEditAnnouncement: (id: string, a: Partial<Announcement>) => void;
@@ -363,6 +363,7 @@ interface ProfessorDashboardProps {
 }
 
 import { uploadFile } from '../services/storageService';
+import { AnswerDoubtModal } from './doubts/AnswerDoubtModal';
 
 type Tab = 'overview' | 'notes' | 'videos' | 'pyqs' | 'sheets' | 'doubts' | 'announcements' | 'settings';
 type ModalKind =
@@ -721,7 +722,7 @@ export default function ProfessorDashboard({
         finalSSize = res.size;
       }
       if (activeModal === 'add-pyq') {
-        onAddPyq({ ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl, questionSize: finalQSize, solutionSize: finalSSize });
+        onAddPyq({ ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl });
       } else if (selectedItemId) {
         onEditPyq(selectedItemId, { ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl, questionSize: finalQSize, solutionSize: finalSSize });
       }
@@ -752,7 +753,7 @@ export default function ProfessorDashboard({
         finalSize = res.size;
       }
       if (activeModal === 'add-sheet') {
-        onAddPracticeSheet({ ...sheetForm, fileUrl: finalUrl, fileSize: finalSize });
+        onAddPracticeSheet({ ...sheetForm, fileUrl: finalUrl });
       } else if (selectedItemId) {
         onEditPracticeSheet(selectedItemId, { ...sheetForm, fileUrl: finalUrl, fileSize: finalSize });
       }
@@ -782,7 +783,7 @@ export default function ProfessorDashboard({
   };
   const handleReplySubmit = (id: string) => {
     if (!replyText.trim()) return;
-    onReplyDoubt(id, replyText);
+    onReplyDoubt(id, { reply_text: replyText });
     setReplyText('');
     setReplyingDoubtId(null);
   };
@@ -1415,52 +1416,105 @@ export default function ProfessorDashboard({
                         )}
 
                         {/* Answer / reply zone */}
-                        {doubt.isAnswered && replyingDoubtId !== doubt.id ? (
+                        {doubt.replies && doubt.replies.length > 0 ? (
+                          <div className="mt-4 space-y-4">
+                            {doubt.replies.map(reply => (
+                              <div key={reply.id} className="rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] p-4">
+                                <div className="flex items-start gap-2.5">
+                                  <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response</p>
+                                    </div>
+                                    <div 
+                                      className="mt-2 text-sm leading-relaxed text-[#3A342E] prose prose-sm max-w-none"
+                                      dangerouslySetInnerHTML={{ __html: reply.reply_text || '' }} 
+                                    />
+                                    {/* Images */}
+                                    {reply.image_urls && reply.image_urls.length > 0 && (
+                                      <div className="mt-3 flex flex-wrap gap-2">
+                                        {reply.image_urls.map((url, i) => (
+                                          <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8]" />
+                                        ))}
+                                      </div>
+                                    )}
+                                    {/* Videos */}
+                                    {reply.video_urls && reply.video_urls.length > 0 && (
+                                      <div className="mt-3 space-y-2">
+                                        {reply.video_urls.map((url, i) => (
+                                          <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8]" />
+                                        ))}
+                                      </div>
+                                    )}
+                                    {/* Audio */}
+                                    {reply.audio_urls && reply.audio_urls.length > 0 && (
+                                      <div className="mt-3 space-y-2">
+                                        {reply.audio_urls.map((url, i) => (
+                                          <audio key={i} src={url} controls className="w-full max-w-xs" />
+                                        ))}
+                                      </div>
+                                    )}
+                                    {/* Docs */}
+                                    {reply.attachment_urls && reply.attachment_urls.length > 0 && (
+                                      <div className="mt-3 space-y-2">
+                                        {reply.attachment_urls.map((url, i) => (
+                                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#EAE1D2] bg-white px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA]">
+                                            <FileText size={14} /> Attachment {i + 1}
+                                          </a>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] pt-4">
+                              <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
+                                <Plus size={13} /> Add another reply
+                              </button>
+                              <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
+                                <Trash2 size={13} /> Delete Ticket
+                              </button>
+                            </div>
+                          </div>
+                        ) : doubt.answerText ? (
                           <div className="mt-4 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] p-4">
                             <div className="flex items-start gap-2.5">
                               <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
                               <div className="flex-1">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response</p>
+                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response (Legacy)</p>
                                 <p className="mt-1 text-sm leading-relaxed text-[#3A342E]">{doubt.answerText}</p>
                               </div>
                             </div>
-                            <div className="mt-3 flex justify-end gap-1">
-                              <button className={ROW_BTN} onClick={() => { setReplyingDoubtId(doubt.id); setReplyText(doubt.answerText || ''); }}>
-                                <Pencil size={13} /> Edit
+                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] pt-4">
+                              <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
+                                <Plus size={13} /> Add rich reply
                               </button>
                               <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                                <Trash2 size={13} /> Delete
-                              </button>
-                            </div>
-                          </div>
-                        ) : replyingDoubtId === doubt.id ? (
-                          <div className="mt-4 space-y-3">
-                            <textarea
-                              value={replyText}
-                              onChange={(e) => setReplyText(e.target.value)}
-                              rows={4}
-                              autoFocus
-                              className={INPUT}
-                              placeholder="Write a clear, encouraging academic response…"
-                            />
-                            <div className="flex justify-end gap-2">
-                              <button className={GHOST_BTN} onClick={() => { setReplyingDoubtId(null); setReplyText(''); }}>
-                                Cancel
-                              </button>
-                              <button className={PRIMARY_BTN} onClick={() => handleReplySubmit(doubt.id)} disabled={!replyText.trim()}>
-                                <Send size={13} /> {doubt.isAnswered ? 'Update answer' : 'Send answer'}
+                                <Trash2 size={13} /> Delete Ticket
                               </button>
                             </div>
                           </div>
                         ) : (
                           <div className="mt-4 flex items-center justify-between">
-                            <button className={PRIMARY_BTN} onClick={() => { setReplyingDoubtId(doubt.id); setReplyText(''); }}>
+                            <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
                               <Send size={13} /> Answer query
                             </button>
                             <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
                               <Trash2 size={13} /> Delete
                             </button>
                           </div>
+                        )}
+
+                        {replyingDoubtId === doubt.id && (
+                          <AnswerDoubtModal
+                            doubt={doubt}
+                            onClose={() => setReplyingDoubtId(null)}
+                            onPublish={async (data) => {
+                              await onReplyDoubt(doubt.id, data);
+                              setReplyingDoubtId(null);
+                            }}
+                          />
                         )}
                       </PremiumCard>
                     ))}

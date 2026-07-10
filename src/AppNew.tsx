@@ -227,12 +227,18 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
     setState(prev => ({ ...prev, doubts: [created, ...prev.doubts] }));
   }, []);
 
-  const handleReplyDoubt = useCallback(async (id: string, answerText: string) => {
-    const updated = await replyToDoubt(id, answerText);
-    setState(prev => ({
-      ...prev,
-      doubts: prev.doubts.map(d => d.id === id ? updated : d),
-    }));
+  const handleReplyDoubt = useCallback(async (id: string, replyData: { reply_text?: string, image_urls?: string[], video_urls?: string[], audio_urls?: string[], attachment_urls?: string[] }) => {
+    try {
+      const professorId = '00000000-0000-0000-0000-000000000000'; // Replace with actual user ID later
+      const updated = await replyToDoubt(id, professorId, replyData);
+      setState(prev => ({
+        ...prev,
+        doubts: prev.doubts.map(d => d.id === id ? updated : d),
+      }));
+    } catch (e: any) {
+      console.error('Error replying to doubt', e);
+      alert(e.message);
+    }
   }, []);
 
   const handleDeleteDoubt = useCallback(async (id: string) => {
