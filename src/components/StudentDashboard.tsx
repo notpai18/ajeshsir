@@ -41,7 +41,9 @@ import {
   LayoutGrid,
   List,
   ArrowDownUp,
-  Check
+  Check,
+  Target,
+  Library
 } from 'lucide-react';
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
 import { VideoWatchModal } from './VideoWatchModal';
@@ -594,9 +596,30 @@ function StudentDashboardContent({
               <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                   <h2 className="dash-serif text-2xl md:text-3xl font-semibold">{currentExamInfo?.heroTitle || 'Study Notes'}</h2>
-                  <p className="mt-2 text-sm text-white/70 max-w-md">
-                    {currentExamInfo?.heroDescription || 'Access chapter-wise Chemistry notes for JEE Main covering Physical, Organic and Inorganic Chemistry with formula sheets, NCERT concepts and previous year important topics.'}
-                  </p>
+                  {currentExamInfo?.quickStats ? (
+                    <div className="mt-4 grid grid-cols-2 sm:flex sm:flex-row gap-3">
+                      {currentExamInfo.quickStats.map((stat, idx) => {
+                        let Icon = BookOpen;
+                        if (stat.icon === 'Library') Icon = Library;
+                        else if (stat.icon === 'FileText') Icon = FileText;
+                        else if (stat.icon === 'Target') Icon = Target;
+                        
+                        return (
+                          <div key={idx} className="flex items-center gap-2.5 rounded-[12px] border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-md transition-all hover:bg-white/10 group">
+                            <Icon size={16} className="text-white/80 transition-transform group-hover:scale-110" />
+                            <div>
+                              <div className="text-[15px] font-bold leading-none text-white">{stat.value}</div>
+                              <div className="text-[10px] uppercase tracking-wider text-white/60 mt-1 font-medium">{stat.label}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-white/70 max-w-md">
+                      {currentExamInfo?.heroDescription || 'Access chapter-wise Chemistry notes for JEE Main covering Physical, Organic and Inorganic Chemistry with formula sheets, NCERT concepts and previous year important topics.'}
+                    </p>
+                  )}
                 </div>
                 <div className="flex shrink-0 items-center gap-4">
                   <div className="rounded-[12px] bg-[#5A2436] p-4 text-center min-w-[160px]">
@@ -957,7 +980,7 @@ function StudentDashboardContent({
                             <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{pyq.chapter}</span>
                           </td>
                           <td className="px-5 py-3.5 dash-mono text-xs font-medium tabular-nums text-[#6E645A]">{pyq.year}</td>
-                          <td className="px-5 py-3.5"><DifficultyChip level={pyq.difficulty} /></td>
+                          <td className="px-5 py-3.5"><DifficultyChip level={pyq.difficulty as any} /></td>
                           <td className="px-5 py-3.5 text-right">
                             <div className="inline-flex justify-end gap-1.5">
                               <button onClick={() => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]"><Eye size={15} /></button>

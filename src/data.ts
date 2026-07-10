@@ -15,7 +15,13 @@ export const EXAMS: ExamInfo[] = [
     heroTitle: 'JEE Main Chemistry Notes',
     heroDescription: 'Access chapter-wise Chemistry notes for JEE Main covering Physical, Organic and Inorganic Chemistry with formula sheets, NCERT concepts and previous year important topics.',
     themeGradient: 'from-[#4A0E1B] to-[#2D0810]',
-    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry']
+    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry'],
+    quickStats: [
+      { icon: 'BookOpen', value: '145', label: 'Notes' },
+      { icon: 'Library', value: '18', label: 'Chapters' },
+      { icon: 'FileText', value: '42', label: 'Formula Sheets' },
+      { icon: 'Target', value: '650+', label: 'PYQs' }
+    ]
   },
   {
     id: 'jee-advanced',
@@ -25,7 +31,13 @@ export const EXAMS: ExamInfo[] = [
     heroTitle: 'JEE Advanced Chemistry Notes',
     heroDescription: 'Advanced conceptual notes with derivations, multi-concept problems, mechanisms, shortcut techniques and high-level practice for IIT-JEE Advanced.',
     themeGradient: 'from-[#4A0E1B] to-[#2D0810]',
-    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry']
+    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry'],
+    quickStats: [
+      { icon: 'BookOpen', value: '82', label: 'Notes' },
+      { icon: 'Library', value: '16', label: 'Chapters' },
+      { icon: 'FileText', value: '31', label: 'Formula Sheets' },
+      { icon: 'Target', value: '980+', label: 'Advanced Problems' }
+    ]
   },
   {
     id: 'neet',
@@ -35,7 +47,13 @@ export const EXAMS: ExamInfo[] = [
     heroTitle: 'NEET Chemistry Notes',
     heroDescription: 'NCERT-focused Chemistry notes for NEET with concise theory, important reactions, diagrams, formula sheets and one-liners.',
     themeGradient: 'from-[#4A0E1B] to-[#2D0810]',
-    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry']
+    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry'],
+    quickStats: [
+      { icon: 'BookOpen', value: '96', label: 'Notes' },
+      { icon: 'Library', value: '15', label: 'Chapters' },
+      { icon: 'FileText', value: '35', label: 'NCERT Summaries' },
+      { icon: 'Target', value: '520+', label: 'PYQs' }
+    ]
   },
   {
     id: 'net',
@@ -45,7 +63,13 @@ export const EXAMS: ExamInfo[] = [
     heroTitle: 'CSIR NET Chemistry Notes',
     heroDescription: 'Postgraduate Chemistry notes for CSIR NET covering advanced Physical, Organic, Inorganic and Analytical Chemistry.',
     themeGradient: 'from-[#4A0E1B] to-[#2D0810]',
-    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Analytical Chemistry']
+    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Analytical Chemistry'],
+    quickStats: [
+      { icon: 'BookOpen', value: '58', label: 'Notes' },
+      { icon: 'Library', value: '12', label: 'Modules' },
+      { icon: 'FileText', value: '24', label: 'Spectroscopy Sheets' },
+      { icon: 'Target', value: '420', label: 'Practice Problems' }
+    ]
   },
   {
     id: 'msc-entrance',
@@ -55,7 +79,13 @@ export const EXAMS: ExamInfo[] = [
     heroTitle: 'M.Sc Chemistry Entrance Notes',
     heroDescription: 'Comprehensive Chemistry notes for IIT JAM, CUET PG, TIFR, BHU, CUSAT and other M.Sc entrance examinations.',
     themeGradient: 'from-[#4A0E1B] to-[#2D0810]',
-    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Analytical Chemistry']
+    filters: ['All', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Analytical Chemistry'],
+    quickStats: [
+      { icon: 'BookOpen', value: '74', label: 'Notes' },
+      { icon: 'Library', value: '14', label: 'Chapters' },
+      { icon: 'FileText', value: '28', label: 'Formula Sheets' },
+      { icon: 'Target', value: '710', label: 'Previous Questions' }
+    ]
   }
 ];
 

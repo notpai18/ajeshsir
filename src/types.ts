@@ -8,6 +8,12 @@ export type ExamType = 'jee-main' | 'jee-advanced' | 'neet' | 'net' | 'msc-entra
 // Re-export SubjectType as the canonical subject type for the whole app
 export type { SubjectType } from './constants/subjects';
 
+export interface QuickStat {
+  icon: string;
+  value: string;
+  label: string;
+}
+
 export interface ExamInfo {
   id: ExamType;
   title: string;
@@ -17,6 +23,7 @@ export interface ExamInfo {
   heroDescription?: string;
   themeGradient?: string;
   filters?: string[];
+  quickStats?: QuickStat[];
 }
 
 export interface Note {
