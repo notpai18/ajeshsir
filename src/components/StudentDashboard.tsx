@@ -405,62 +405,96 @@ export default function StudentDashboard({
               ))}
             </div>
 
-            {/* Supporting Panels - Reduced Visual Weight */}
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start border-t border-[#EAE1D2] pt-8">
+            {/* Supporting Panels - Redesigned Bento Grid */}
+            <div className="mt-12 grid gap-6 grid-cols-1 lg:grid-cols-12 items-stretch border-t border-[#EAE1D2] pt-10">
               
-              {/* Quick Statistics */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Platform Stats</h3>
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Notes</span><span className="text-xs font-bold">{notes.length}</span></div>
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Videos</span><span className="text-xs font-bold">{videos.length}</span></div>
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Practice Sheets</span><span className="text-xs font-bold">{practiceSheets.length}</span></div>
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">PYQs</span><span className="text-xs font-bold">{pyqs.length}</span></div>
-                </div>
-              </div>
-
-              {/* Featured Announcements */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                 <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Announcements</h3>
-                 <div className="space-y-4">
-                   {sortedAnnouncements.filter(a => a.pinned).slice(0, 2).map(ann => (
-                     <div key={ann.id}>
-                       <p className="text-xs font-bold text-[#22201F] line-clamp-1">{ann.title}</p>
-                       <p className="mt-1 text-[10px] text-[#5A534B] line-clamp-2">{ann.body}</p>
+              {/* Featured Announcements - Prominent Brand Card */}
+              <div className="lg:col-span-6 xl:col-span-5 rounded-[24px] bg-[#4A0E1B] p-6 sm:p-8 shadow-[0_22px_44px_-24px_rgba(74,14,27,0.75)] relative overflow-hidden flex flex-col">
+                 <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#D9C2A2]/20 blur-2xl" />
+                 <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-[#D9C2A2]/10 blur-2xl" />
+                 
+                 <div className="relative z-10 flex items-center justify-between mb-8">
+                   <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#D9C2A2]">Latest Announcements</h3>
+                   <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#380A14] text-[#D9C2A2]">
+                     <Megaphone size={14} />
+                   </span>
+                 </div>
+                 
+                 <div className="relative z-10 flex-1 space-y-5">
+                   {sortedAnnouncements.filter(a => a.pinned).slice(0, 2).map((ann, idx) => (
+                     <div key={ann.id} className={`${idx !== 0 ? 'pt-5 border-t border-[#7A1F2B]' : ''}`}>
+                       <p className="dash-serif text-xl font-bold text-white leading-tight">{ann.title}</p>
+                       <p className="mt-2.5 text-sm text-[#F4E7E5]/80 line-clamp-2 leading-relaxed font-medium">{ann.body}</p>
                      </div>
                    ))}
-                   {sortedAnnouncements.filter(a => a.pinned).length === 0 && <p className="text-xs text-[#8A7E6F]">No pinned announcements.</p>}
+                   {sortedAnnouncements.filter(a => a.pinned).length === 0 && (
+                     <p className="text-sm text-[#D9C2A2]/70 italic">No pinned announcements at this time.</p>
+                   )}
+                 </div>
+                 
+                 <div className="relative z-10 mt-8 pt-5 border-t border-[#7A1F2B]/50">
+                    <button className="text-xs font-bold uppercase tracking-widest text-[#D9C2A2] hover:text-white transition-colors flex items-center group">
+                      View All Updates <ArrowRight size={14} className="ml-1.5 transition-transform group-hover:translate-x-1" />
+                    </button>
                  </div>
               </div>
 
-              {/* Recently Added */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Recently Added</h3>
-                <div className="space-y-3">
-                  {recentUploads.map((item, i) => (
-                    <div key={i} className="flex items-center gap-2.5">
-                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4E7E5] text-[#4A0E1B]">{item.type === 'Note' ? <BookOpen size={10} /> : <VideoIcon size={10} />}</span>
-                       <div>
-                         <p className="text-xs font-semibold text-[#22201F] line-clamp-1">{item.title}</p>
-                       </div>
-                    </div>
-                  ))}
+              {/* Right Side Grid - 3 cards */}
+              <div className="lg:col-span-6 xl:col-span-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+                
+                {/* Quick Statistics */}
+                <div className="rounded-[24px] border border-[#EAE1D2] bg-white p-6 shadow-[0_4px_12px_rgba(34,32,31,0.02)] flex flex-col transition-all duration-[220ms] hover:border-[#D9C2A2]">
+                  <h3 className="mb-6 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Platform Stats</h3>
+                  <div className="flex-1 flex flex-col justify-center gap-4.5">
+                    <div className="flex items-center justify-between group"><span className="text-sm font-semibold text-[#5A534B]">Study Notes</span><span className="dash-mono text-sm font-bold text-[#22201F]">{notes.length}</span></div>
+                    <div className="h-px w-full bg-[#F2ECDF]" />
+                    <div className="flex items-center justify-between group"><span className="text-sm font-semibold text-[#5A534B]">Video Lectures</span><span className="dash-mono text-sm font-bold text-[#22201F]">{videos.length}</span></div>
+                    <div className="h-px w-full bg-[#F2ECDF]" />
+                    <div className="flex items-center justify-between group"><span className="text-sm font-semibold text-[#5A534B]">Practice Sheets</span><span className="dash-mono text-sm font-bold text-[#22201F]">{practiceSheets.length}</span></div>
+                    <div className="h-px w-full bg-[#F2ECDF]" />
+                    <div className="flex items-center justify-between group"><span className="text-sm font-semibold text-[#5A534B]">PYQs</span><span className="dash-mono text-sm font-bold text-[#22201F]">{pyqs.length}</span></div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Popular Resources */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Popular</h3>
-                <div className="space-y-3">
-                  {popularResources.map(res => (
-                    <div key={res.id} className="cursor-pointer group flex items-center gap-2.5" onClick={() => setActivePdfViewer({ title: res.title, fileUrl: res.fileUrl })}>
-                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F7EFD9] text-[#8A6A16]"><Download size={10} /></span>
-                       <div>
-                         <p className="text-xs font-semibold text-[#22201F] line-clamp-1 group-hover:text-[#4A0E1B] transition-colors">{res.title}</p>
-                       </div>
-                    </div>
-                  ))}
+                {/* Popular Resources */}
+                <div className="rounded-[24px] border border-[#EAE1D2] bg-white p-6 shadow-[0_4px_12px_rgba(34,32,31,0.02)] flex flex-col transition-all duration-[220ms] hover:border-[#D9C2A2]">
+                  <h3 className="mb-6 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Popular Now</h3>
+                  <div className="flex-1 flex flex-col gap-4">
+                    {popularResources.slice(0, 4).map(res => (
+                      <div key={res.id} className="cursor-pointer group flex items-start gap-3.5" onClick={() => setActivePdfViewer({ title: res.title, fileUrl: res.fileUrl })}>
+                         <span className="flex mt-0.5 shrink-0 h-8 w-8 items-center justify-center rounded-[10px] bg-[#F4E7E5] text-[#4A0E1B] transition-colors group-hover:bg-[#4A0E1B] group-hover:text-white">
+                           <Download size={12} />
+                         </span>
+                         <div>
+                           <p className="text-sm font-bold text-[#22201F] line-clamp-1 group-hover:text-[#4A0E1B] transition-colors">{res.title}</p>
+                           <p className="text-[11px] font-medium text-[#8A7E6F] mt-1">{res.course.toUpperCase()}</p>
+                         </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Recently Added (Full width at bottom of right grid) */}
+                <div className="rounded-[24px] border border-[#EAE1D2] bg-white p-6 shadow-[0_4px_12px_rgba(34,32,31,0.02)] sm:col-span-2 transition-all duration-[220ms] hover:border-[#D9C2A2]">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Recently Added</h3>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#C0A98B]">Latest Updates</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {recentUploads.slice(0, 4).map((item, i) => (
+                      <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-2xl border border-[#F2ECDF] hover:border-[#EAE1D2] hover:bg-[#FBF7F0] hover:shadow-sm transition-all cursor-pointer">
+                         <span className="flex shrink-0 h-9 w-9 items-center justify-center rounded-[10px] bg-[#FBF7F0] border border-[#EAE1D2] text-[#4A0E1B]">
+                           {item.type === 'Note' ? <BookOpen size={14} /> : <VideoIcon size={14} />}
+                         </span>
+                         <div className="min-w-0">
+                           <p className="text-sm font-bold text-[#22201F] truncate">{item.title}</p>
+                           <p className="text-[11px] font-medium text-[#8A7E6F] mt-1">{item.type}</p>
+                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
