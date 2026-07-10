@@ -14,21 +14,21 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({ title, count, 
   return (
     <button
       onClick={onClick}
-      className="group relative flex flex-col justify-between h-[150px] min-w-[200px] w-full flex-1 rounded-[30px] bg-white dark:bg-[#22201F]/70 backdrop-blur-xl border border-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(74,14,27,0.12)] overflow-hidden text-left"
+      className="group relative flex flex-col justify-between h-[150px] min-w-[200px] w-full flex-1 rounded-[30px] bg-white dark:bg-[#22201F] dark:bg-[#22201F]/70 backdrop-blur-xl border border-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(74,14,27,0.12)] overflow-hidden text-left"
       style={{ animationDelay: `${delay}s`, animationFillMode: 'both' }}
     >
       {/* Animated gradient border on hover */}
       <div className="absolute inset-0 rounded-[30px] bg-gradient-to-br from-[#4A0E1B]/20 to-[#C9A13B]/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none" style={{ padding: '2px' }}>
-        <div className="absolute inset-0 rounded-[28px] bg-white dark:bg-[#22201F]/90 backdrop-blur-md m-[2px]" />
+        <div className="absolute inset-0 rounded-[28px] bg-white dark:bg-[#22201F] dark:bg-[#22201F]/90 backdrop-blur-md m-[2px]" />
       </div>
 
       <div className="relative z-10 flex items-start justify-between">
-        <span className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[#F7F3EC] dark:bg-[#1A1817] text-[#4A0E1B] transition-transform duration-500 group-hover:scale-110 group-hover:bg-[#4A0E1B] group-hover:text-white shadow-sm">
+        <span className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] text-[#4A0E1B] transition-transform duration-500 group-hover:scale-110 group-hover:bg-[#4A0E1B] group-hover:text-white shadow-sm">
           {icon}
         </span>
         
         {count !== undefined && (
-          <span className="dash-mono rounded-full border border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3 py-1.5 text-[11px] font-semibold text-[#8A7E6F] dark:text-[#A89F91] transition-colors group-hover:border-[#C9A13B]/30 group-hover:text-[#C9A13B]">
+          <span className="dash-mono rounded-full border border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] px-3 py-1.5 text-[11px] font-semibold text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] transition-colors group-hover:border-[#C9A13B]/30 group-hover:text-[#C9A13B]">
             {count} {unit}
           </span>
         )}
@@ -36,9 +36,9 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({ title, count, 
 
       <div className="relative z-10 flex items-end justify-between w-full mt-4">
         <div>
-          <h3 className="dash-serif text-[18px] font-bold text-[#22201F] dark:text-[#F6F2EA] transition-colors group-hover:text-[#4A0E1B]">{title}</h3>
+          <h3 className="dash-serif text-[18px] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-colors group-hover:text-[#4A0E1B]">{title}</h3>
         </div>
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] text-[#4A0E1B] transform translate-x-4 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] text-[#4A0E1B] transform translate-x-4 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100">
           <ArrowRight size={14} />
         </div>
       </div>
@@ -65,7 +65,7 @@ interface QuickAccessGridProps {
 export function QuickAccessGrid({ categories, onSelectCategory }: QuickAccessGridProps) {
   return (
     <div className="mt-12 mb-16 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s' }}>
-      <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A7E6F] dark:text-[#A89F91] mb-6 px-2">Quick Access</h3>
+      <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] mb-6 px-2">Quick Access</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {categories.map((cat, index) => (
           <QuickAccessCard

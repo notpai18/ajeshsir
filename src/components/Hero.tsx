@@ -14,7 +14,7 @@ interface HeroProps {
 
 export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
   return (
-    <section className="relative overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] py-16 md:py-24">
+    <section className="relative overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] py-16 md:py-24">
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
@@ -23,18 +23,18 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
           <div className="flex flex-col space-y-6 lg:col-span-7">
             
             <div className="flex items-center space-x-2">
-              <span className="flex items-center space-x-2 bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] border border-[#D9C2A2]/40 px-3 py-1 font-sans text-[9px] uppercase tracking-[0.2em] font-bold text-[#C9A13B]">
+              <span className="flex items-center space-x-2 bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] border border-[#D9C2A2]/40 px-3 py-1 font-sans text-[9px] uppercase tracking-[0.2em] font-bold text-[#C9A13B]">
                 <span className="h-1.5 w-1.5 bg-[#C9A13B] rounded-full animate-pulse" />
                 <span>NON-COMMERCIAL DIGITAL LIBRARY</span>
               </span>
             </div>
 
-            <h1 className="text-4xl font-serif font-extrabold tracking-tight text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] sm:text-5xl md:text-6xl leading-none">
+            <h1 className="text-4xl font-serif font-extrabold tracking-tight text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] sm:text-5xl md:text-6xl leading-none">
               Free Learning <br />
               <span className="text-[#4A0E1B] dark:text-[#F4E7E5]">Resources</span>
             </h1>
 
-            <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+            <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
               A collection of notes, lectures, practice material and educational resources prepared to help students learn. Curated by Professor Ajesh Joe, to foster true academic excellence.
             </p>
 
@@ -52,16 +52,16 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             {/* Quick stats panel, purely academic */}
             <div className="grid grid-cols-3 gap-6 border-t border-[#D9C2A2]/30 pt-8 mt-8">
               <div>
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">Curriculums</p>
-                <p className="mt-1 text-lg font-semibold font-serif text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">5 Exam Focuses</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">Curriculums</p>
+                <p className="mt-1 text-lg font-semibold font-serif text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">5 Exam Focuses</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">Material</p>
-                <p className="mt-1 text-lg font-semibold font-serif text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">100% Free PDFs</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">Material</p>
+                <p className="mt-1 text-lg font-semibold font-serif text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">100% Free PDFs</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">Guidance</p>
-                <p className="mt-1 text-lg font-semibold font-serif text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Doubt Clarification</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">Guidance</p>
+                <p className="mt-1 text-lg font-semibold font-serif text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Doubt Clarification</p>
               </div>
             </div>
 
@@ -83,13 +83,13 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
                     <span className="h-2.5 w-2.5 rounded-full bg-[#C9A13B]/30" />
                     <span className="h-2.5 w-2.5 rounded-full bg-[#7C2532]/30" />
                   </div>
-                  <span className="text-[9px] uppercase tracking-[0.2em] font-mono text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+                  <span className="text-[9px] uppercase tracking-[0.2em] font-mono text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
                     quantum_wave_theory.ts
                   </span>
                 </div>
 
                 {/* Animated vector coordinate graph illustrating a physics problem */}
-                <div className="my-8 flex h-48 items-center justify-center rounded-xl bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] p-4">
+                <div className="my-8 flex h-48 items-center justify-center rounded-xl bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] p-4">
                   <svg className="h-full w-full" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {/* Grid Lines */}
                     <line x1="10" y1="60" x2="190" y2="60" stroke="#D9C2A2" strokeWidth="0.5" className="opacity-40" />
@@ -125,14 +125,14 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
 
                 {/* Simulated file cards at the bottom */}
                 <div className="space-y-2.5">
-                  <div className="flex items-center justify-between rounded-xl border border-[#D9C2A2]/20 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817]/50 p-2.5">
+                  <div className="flex items-center justify-between rounded-xl border border-[#D9C2A2]/20 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817]/50 p-2.5">
                     <div className="flex items-center space-x-2.5">
                       <div className="flex h-7 w-7 items-center justify-center rounded bg-[#4A0E1B]/8 text-[#4A0E1B] dark:text-[#F4E7E5]">
                         <BookOpen size={14} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Quantum Wave Mechanics</span>
-                        <span className="font-mono text-[9px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">PDF Document • 3.2MB</span>
+                        <span className="text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Quantum Wave Mechanics</span>
+                        <span className="font-mono text-[9px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">PDF Document • 3.2MB</span>
                       </div>
                     </div>
                     <span className="rounded bg-[#C9A13B]/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-[#C9A13B]">Lecture 04</span>

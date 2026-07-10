@@ -26,7 +26,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
   const fadeUp = "animate-[fadeInUp_0.4s_ease-out_forwards]";
 
   return (
-    <article className={`relative mb-12 w-full mx-auto max-w-[1000px] overflow-hidden rounded-3xl bg-white p-8 sm:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#F2ECDF] transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.05)] ${fadeUp}`}>
+    <article className={`relative mb-12 w-full mx-auto max-w-[1000px] overflow-hidden rounded-3xl bg-white dark:bg-[#22201F] p-8 sm:p-12 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-[#F2ECDF] dark:border-[#383330] transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,0,0,0.05)] ${fadeUp}`}>
       
       {/* ───────────────────────────────────────────────────────── */}
       {/* META & TAGS */}
@@ -35,11 +35,11 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 flex-wrap">
             {/* Primary Tag */}
-            <span className="flex h-[24px] items-center rounded-full bg-[#EFE7D8] px-[10px] text-[11px] font-semibold uppercase tracking-widest text-[#5A534B]">
+            <span className="flex h-[24px] items-center rounded-full bg-[#EFE7D8] px-[10px] text-[11px] font-semibold uppercase tracking-widest text-[#5A534B] dark:text-[#C7BCAD]">
               JEE Advanced
             </span>
             {/* Secondary Tag */}
-            <span className="flex h-[24px] items-center rounded-full border border-[#EAE1D2] bg-[#FBF9F6] px-[10px] text-[11px] font-medium uppercase tracking-widest text-[#8A7E6F]">
+            <span className="flex h-[24px] items-center rounded-full border border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF9F6] px-[10px] text-[11px] font-medium uppercase tracking-widest text-[#8A7E6F] dark:text-[#A89F91]">
               {doubt.subject}
             </span>
           </div>
@@ -64,8 +64,8 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
             {doubt.question.length > 90 ? doubt.question.substring(0, 90) + '...' : doubt.question}
           </h1>
           
-          <div className="mt-4 flex items-center gap-2 text-[13px] text-[#8A7E6F]">
-            <span className="font-semibold text-[#5A534B]">{doubt.name}</span>
+          <div className="mt-4 flex items-center gap-2 text-[13px] text-[#8A7E6F] dark:text-[#A89F91]">
+            <span className="font-semibold text-[#5A534B] dark:text-[#C7BCAD]">{doubt.name}</span>
             <span>·</span>
             <span>{fmtDate(doubt.createdAt)}</span>
           </div>
@@ -93,13 +93,13 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
                 />
               </div>
             ) : (
-              <a href={doubt.attachmentDataUrl} download={doubt.attachmentName} className="group inline-flex items-center gap-4 rounded-2xl border border-[#F2ECDF] bg-white px-5 py-4 transition-all hover:border-[#EAE1D2] hover:shadow-sm">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FBF9F6] text-[#8A6A16] group-hover:bg-[#F7F3EC] transition-colors">
+              <a href={doubt.attachmentDataUrl} download={doubt.attachmentName} className="group inline-flex items-center gap-4 rounded-2xl border border-[#F2ECDF] dark:border-[#383330] bg-white dark:bg-[#22201F] px-5 py-4 transition-all hover:border-[#EAE1D2] dark:border-[#4A433E] dark:hover:border-[#4A433E] hover:shadow-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FBF9F6] text-[#8A6A16] group-hover:bg-[#F7F3EC] dark:bg-[#1A1817] transition-colors">
                   <FileText size={20} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-[#22201F] truncate max-w-[300px]">{doubt.attachmentName}</span>
-                  <span className="text-[11px] font-medium text-[#8A7E6F] uppercase tracking-wider mt-0.5">Attached Document</span>
+                  <span className="text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] truncate max-w-[300px]">{doubt.attachmentName}</span>
+                  <span className="text-[11px] font-medium text-[#8A7E6F] dark:text-[#A89F91] uppercase tracking-wider mt-0.5">Attached Document</span>
                 </div>
                 <Download size={16} className="ml-4 text-[#A79A88] group-hover:text-[#8A6A16] transition-colors" />
               </a>
@@ -124,7 +124,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
 
           <div className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
             <div className="overflow-hidden">
-              <div className="relative rounded-3xl bg-[#FBF9F6] p-8 sm:p-10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.01)] border border-[#F2ECDF]/50 mt-2 mb-2">
+              <div className="relative rounded-3xl bg-[#FBF9F6] p-8 sm:p-10 shadow-[inset_0_1px_4px_rgba(0,0,0,0.01)] border border-[#F2ECDF] dark:border-[#383330]/50 mt-2 mb-2">
                 
                 {/* Burgundy Accent Line */}
                 <div className="absolute left-0 top-10 bottom-10 w-1 rounded-r-full bg-[#4A0E1B]/80"></div>
@@ -136,20 +136,20 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
                       AJ
                     </div>
                     <div className="flex flex-col">
-                      <div className="text-sm font-medium text-[#8A7E6F] mb-1">👨‍🏫 Professor Answer</div>
+                      <div className="text-sm font-medium text-[#8A7E6F] dark:text-[#A89F91] mb-1">👨‍🏫 Professor Answer</div>
                       <div className="flex items-center gap-2 mb-0.5">
                         <span className="text-[17px] font-bold text-[#111]">Prof. Ajesh Joe</span>
                         <span className="inline-flex items-center gap-1 rounded-full bg-[#E8F3EA] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#1E7B35]">
                           <CheckCircle2 size={10} /> Verified
                         </span>
                       </div>
-                      <span className="text-[13px] text-[#8A7E6F]">Department of {doubt.subject}</span>
+                      <span className="text-[13px] text-[#8A7E6F] dark:text-[#A89F91]">Department of {doubt.subject}</span>
                     </div>
                   </div>
                   
                   {isProfessorView && (
                     <div className="flex items-center gap-1">
-                      <button className="rounded-lg p-2 text-[#A79A88] hover:bg-white hover:text-[#111] transition-all" title="Edit"><Edit2 size={15} /></button>
+                      <button className="rounded-lg p-2 text-[#A79A88] hover:bg-white dark:bg-[#22201F] hover:text-[#111] transition-all" title="Edit"><Edit2 size={15} /></button>
                       {onDeleteDoubt && (
                         <button onClick={() => onDeleteDoubt(doubt.id)} className="rounded-lg p-2 text-[#A79A88] hover:bg-[#F4E4E4] hover:text-[#B23B2E] transition-all" title="Delete"><Trash2 size={15} /></button>
                       )}
@@ -175,7 +175,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
                             {reply.image_urls && reply.image_urls.length > 0 && (
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 {reply.image_urls.map((url, i) => (
-                                  <div key={i} className="group/img relative overflow-hidden rounded-2xl bg-white shadow-sm border border-[#EAE1D2]">
+                                  <div key={i} className="group/img relative overflow-hidden rounded-2xl bg-white dark:bg-[#22201F] shadow-sm border border-[#EAE1D2] dark:border-[#4A433E]">
                                     <ClickableImage
                                       src={url}
                                       alt={`Reply image ${i+1}`}
@@ -193,7 +193,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
                             {reply.video_urls && reply.video_urls.length > 0 && (
                               <div className="grid grid-cols-1 gap-6">
                                 {reply.video_urls.map((url, i) => (
-                                  <div key={i} className="relative overflow-hidden rounded-2xl border border-[#EAE1D2] bg-black shadow-sm">
+                                  <div key={i} className="relative overflow-hidden rounded-2xl border border-[#EAE1D2] dark:border-[#4A433E] bg-black shadow-sm">
                                     <video src={url} controls className="max-h-[500px] w-full" />
                                   </div>
                                 ))}
@@ -204,7 +204,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
                             {reply.audio_urls && reply.audio_urls.length > 0 && (
                               <div className="flex flex-col gap-4">
                                 {reply.audio_urls.map((url, i) => (
-                                  <div key={i} className="flex items-center rounded-2xl bg-white px-5 py-3 border border-[#EAE1D2] shadow-sm max-w-md">
+                                  <div key={i} className="flex items-center rounded-2xl bg-white dark:bg-[#22201F] px-5 py-3 border border-[#EAE1D2] dark:border-[#4A433E] shadow-sm max-w-md">
                                     <audio src={url} controls className="w-full h-10" />
                                   </div>
                                 ))}
@@ -215,13 +215,13 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
                             {reply.attachment_urls && reply.attachment_urls.length > 0 && (
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {reply.attachment_urls.map((url, i) => (
-                                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-4 rounded-2xl border border-[#EAE1D2] bg-white px-5 py-4 transition-all hover:border-[#C9A13B] hover:shadow-sm">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FBF9F6] text-[#8A6A16] group-hover:bg-[#F7F3EC] transition-colors">
+                                  <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-4 rounded-2xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] px-5 py-4 transition-all hover:border-[#C9A13B] hover:shadow-sm">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FBF9F6] text-[#8A6A16] group-hover:bg-[#F7F3EC] dark:bg-[#1A1817] transition-colors">
                                       <FileText size={20} />
                                     </div>
                                     <div className="flex flex-col">
                                       <span className="text-sm font-semibold text-[#111]">Reference Document</span>
-                                      <span className="text-[11px] font-medium text-[#8A7E6F] uppercase tracking-wider mt-0.5">PDF Download</span>
+                                      <span className="text-[11px] font-medium text-[#8A7E6F] dark:text-[#A89F91] uppercase tracking-wider mt-0.5">PDF Download</span>
                                     </div>
                                     <Download size={16} className="ml-auto text-[#A79A88] group-hover:text-[#8A6A16] transition-colors" />
                                   </a>
@@ -251,7 +251,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
         <div className="flex items-center gap-4">
           <button 
             onClick={handleCopyLink}
-            className="group flex items-center gap-2 text-[13px] font-semibold text-[#8A7E6F] hover:text-[#111] transition-colors"
+            className="group flex items-center gap-2 text-[13px] font-semibold text-[#8A7E6F] dark:text-[#A89F91] hover:text-[#111] transition-colors"
           >
             <Copy size={14} className="group-hover:text-[#8A6A16] transition-colors" /> 
             {copying ? 'Copied!' : 'Copy Link'}
@@ -262,7 +262,7 @@ export function DoubtThread({ doubt, onReply, onDeleteDoubt, openLightbox, isPro
               <span className="text-[#EAE1D2]">|</span>
               <button 
                 onClick={() => onReply(doubt.id)}
-                className="group flex items-center gap-2 text-[13px] font-semibold text-[#8A7E6F] hover:text-[#4A0E1B] transition-colors"
+                className="group flex items-center gap-2 text-[13px] font-semibold text-[#8A7E6F] dark:text-[#A89F91] hover:text-[#4A0E1B] transition-colors"
               >
                 <CornerDownRight size={14} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" /> 
                 Add Note

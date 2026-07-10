@@ -27,7 +27,7 @@ import { PremiumCard } from './PremiumCard';
 import { BreadcrumbBar } from './BreadcrumbBar';
 // ─── Design constants (from design.md) ───────────────────────────────────────
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
-const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60';
+const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60';
 
 const EXAM_LABELS: Record<string, string> = {
   'jee-main': 'JEE Main',
@@ -77,8 +77,8 @@ function VideoThumbnail({
 
   if (!videoId) {
     return (
-      <div className={`flex items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817] ${className}`}>
-        <Play size={20} className="text-[#22201F] dark:text-[#F6F2EA]/40" />
+      <div className={`flex items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] ${className}`}>
+        <Play size={20} className="text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40" />
       </div>
     );
   }
@@ -164,14 +164,14 @@ export function VideoWatchModal({
 
       {/* Modal shell */}
       <div
-        className={`relative flex h-full w-full flex-col overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] transition-all duration-300 sm:rounded-card sm:shadow-[0_20px_60px_rgba(74,14,27,0.12)] border border-[#D9C2A2]/45 ${
+        className={`relative flex h-full w-full flex-col overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] transition-all duration-300 sm:rounded-card sm:shadow-[0_20px_60px_rgba(74,14,27,0.12)] border border-[#D9C2A2]/45 ${
           theater
             ? 'sm:max-w-[98vw] sm:max-h-[96vh]'
             : 'sm:max-w-6xl sm:max-h-[92vh]'
         }`}
       >
         {/* ── Header ─────────────────────────────────────────────────────── */}
-        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-4 py-3 sm:px-5">
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-4 py-3 sm:px-5">
           <div className="flex-1 min-w-0">
             <BreadcrumbBar
               items={[
@@ -190,7 +190,7 @@ export function VideoWatchModal({
             {/* Toggle sidebar (mobile) */}
             <button
               onClick={() => setSidebarOpen((o) => !o)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA] lg:hidden"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] lg:hidden"
               aria-label={sidebarOpen ? 'Hide playlist' : 'Show playlist'}
             >
               <List size={16} />
@@ -198,7 +198,7 @@ export function VideoWatchModal({
             {/* Theater mode */}
             <button
               onClick={() => setTheater((t) => !t)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]"
               aria-label={theater ? 'Exit theater mode' : 'Theater mode'}
             >
               {theater ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
@@ -206,7 +206,7 @@ export function VideoWatchModal({
             {/* Close */}
             <button
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]"
               aria-label="Close"
             >
               <X size={16} />
@@ -225,7 +225,7 @@ export function VideoWatchModal({
               ) : (
                 /* No valid video ID */
                 <div className="aspect-video w-full flex flex-col items-center justify-center bg-[#0f0f0f] text-center p-6">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-[#22201F]/10">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F]/10">
                     <Play size={28} className="text-white/40 ml-1" />
                   </div>
                   <p className="mt-4 text-sm font-semibold text-white/60">
@@ -248,7 +248,7 @@ export function VideoWatchModal({
                   <div className="mt-6 flex gap-3">
                     <button
                       onClick={() => setShowUpNext(false)}
-                      className="inline-flex items-center gap-2 rounded-btn border border-[#D9C2A2]/40 bg-[#F7F3EC] dark:bg-[#1A1817]/10 px-4 py-2 text-xs font-bold text-white hover:bg-[#F7F3EC] dark:bg-[#1A1817]/20 transition-colors"
+                      className="inline-flex items-center gap-2 rounded-btn border border-[#D9C2A2]/40 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]/10 px-4 py-2 text-xs font-bold text-white hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]/20 transition-colors"
                     >
                       Stay here
                     </button>
@@ -275,19 +275,19 @@ export function VideoWatchModal({
                     <span className={`h-1.5 w-1.5 rounded-full ${exam.dot}`} />
                     {examLabel}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA]/60 border border-[#D9C2A2]/20">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 border border-[#D9C2A2]/20">
                     <BookOpen size={10} />
                     {video.subject}
                   </span>
                   {video.duration && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA]/60 border border-[#D9C2A2]/20">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 border border-[#D9C2A2]/20">
                       <Clock size={10} />
                       {video.duration}
                     </span>
                   )}
                 </div>
 
-                <h2 className="dash-serif text-xl font-semibold text-[#22201F] dark:text-[#F6F2EA] leading-snug sm:text-2xl">
+                <h2 className="dash-serif text-xl font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] leading-snug sm:text-2xl">
                   {video.title}
                 </h2>
                 <p className={`mt-1 ${MICRO}`}>{video.chapter}</p>
@@ -297,7 +297,7 @@ export function VideoWatchModal({
               {video.description && (
                 <PremiumCard padding="medium" accentLine>
                   <PremiumCard.Category className="mb-2">About this lecture</PremiumCard.Category>
-                  <p className="text-sm leading-relaxed text-[#22201F] dark:text-[#F6F2EA]/80">{video.description}</p>
+                  <p className="text-sm leading-relaxed text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/80">{video.description}</p>
                   <PremiumCard.Footer noDivider className="mt-4">
                     <PremiumCard.Metadata className="font-mono">Instructor: Prof. Ajesh Joe</PremiumCard.Metadata>
                   </PremiumCard.Footer>
@@ -309,7 +309,7 @@ export function VideoWatchModal({
                 <button
                   onClick={goPrev}
                   disabled={!prevVideo}
-                  className="flex-1 inline-flex items-center gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
+                  className="flex-1 inline-flex items-center gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
                 >
                   <ChevronLeft size={15} />
                   <span className="min-w-0 text-left">
@@ -320,7 +320,7 @@ export function VideoWatchModal({
                 <button
                   onClick={goNext}
                   disabled={!nextVideo}
-                  className="flex-1 inline-flex items-center justify-end gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
+                  className="flex-1 inline-flex items-center justify-end gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
                 >
                   <span className="min-w-0 text-right">
                     <span className={`block ${MICRO} leading-none`}>Next</span>
@@ -334,16 +334,16 @@ export function VideoWatchModal({
 
           {/* ── Sidebar playlist ─────────────────────────────────────────── */}
           <aside
-            className={`shrink-0 overflow-y-auto border-l border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] transition-all duration-300 ${
+            className={`shrink-0 overflow-y-auto border-l border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] dark:bg-[#22201F] transition-all duration-300 ${
               sidebarOpen ? 'w-72 xl:w-80' : 'w-0 overflow-hidden border-0'
             }`}
           >
-            <div className="sticky top-0 z-10 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-4 py-3">
+            <div className="sticky top-0 z-10 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-4 py-3">
               <p className={MICRO}>Playlist</p>
-              <p className="mt-0.5 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">
+              <p className="mt-0.5 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
                 {examLabel} · {video.subject}
               </p>
-              <p className="text-xs text-[#22201F] dark:text-[#F6F2EA]/60">
+              <p className="text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
                 {currentIndex + 1} of {playlist.length}
               </p>
             </div>
@@ -362,16 +362,16 @@ export function VideoWatchModal({
                     className={`group flex w-full items-start gap-3 rounded-xl px-2.5 py-3 text-left transition-colors ${
                       isActive
                         ? 'bg-[#4A0E1B]/8'
-                        : 'hover:bg-[#F7F3EC] dark:bg-[#1A1817]/50'
+                        : 'hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]/50'
                     }`}
                   >
                     {/* Thumbnail / index */}
-                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-[#F7F3EC] dark:bg-[#1A1817]">
+                    <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]">
                       {itemId ? (
                         <PlaylistThumbnail videoId={itemId} alt={item.title} />
                       ) : (
                         <div className="flex h-full items-center justify-center">
-                          <span className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]/40">
+                          <span className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40">
                             {idx + 1}
                           </span>
                         </div>
@@ -387,14 +387,14 @@ export function VideoWatchModal({
                     <div className="min-w-0 flex-1">
                       <p
                         className={`line-clamp-2 text-xs font-semibold leading-snug ${
-                          isActive ? 'text-[#4A0E1B]' : 'text-[#22201F] dark:text-[#F6F2EA] group-hover:text-[#4A0E1B]'
+                          isActive ? 'text-[#4A0E1B]' : 'text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] group-hover:text-[#4A0E1B]'
                         } transition-colors`}
                       >
                         {item.title}
                       </p>
-                      <p className="mt-1 text-[10px] text-[#22201F] dark:text-[#F6F2EA]/60">{item.chapter}</p>
+                      <p className="mt-1 text-[10px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">{item.chapter}</p>
                       {item.duration && (
-                        <p className="dash-mono mt-1 text-[10px] tabular-nums text-[#22201F] dark:text-[#F6F2EA]/40">
+                        <p className="dash-mono mt-1 text-[10px] tabular-nums text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40">
                           {item.duration}
                         </p>
                       )}
@@ -409,7 +409,7 @@ export function VideoWatchModal({
               })}
 
               {playlist.length === 0 && (
-                <p className="px-4 py-8 text-center text-sm text-[#22201F] dark:text-[#F6F2EA]/60">
+                <p className="px-4 py-8 text-center text-sm text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
                   No other lectures in this course.
                 </p>
               )}

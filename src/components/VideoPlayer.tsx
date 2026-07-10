@@ -59,11 +59,11 @@ export function VideoPlayer({ videoId, autoplay = false, onEnd, className = '' }
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0f0f0f]">
           {/* Shimmer bars */}
           <div className="w-full space-y-3 px-8">
-            <div className="h-2 w-3/4 animate-pulse rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/10" />
-            <div className="h-2 w-1/2 animate-pulse rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/10" />
+            <div className="h-2 w-3/4 animate-pulse rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/10" />
+            <div className="h-2 w-1/2 animate-pulse rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/10" />
           </div>
           {/* Play icon shimmer */}
-          <div className="mt-6 flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/10">
+          <div className="mt-6 flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/10">
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-white/30 ml-1">
               <path d="M8 5v14l11-7z" />
             </svg>

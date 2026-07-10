@@ -27,10 +27,10 @@ export function BreadcrumbBar({ items, backLabel, onBack, rightContent, classNam
           {onBack && backLabel && (
             <button
               onClick={onBack}
-              className="group flex items-center gap-2 bg-white dark:bg-[#22201F] rounded-[16px] border border-[#D9C2A2] px-[14px] py-[7px] shadow-sm transition-all duration-250 ease-out hover:-translate-y-[2px] hover:border-[#C9A13B] hover:shadow-md cursor-pointer mr-2"
+              className="group flex items-center gap-2 bg-white dark:bg-[#22201F] dark:bg-[#22201F] rounded-[16px] border border-[#D9C2A2] px-[14px] py-[7px] shadow-sm transition-all duration-250 ease-out hover:-translate-y-[2px] hover:border-[#C9A13B] hover:shadow-md cursor-pointer mr-2"
             >
               <ArrowLeft size={16} className="text-[#4A0E1B] transition-transform group-hover:-translate-x-1" />
-              <span className="text-[12px] font-semibold tracking-wide text-[#8A7E6F] dark:text-[#A89F91] group-hover:text-[#4A0E1B]">{backLabel}</span>
+              <span className="text-[12px] font-semibold tracking-wide text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] group-hover:text-[#4A0E1B]">{backLabel}</span>
             </button>
           )}
 
@@ -49,7 +49,7 @@ export function BreadcrumbBar({ items, backLabel, onBack, rightContent, classNam
                       className={`group relative flex items-center gap-1.5 rounded-[14px] border px-[14px] py-[7px] text-[11px] font-bold uppercase tracking-[0.1em] transition-all duration-250 ease-out shadow-sm
                         ${isLast 
                           ? 'bg-[#4A0E1B] border-[#4A0E1B] text-white shadow-md' 
-                          : 'bg-white dark:bg-[#22201F] border-[#D9C2A2] text-[#4A0E1B] hover:border-[#C9A13B] hover:scale-[1.03] hover:-translate-y-[2px] hover:shadow-md cursor-pointer'
+                          : 'bg-white dark:bg-[#22201F] dark:bg-[#22201F] border-[#D9C2A2] text-[#4A0E1B] hover:border-[#C9A13B] hover:scale-[1.03] hover:-translate-y-[2px] hover:shadow-md cursor-pointer'
                         }`}
                       style={{ 
                         animation: 'fadeInUp 0.3s ease-out forwards',
