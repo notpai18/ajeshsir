@@ -107,7 +107,7 @@ export function PDFViewerCore({ pdfUrl, containerWidth }: PDFViewerCoreProps) {
   }, []);
 
   // Theme backgrounds
-  const viewerBg = theme === 'dark' ? 'bg-[#1a1a1a]' : theme === 'sepia' ? 'bg-[#f4ecd8]' : 'bg-[#F7F3EC]';
+  const viewerBg = theme === 'dark' ? 'bg-[#1a1a1a]' : theme === 'sepia' ? 'bg-[#f4ecd8]' : 'bg-[#F7F3EC] dark:bg-[#1A1817]';
   const pageShadow = theme === 'dark'
     ? 'shadow-[0_4px_24px_rgba(0,0,0,0.6)]'
     : 'shadow-soft-md border border-[#D9C2A2]/30';
@@ -164,12 +164,12 @@ export function PDFViewerCore({ pdfUrl, containerWidth }: PDFViewerCoreProps) {
                   className={`${pageShadow} rounded-sm transition-shadow duration-200`}
                   loading={
                     <div
-                      className="animate-pulse rounded-sm bg-white"
+                      className="animate-pulse rounded-sm bg-white dark:bg-[#22201F]"
                       style={{ width: pageWidth, height: Math.round(pageWidth * 1.414) }}
                     />
                   }
                   error={
-                    <div className="flex items-center justify-center rounded-sm bg-white p-8 text-sm text-[#22201F]/60">
+                    <div className="flex items-center justify-center rounded-sm bg-white dark:bg-[#22201F] p-8 text-sm text-[#22201F] dark:text-[#F6F2EA]/60">
                       Page {pageNum} failed to render
                     </div>
                   }
@@ -190,13 +190,13 @@ function LoadingSkeleton() {
       {[1.414, 1.414, 1.0].map((ratio, i) => (
         <div
           key={i}
-          className="w-full max-w-[600px] animate-pulse rounded-sm bg-white"
+          className="w-full max-w-[600px] animate-pulse rounded-sm bg-white dark:bg-[#22201F]"
           style={{ height: Math.round(600 * ratio) }}
         >
           <div className="h-full w-full rounded-sm bg-gradient-to-b from-[#D9C2A2]/20 to-[#F7F3EC]/10" />
         </div>
       ))}
-      <p className="dash-root text-xs text-[#22201F]/60 animate-pulse">Loading document…</p>
+      <p className="dash-root text-xs text-[#22201F] dark:text-[#F6F2EA]/60 animate-pulse">Loading document…</p>
     </div>
   );
 }
@@ -205,13 +205,13 @@ function LoadingSkeleton() {
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] border border-[#D9C2A2]/30">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#D9C2A2]/30">
         <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
         </svg>
       </div>
-      <h4 className="dash-serif text-base font-bold text-[#22201F]">Could not load document</h4>
-      <p className="max-w-xs text-sm text-[#22201F]/60">{error}</p>
+      <h4 className="dash-serif text-base font-bold text-[#22201F] dark:text-[#F6F2EA]">Could not load document</h4>
+      <p className="max-w-xs text-sm text-[#22201F] dark:text-[#F6F2EA]/60">{error}</p>
       <button
         onClick={onRetry}
         className="inline-flex items-center gap-2 rounded-btn bg-[#4A0E1B] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all hover:bg-[#7C2532] shadow-soft-sm hover:-translate-y-0.5 duration-200 transition-all border border-[#4A0E1B]"

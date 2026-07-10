@@ -42,7 +42,7 @@ export function PremiumCard({
   }[padding];
 
   // Base card styles
-  const baseClasses = 'relative rounded-[22px] border bg-white transition-all duration-250 ease-out group overflow-hidden';
+  const baseClasses = 'relative rounded-[22px] border bg-white dark:bg-[#22201F] transition-all duration-250 ease-out group overflow-hidden';
   
   // Dynamic styles based on states
   const borderClasses = selected
@@ -53,7 +53,7 @@ export function PremiumCard({
 
   const bgClasses = selected
     ? 'bg-[#4A0E1B]/[0.02]'
-    : 'bg-white';
+    : 'bg-white dark:bg-[#22201F]';
 
   const shadowClasses = selected
     ? 'shadow-[0_12px_32px_rgba(74,14,27,0.06)]'
@@ -113,7 +113,7 @@ interface CardIconProps {
 PremiumCard.Icon = function CardIcon({ children, className = '' }: CardIconProps) {
   return (
     <div 
-      className={`w-12 h-12 flex items-center justify-center rounded-[14px] bg-[#F7F3EC] border border-[#C9A13B]/25 text-[#4A0E1B] shrink-0 transition-all duration-250 group-hover:shadow-[0_0_12px_rgba(201,161,59,0.35)] group-hover:border-[#C9A13B]/50 group-hover:text-[#7C2532] ${className}`}
+      className={`w-12 h-12 flex items-center justify-center rounded-[14px] bg-[#F7F3EC] dark:bg-[#1A1817] border border-[#C9A13B]/25 text-[#4A0E1B] dark:text-[#F4E7E5] shrink-0 transition-all duration-250 group-hover:shadow-[0_0_12px_rgba(201,161,59,0.35)] group-hover:border-[#C9A13B]/50 group-hover:text-[#7C2532] ${className}`}
     >
       {children}
     </div>
@@ -142,7 +142,7 @@ interface CardTitleProps {
 PremiumCard.Title = function CardTitle({ children, className = '', as = 'h3' }: CardTitleProps) {
   const Component = as;
   return (
-    <Component className={`block text-lg md:text-xl font-[650] text-[#22201F] tracking-tight leading-snug ${className}`}>
+    <Component className={`block text-lg md:text-xl font-[650] text-[#22201F] dark:text-[#F6F2EA] tracking-tight leading-snug ${className}`}>
       {children}
     </Component>
   );
@@ -155,7 +155,7 @@ interface CardDescriptionProps {
 }
 PremiumCard.Description = function CardDescription({ children, className = '' }: CardDescriptionProps) {
   return (
-    <p className={`text-[15px] font-normal text-[#22201F]/70 leading-relaxed ${className}`}>
+    <p className={`text-[15px] font-normal text-[#22201F] dark:text-[#F6F2EA]/70 leading-relaxed ${className}`}>
       {children}
     </p>
   );
@@ -168,7 +168,7 @@ interface CardMetadataProps {
 }
 PremiumCard.Metadata = function CardMetadata({ children, className = '' }: CardMetadataProps) {
   return (
-    <span className={`text-[13px] text-[#22201F]/60 ${className}`}>
+    <span className={`text-[13px] text-[#22201F] dark:text-[#F6F2EA]/60 ${className}`}>
       {children}
     </span>
   );

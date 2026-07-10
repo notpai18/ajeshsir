@@ -61,13 +61,13 @@ export function PDFViewer({ docInfo, onClose }: PDFViewerProps) {
     return (
       <ModalShell onClose={onClose}>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] border border-[#D9C2A2]/30">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#D9C2A2]/30">
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
             </svg>
           </div>
-          <h4 className="dash-serif text-base font-bold text-[#22201F]">Cannot load document</h4>
-          <p className="max-w-xs text-sm text-[#22201F]/60">{urlError}</p>
+          <h4 className="dash-serif text-base font-bold text-[#22201F] dark:text-[#F6F2EA]">Cannot load document</h4>
+          <p className="max-w-xs text-sm text-[#22201F] dark:text-[#F6F2EA]/60">{urlError}</p>
           <button
             onClick={onClose}
             className="inline-flex items-center gap-2 rounded-btn bg-[#4A0E1B] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all hover:bg-[#7C2532] shadow-soft-sm hover:-translate-y-0.5"
@@ -105,7 +105,7 @@ function ModalShell({ children, onClose }: { children: React.ReactNode; onClose:
         onClick={onClose}
         tabIndex={-1}
       />
-      <div className="relative z-10 flex h-full flex-col overflow-hidden rounded-none bg-white sm:m-4 sm:rounded-card border border-[#D9C2A2]/30 shadow-soft-xl">
+      <div className="relative z-10 flex h-full flex-col overflow-hidden rounded-none bg-white dark:bg-[#22201F] sm:m-4 sm:rounded-card border border-[#D9C2A2]/30 shadow-soft-xl">
         {children}
       </div>
     </div>
@@ -137,9 +137,9 @@ function ViewerLayout({ resolvedUrl, onClose }: { resolvedUrl: string | null; on
     return (
       <>
         <PDFToolbar onClose={onClose} />
-        <div className="flex flex-1 items-center justify-center gap-3 bg-[#F7F3EC]">
+        <div className="flex flex-1 items-center justify-center gap-3 bg-[#F7F3EC] dark:bg-[#1A1817]">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#4A0E1B] border-t-transparent" />
-          <p className="dash-root text-sm text-[#22201F]/60">Resolving document…</p>
+          <p className="dash-root text-sm text-[#22201F] dark:text-[#F6F2EA]/60">Resolving document…</p>
         </div>
       </>
     );

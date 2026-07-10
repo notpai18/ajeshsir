@@ -17,9 +17,5 @@ export default function App() {
     setTheme(prev => prev === 'current' ? 'dark' : 'current');
   };
 
-  if (theme === 'dark') {
-    return <AppOriginal theme={theme} toggleTheme={toggleTheme} />;
-  }
-  
   return <AppNew theme={theme} toggleTheme={toggleTheme} />;
 }

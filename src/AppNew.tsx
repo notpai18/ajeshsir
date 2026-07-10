@@ -272,10 +272,10 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
   // ─── Loading / Error UI ───────────────────────────────────────────────────
   if (state.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC]">
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817]">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 border-4 border-[#4A0E1B] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#4A0E1B]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#4A0E1B] dark:text-[#F4E7E5]">
             Loading Portal…
           </p>
         </div>
@@ -285,13 +285,13 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
 
   if (state.error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] p-6">
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817] p-6">
         <div className="max-w-md text-center space-y-4">
           <p className="text-3xl">⚠️</p>
-          <h2 className="text-lg font-black uppercase tracking-[0.2em] text-[#4A0E1B]">
+          <h2 className="text-lg font-black uppercase tracking-[0.2em] text-[#4A0E1B] dark:text-[#F4E7E5]">
             Failed to connect
           </h2>
-          <p className="text-sm text-[#22201F]/80">{state.error}</p>
+          <p className="text-sm text-[#22201F] dark:text-[#F6F2EA]/80">{state.error}</p>
           <button
             onClick={loadAllData}
             className="px-6 py-3 bg-[#4A0E1B] text-white text-xs font-black uppercase tracking-[0.2em] rounded-lg hover:bg-[#7C2532] transition-colors"
@@ -305,7 +305,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
 
   // ─── Main Render ──────────────────────────────────────────────────────────
   return (
-    <div className={`min-h-screen flex flex-col bg-[#F7F3EC] text-[#22201F] transition-colors duration-300`}>
+    <div className={`min-h-screen flex flex-col bg-[#F7F3EC] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA] transition-colors duration-300`}>
       {/* Sticky Top Navbar */}
       <Navbar
         theme={theme}
