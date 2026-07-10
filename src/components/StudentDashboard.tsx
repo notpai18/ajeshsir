@@ -29,7 +29,9 @@ import {
   Pin,
   Play,
   Paperclip,
-  CheckCircle2
+  CheckCircle2,
+  Atom,
+  FlaskConical
 } from 'lucide-react';
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
 import { VideoWatchModal } from './VideoWatchModal';
@@ -291,6 +293,17 @@ export default function StudentDashboard({
     });
   }, [announcements]);
 
+  const recentUploads = useMemo(() => {
+    return [
+      ...notes.slice(0, 2).map(n => ({ type: 'Note', title: n.title, course: n.course })),
+      ...videos.slice(0, 2).map(v => ({ type: 'Video', title: v.title, course: v.course }))
+    ].slice(0, 3);
+  }, [notes, videos]);
+
+  const popularResources = useMemo(() => {
+    return [...notes].sort((a, b) => (b.downloadCount || 0) - (a.downloadCount || 0)).slice(0, 4);
+  }, [notes]);
+
   // Category cards (Step 2) with live counts for the selected exam
   const categoryCards = [
     { id: 'notes' as const, title: 'Study Notes', desc: 'Rigorous mechanism summaries and multi-concept chapter breakdowns.', icon: <BookOpen size={20} />, count: notes.filter(n => n.course === selectedExam).length, unit: 'notes' },
@@ -305,33 +318,141 @@ export default function StudentDashboard({
     <div className="dash-root min-h-screen bg-[#F6F2EA] py-12 text-[#22201F]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* ================= PROFESSOR ANNOUNCEMENTS ================= */}
-        {!selectedExam && announcements.length > 0 && (
-          <div className={`${CARD} mb-8 p-5 sm:p-6`}>
-            <div className="mb-4 flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">
-                <Megaphone size={16} />
-              </span>
-              <h3 className={MICRO}>Professor announcements</h3>
-            </div>
-            <div className="space-y-2.5">
-              {sortedAnnouncements.slice(0, 3).map(ann => (
-                <div key={ann.id} className="rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] p-4">
-                  <div className="flex items-start gap-2.5">
-                    {ann.pinned && <Pin size={14} className="mt-0.5 shrink-0 text-[#4A0E1B]" fill="currentColor" />}
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold text-[#22201F]">{ann.title}</p>
-                      <p className="mt-1 text-xs leading-relaxed text-[#5A534B]">{ann.body}</p>
-                      <div className="mt-2.5 flex items-center gap-2">
-                        <span className="dash-mono text-[11px] text-[#A79A88]">{new Date(ann.createdAt).toLocaleDateString()}</span>
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${ANN_CAT[ann.category].cls}`}>
-                          {ANN_CAT[ann.category].label}
-                        </span>
-                      </div>
-                    </div>
+        {/* ================= LANDING PAGE (REDESIGNED V2) ================= */}
+        {!selectedExam && (
+          <div className="flex flex-col gap-6 pb-12">
+            {/* Hero Section */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(74,14,27,0.75)] sm:p-10 animate-[fadeInUp_0.8s_ease-out_forwards]">
+              <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />
+
+              <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:items-center md:gap-9 md:text-left">
+                {/* Academic Icon */}
+                <div className="relative shrink-0 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
+                  <div className="flex h-28 w-28 items-center justify-center rounded-[28px] bg-gradient-to-br from-[#EAD3AE] to-[#D9C2A2] shadow-lg sm:h-32 sm:w-32">
+                    <Atom className="text-[#4A0E1B]" size={48} strokeWidth={1.5} />
+                  </div>
+                  <span className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-2xl border-4 border-[#4A0E1B] bg-white text-[#4A0E1B]">
+                    <BookOpen size={18} />
+                  </span>
+                </div>
+
+                {/* Identity / Text */}
+                <div className="max-w-xl">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D9C2A2] animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>COURSE REPOSITORIES</p>
+                  <h1 className="dash-serif mt-2 text-3xl font-semibold leading-tight sm:text-[2.5rem] animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Choose Your Examination</h1>
+                  <p className="mt-3 text-sm leading-relaxed text-white/70 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
+                    Organize your chemistry resources by examination and access carefully curated notes, lectures, PYQs, and practice material.
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap justify-center gap-2 md:justify-start">
+                    {[
+                      { icon: <Compass size={13} />, text: '5 Examination Tracks' },
+                      { icon: <FileText size={13} />, text: '24 Study Notes' },
+                      { icon: <VideoIcon size={13} />, text: '18 Video Lectures' },
+                      { icon: <BookOpen size={13} />, text: '12 Practice Sheets' },
+                      { icon: <FileSpreadsheet size={13} />, text: 'PYQs Included' }
+                    ].map((chip, i) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[#D9C2A2]/30 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/90 hover:border-[#D9C2A2] hover:shadow-[0_0_12px_rgba(217,194,162,0.3)] hover:-translate-y-0.5 transition-all duration-300 animate-[fadeInUp_0.8s_ease-out_forwards]"
+                        style={{ animationDelay: `${0.5 + i * 0.1}s`, animationFillMode: 'both' }}
+                      >
+                        <span className="text-[#D9C2A2]">{chip.icon}</span>
+                        {chip.text}
+                      </span>
+                    ))}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Examination Grid */}
+            <div className="flex flex-wrap justify-center gap-6 mt-4">
+              {exams.map((exam) => (
+                <button
+                  key={exam.id}
+                  onClick={() => setSelectedExam(exam.id)}
+                  className="group relative flex w-full max-w-[340px] flex-col overflow-hidden rounded-[24px] border border-[#EAE1D2] bg-white p-6 text-left shadow-[0_4px_12px_rgba(34,32,31,0.04)] transition-all duration-[220ms] ease-out hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(74,14,27,0.12)] sm:w-[calc(50%-12px)] lg:w-[340px] h-[230px]"
+                >
+                  <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-[#C9A13B] transition-transform duration-[220ms] ease-out group-hover:scale-x-100 origin-left"></div>
+                  
+                  <div className="flex items-start justify-between w-full">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#F4E7E5] text-[#4A0E1B] transition-colors duration-[220ms] ease-out group-hover:bg-[#F7EFD9] group-hover:text-[#8A6A16]">
+                      {renderExamIcon(exam.icon)}
+                    </span>
+                    <span className="dash-mono rounded-full border border-[#EFE7D8] bg-[#FBF7F0] px-2.5 py-1 text-[10px] font-medium text-[#8A7E6F]">
+                      {notes.filter(n => n.course === exam.id).length + videos.filter(v => v.course === exam.id).length + practiceSheets.filter(s => s.course === exam.id).length + pyqs.filter(p => p.course === exam.id).length} Resources
+                    </span>
+                  </div>
+                  
+                  <h3 className="dash-serif mt-5 text-xl font-bold text-[#22201F]">{exam.title}</h3>
+                  <p className="mt-2 text-sm text-[#8A7E6F] line-clamp-1">{exam.description}</p>
+                  
+                  <div className="mt-auto pt-4 flex items-center text-[#4A0E1B] font-bold text-xs uppercase tracking-widest">
+                    Explore <ArrowRight size={14} className="ml-1.5 transition-transform duration-[220ms] ease-out group-hover:translate-x-2" />
+                  </div>
+                </button>
               ))}
+            </div>
+
+            {/* Supporting Panels - Reduced Visual Weight */}
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start border-t border-[#EAE1D2] pt-8">
+              
+              {/* Quick Statistics */}
+              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
+                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Platform Stats</h3>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Notes</span><span className="text-xs font-bold">{notes.length}</span></div>
+                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Videos</span><span className="text-xs font-bold">{videos.length}</span></div>
+                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Practice Sheets</span><span className="text-xs font-bold">{practiceSheets.length}</span></div>
+                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">PYQs</span><span className="text-xs font-bold">{pyqs.length}</span></div>
+                </div>
+              </div>
+
+              {/* Featured Announcements */}
+              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
+                 <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Announcements</h3>
+                 <div className="space-y-4">
+                   {sortedAnnouncements.filter(a => a.pinned).slice(0, 2).map(ann => (
+                     <div key={ann.id}>
+                       <p className="text-xs font-bold text-[#22201F] line-clamp-1">{ann.title}</p>
+                       <p className="mt-1 text-[10px] text-[#5A534B] line-clamp-2">{ann.body}</p>
+                     </div>
+                   ))}
+                   {sortedAnnouncements.filter(a => a.pinned).length === 0 && <p className="text-xs text-[#8A7E6F]">No pinned announcements.</p>}
+                 </div>
+              </div>
+
+              {/* Recently Added */}
+              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
+                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Recently Added</h3>
+                <div className="space-y-3">
+                  {recentUploads.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2.5">
+                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4E7E5] text-[#4A0E1B]">{item.type === 'Note' ? <BookOpen size={10} /> : <VideoIcon size={10} />}</span>
+                       <div>
+                         <p className="text-xs font-semibold text-[#22201F] line-clamp-1">{item.title}</p>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Popular Resources */}
+              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
+                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Popular</h3>
+                <div className="space-y-3">
+                  {popularResources.map(res => (
+                    <div key={res.id} className="cursor-pointer group flex items-center gap-2.5" onClick={() => setActivePdfViewer({ title: res.title, fileUrl: res.fileUrl })}>
+                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F7EFD9] text-[#8A6A16]"><Download size={10} /></span>
+                       <div>
+                         <p className="text-xs font-semibold text-[#22201F] line-clamp-1 group-hover:text-[#4A0E1B] transition-colors">{res.title}</p>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -358,39 +479,6 @@ export default function StudentDashboard({
               </>
             )}
           </nav>
-        )}
-
-        {/* ================= STEP 1: EXAM SELECTION ================= */}
-        {!selectedExam && (
-          <div>
-            <div className="mb-10 text-center">
-              <p className={MICRO}>Course repositories</p>
-              <h2 className="dash-serif mt-2 text-3xl font-semibold text-[#22201F] sm:text-4xl">Choose your examination</h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-[#8A7E6F]">
-                Select your academic category below to unlock a highly organised directory of learning materials.
-              </p>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {exams.map((exam) => (
-                <button
-                  key={exam.id}
-                  onClick={() => setSelectedExam(exam.id)}
-                  className={`${CARD} group w-full p-7 text-left transition-all duration-200 hover:-translate-y-1 hover:rotate-1`}
-                  id={`exam-card-${exam.id}`}
-                >
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
-                    {renderExamIcon(exam.icon)}
-                  </span>
-                  <h3 className="dash-serif mt-5 text-xl font-semibold text-[#22201F]">{exam.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#8A7E6F] line-clamp-3">{exam.description}</p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#4A0E1B] opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100">
-                    Explore course <ArrowRight size={14} />
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
         )}
 
         {/* ================= STEP 2: CATEGORY DASHBOARD ================= */}
