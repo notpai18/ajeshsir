@@ -622,7 +622,7 @@ function StudentDashboardContent({
                   )}
                 </div>
                 <div className="flex shrink-0 items-center gap-4">
-                  <div className="rounded-[12px] bg-[#22201F] p-4 text-center min-w-[160px]">
+                  <div className="rounded-[12px] bg-[#C9A13B] p-4 text-center min-w-[160px]">
                     <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#A8909A]">Total Notes</p>
                     <p className="dash-mono text-[32px] font-bold text-white mt-2 leading-none">{notes.filter(n => n.course === selectedExam).length}</p>
                     
