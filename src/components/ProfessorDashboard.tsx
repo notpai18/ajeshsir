@@ -61,29 +61,29 @@ import { SUBJECTS, SUBJECT_BADGE } from '../constants/subjects';
  * ------------------------------------------------------------------ */
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
 const INPUT =
-  'w-full rounded-input border border-[#D9C2A2]/40 bg-white px-3.5 py-2.5 text-sm text-[#22201F] placeholder:text-[#22201F]/30 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
+  'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#22201F] dark:text-[#F6F2EA]/30 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
 const PRIMARY_BTN =
   'inline-flex items-center justify-center gap-2 rounded-btn bg-[#4A0E1B] hover:bg-[#7C2532] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all shadow-soft-sm hover:-translate-y-0.5 duration-200 disabled:opacity-50';
 const GHOST_BTN =
-  'inline-flex items-center justify-center gap-2 rounded-btn border border-[#D9C2A2]/40 bg-white px-4 py-2.5 text-xs font-semibold text-[#22201F] transition-all hover:bg-[#F7F3EC] hover:-translate-y-0.5 duration-200';
+  'inline-flex items-center justify-center gap-2 rounded-btn border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-4 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:-translate-y-0.5 duration-200';
 const ROW_BTN =
-  'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#22201F]/80 transition-colors hover:bg-[#F7F3EC] hover:text-[#4A0E1B]';
+  'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#4A0E1B]';
 const ROW_BTN_DANGER =
   'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#4A0E1B]/80 transition-colors hover:bg-[#4A0E1B]/8 hover:text-[#4A0E1B]';
-const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F]/60';
+const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60';
 
 const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
+  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
   'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F]', dot: 'bg-[#22201F]' },
+  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
+  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
   'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
 };
 
 const ANN_CAT: Record<AnnouncementCategory, { label: string; cls: string }> = {
   general: { label: 'General', cls: 'bg-[#EFE7D8] text-[#6E645A]' },
   exam: { label: 'Exam', cls: 'bg-[#F4E4E4] text-[#4A0E1B]' },
-  resource: { label: 'Resource', cls: 'bg-[#F7EFD9] text-[#8A6A16]' },
+  resource: { label: 'Resource', cls: 'bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]' },
   schedule: { label: 'Schedule', cls: 'bg-[#F4E2E5] text-[#7C2532]' }
 };
 
@@ -92,7 +92,7 @@ const ANN_CAT: Record<AnnouncementCategory, { label: string; cls: string }> = {
  * ------------------------------------------------------------------ */
 function SubjectBadge({ subject }: { subject: string }) {
   const s = SUBJECT_BADGE[subject as keyof typeof SUBJECT_BADGE];
-  if (!s) return <span className="text-xs text-[#8A7E6F]">{subject}</span>;
+  if (!s) return <span className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">{subject}</span>;
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${s.bg} ${s.text}`}>
       <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
@@ -116,7 +116,7 @@ function ExamChip({ course, label }: { course: string; label: string }) {
 
 function DifficultyChip({ level }: { level: 'Easy' | 'Medium' | 'Hard' }) {
   const map = {
-    Easy: 'bg-[#F7EFD9] text-[#8A6A16]',
+    Easy: 'bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]',
     Medium: 'bg-[#F4E2E5] text-[#7C2532]',
     Hard: 'bg-[#F4E4E4] text-[#4A0E1B]'
   } as const;
@@ -140,7 +140,7 @@ function StatCard({
         <PremiumCard.Category>{label}</PremiumCard.Category>
         <PremiumCard.Icon className="h-10 w-10 rounded-full">{icon}</PremiumCard.Icon>
       </div>
-      <p className="mt-4 text-3xl font-bold leading-none tabular-nums text-[#22201F]">{value}</p>
+      <p className="mt-4 text-3xl font-bold leading-none tabular-nums text-[#22201F] dark:text-[#F6F2EA]">{value}</p>
       {sub && <PremiumCard.Metadata className="mt-2 block">{sub}</PremiumCard.Metadata>}
     </PremiumCard>
   );
@@ -165,7 +165,7 @@ function Bar({
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
         <span className="truncate text-sm font-semibold text-[#3A342E]">{label}</span>
-        <span className="dash-mono shrink-0 text-xs tabular-nums text-[#8A7E6F]">{sub}</span>
+        <span className="dash-mono shrink-0 text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">{sub}</span>
       </div>
       <div className="h-2.5 overflow-hidden rounded-full bg-[#F0E9DB]">
         <div className={`h-full rounded-full ${barClass}`} style={{ width: `${pct}%` }} />
@@ -186,10 +186,10 @@ function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] px-6 py-14 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] text-[#8A6A16]">{icon}</div>
-      <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F]">{title}</h4>
-      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F]">{message}</p>
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] px-6 py-14 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">{icon}</div>
+      <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F] dark:text-[#F6F2EA]">{title}</h4>
+      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91]">{message}</p>
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
@@ -217,13 +217,13 @@ function Modal({
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <button aria-label="Close" onClick={onClose} className="absolute inset-0 cursor-default bg-[#22201F]/40 backdrop-blur-[2px]" />
-      <div className={`relative w-full ${wide ? 'max-w-2xl' : 'max-w-lg'} overflow-hidden rounded-modal border border-[#D9C2A2]/30 bg-white shadow-soft-xl`}>
+      <div className={`relative w-full ${wide ? 'max-w-2xl' : 'max-w-lg'} overflow-hidden rounded-modal border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] shadow-soft-xl`}>
         <div className="flex items-start justify-between gap-4 border-b border-[#D9C2A2]/20 px-6 py-5">
           <div>
-            <h3 className="dash-serif text-lg font-semibold text-[#22201F]">{title}</h3>
-            {subtitle && <p className="mt-0.5 text-xs text-[#22201F]/60">{subtitle}</p>}
+            <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">{title}</h3>
+            {subtitle && <p className="mt-0.5 text-xs text-[#22201F] dark:text-[#F6F2EA]/60">{subtitle}</p>}
           </div>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-[#22201F]/60 transition-colors hover:bg-[#F7F3EC] hover:text-[#22201F]">
+          <button onClick={onClose} className="rounded-lg p-1.5 text-[#22201F] dark:text-[#F6F2EA]/60 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]">
             <X size={18} />
           </button>
         </div>
@@ -236,7 +236,7 @@ function Modal({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="block">
-      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A7E6F]">{label}</span>
+      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A7E6F] dark:text-[#A89F91]">{label}</span>
       {children}
     </div>
   );
@@ -255,7 +255,7 @@ function YouTubeLinkField({ value, onChange }: { value: string; onChange: (v: st
 
   return (
     <div className="block">
-      <span className="mb-1.5 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A7E6F]">
+      <span className="mb-1.5 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A7E6F] dark:text-[#A89F91]">
         YouTube URL
         <span className="normal-case font-normal text-[#A79A88] tracking-normal">
           — supports all formats (watch, youtu.be, embed, shorts)
@@ -264,12 +264,12 @@ function YouTubeLinkField({ value, onChange }: { value: string; onChange: (v: st
       <div className="relative">
         <input
           type="url"
-          className={`w-full rounded-xl border bg-[#FBF7F0] px-3.5 py-2.5 pr-10 text-sm text-[#22201F] placeholder:text-[#B3A996] outline-none transition ${
+          className={`w-full rounded-xl border bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5 pr-10 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B3A996] outline-none transition ${
             showError
               ? 'border-[#B23B2E]/60 focus:border-[#B23B2E]/80 focus:ring-4 focus:ring-[#B23B2E]/10'
               : showOk
-              ? 'border-[#8A6A16]/60 focus:border-[#8A6A16]/80 focus:ring-4 focus:ring-[#8A6A16]/10 bg-white'
-              : 'border-[#E3D8C5] focus:border-[#4A0E1B]/50 focus:bg-white focus:ring-4 focus:ring-[#4A0E1B]/10'
+              ? 'border-[#8A6A16]/60 focus:border-[#8A6A16]/80 focus:ring-4 focus:ring-[#8A6A16]/10 bg-white dark:bg-[#22201F]'
+              : 'border-[#E3D8C5] focus:border-[#4A0E1B]/50 focus:bg-white dark:bg-[#22201F] focus:ring-4 focus:ring-[#4A0E1B]/10'
           }`}
           required
           value={value}
@@ -299,7 +299,7 @@ function YouTubeLinkField({ value, onChange }: { value: string; onChange: (v: st
       )}
 
       {showOk && thumbSrc && !thumbError && (
-        <div className="mt-3 flex items-start gap-3 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] p-3">
+        <div className="mt-3 flex items-start gap-3 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-3">
           <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-lg bg-[#0f0f0f]">
             <img
               src={thumbSrc}
@@ -317,10 +317,10 @@ function YouTubeLinkField({ value, onChange }: { value: string; onChange: (v: st
             <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">
               ✓ Valid YouTube URL
             </p>
-            <p className="mt-0.5 font-mono text-[10px] text-[#8A7E6F] break-all">
-              Video ID: <span className="text-[#22201F] font-semibold">{videoId}</span>
+            <p className="mt-0.5 font-mono text-[10px] text-[#8A7E6F] dark:text-[#A89F91] break-all">
+              Video ID: <span className="text-[#22201F] dark:text-[#F6F2EA] font-semibold">{videoId}</span>
             </p>
-            <p className="mt-1 text-[10px] text-[#8A7E6F]">
+            <p className="mt-1 text-[10px] text-[#8A7E6F] dark:text-[#A89F91]">
               Thumbnail auto-generated · No manual upload needed
             </p>
           </div>
@@ -850,7 +850,7 @@ export default function ProfessorDashboard({
   );
 
   return (
-    <div className="dash-root min-h-[85vh] bg-[#F7F3EC] text-[#22201F]">
+    <div className="dash-root min-h-[85vh] bg-[#F7F3EC] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA]">
       {/* ─── In-app PDF Viewer overlay ─── */}
       {pdfDoc && <PDFViewer docInfo={pdfDoc} onClose={() => setPdfDoc(null)} />}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -858,8 +858,8 @@ export default function ProfessorDashboard({
         <header className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className={MICRO}>Professor workspace</p>
-            <h1 className="dash-serif mt-1 text-3xl font-semibold text-[#22201F] sm:text-[2rem]">{pageTitle[activeTab]}</h1>
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-[#22201F]/60">
+            <h1 className="dash-serif mt-1 text-3xl font-semibold text-[#22201F] dark:text-[#F6F2EA] sm:text-[2rem]">{pageTitle[activeTab]}</h1>
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-[#22201F] dark:text-[#F6F2EA]/60">
               {activeTab === 'overview' && <Calendar size={14} />}
               {pageSub[activeTab]}
             </p>
@@ -872,7 +872,7 @@ export default function ProfessorDashboard({
             {quickAddOpen && (
               <>
                 <button className="fixed inset-0 z-40 cursor-default" aria-hidden onClick={() => setQuickAddOpen(false)} />
-                <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-[#D9C2A2]/30 bg-white p-1.5 shadow-soft-lg">
+                <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] p-1.5 shadow-soft-lg">
                   {quickAdd.map((item) => (
                     <button
                       key={item.label}
@@ -880,7 +880,7 @@ export default function ProfessorDashboard({
                         item.fn();
                         setQuickAddOpen(false);
                       }}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#22201F] transition-colors hover:bg-[#F7F3EC]"
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817]"
                     >
                       <span className="text-[#8A6A16]">{item.icon}</span>
                       {item.label}
@@ -903,8 +903,8 @@ export default function ProfessorDashboard({
                     {initials(profile.name)}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="truncate text-sm font-bold text-[#22201F]">{profile.name}</h3>
-                    <span className="text-[11px] font-medium text-[#22201F]/60">{profile.role}</span>
+                    <h3 className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{profile.name}</h3>
+                    <span className="text-[11px] font-medium text-[#22201F] dark:text-[#F6F2EA]/60">{profile.role}</span>
                   </div>
                 </div>
 
@@ -918,7 +918,7 @@ export default function ProfessorDashboard({
                         onClick={() => setActiveTab(item.id)}
                         id={`sidebar-tab-${item.id}`}
                         className={`group relative flex w-full items-center gap-3 rounded-[12px] px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
-                          active ? 'bg-[#4A0E1B]/8 text-[#4A0E1B]' : 'text-[#22201F]/80 hover:bg-[#F7F3EC] hover:text-[#22201F]'
+                          active ? 'bg-[#4A0E1B]/8 text-[#4A0E1B]' : 'text-[#22201F] dark:text-[#F6F2EA]/80 hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]'
                         }`}
                       >
                         {active && <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#4A0E1B]" />}
@@ -933,7 +933,7 @@ export default function ProfessorDashboard({
                 </nav>
               </PremiumCard>
 
-              <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#EAE1D2] bg-[#FBF7F0] px-3.5 py-3 text-[11px] text-[#8A7E6F]">
+              <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3 text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">
                 <Check size={14} className="text-[#8A6A16]" />
                 Changes save automatically to this browser.
               </div>
@@ -948,7 +948,7 @@ export default function ProfessorDashboard({
                 {/* Hero band */}
                 <div className="relative overflow-hidden rounded-hero bg-gradient-to-r from-[#4A0E1B] to-[#7C2532] p-6 text-white shadow-soft-xl border border-[#D9C2A2]/20 sm:p-7">
                   <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#C9A13B]/20 blur-3xl" />
-                  <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
+                  <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-white dark:bg-[#22201F]/10 blur-2xl" />
                   <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <div className="max-w-md">
                       <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#D9C2A2]">Repository health</p>
@@ -983,15 +983,15 @@ export default function ProfessorDashboard({
                   <PremiumCard padding="large" accentLine>
                     <div className="mb-5 flex items-center justify-between">
                       <div>
-                        <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Most downloaded notes</h3>
-                        <p className="text-xs text-[#8A7E6F]">What students reach for most</p>
+                        <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Most downloaded notes</h3>
+                        <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">What students reach for most</p>
                       </div>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
                         <TrendingUp size={17} />
                       </span>
                     </div>
                     {topNotes.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-[#8A7E6F]">No notes yet.</p>
+                      <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91]">No notes yet.</p>
                     ) : (
                       <div className="space-y-4">
                         {topNotes.map((n) => (
@@ -1004,10 +1004,10 @@ export default function ProfessorDashboard({
                   <PremiumCard padding="large" accentLine>
                     <div className="mb-5 flex items-center justify-between">
                       <div>
-                        <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Library by exam</h3>
-                        <p className="text-xs text-[#8A7E6F]">How your content is spread</p>
+                        <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Library by exam</h3>
+                        <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">How your content is spread</p>
                       </div>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] text-[#8A6A16]">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
                         <LayoutDashboard size={17} />
                       </span>
                     </div>
@@ -1030,18 +1030,18 @@ export default function ProfessorDashboard({
                 <div className="grid gap-6 lg:grid-cols-2">
                   <PremiumCard padding="large" accentLine>
                     <div className="mb-4 flex items-center justify-between">
-                      <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Needs your attention</h3>
+                      <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Needs your attention</h3>
                       {pendingDoubtsCount > 0 && (
                         <span className="rounded-full bg-[#F4E4E4] px-2.5 py-1 text-[10px] font-bold text-[#4A0E1B]">{pendingDoubtsCount} unanswered</span>
                       )}
                     </div>
                     {pendingDoubtsCount === 0 ? (
                       <div className="flex flex-col items-center py-6 text-center">
-                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7EFD9] text-[#8A6A16]">
+                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
                           <Check size={20} />
                         </span>
-                        <p className="mt-3 text-sm font-semibold text-[#22201F]">You're all caught up</p>
-                        <p className="text-xs text-[#8A7E6F]">Every student doubt has an answer.</p>
+                        <p className="mt-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">You're all caught up</p>
+                        <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">Every student doubt has an answer.</p>
                       </div>
                     ) : (
                       <div className="space-y-2.5">
@@ -1052,17 +1052,17 @@ export default function ProfessorDashboard({
                              <button
                                key={d.id}
                                onClick={() => goAnswer(d.id)}
-                               className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
+                               className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
                              >
-                               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#8A7E6F] ring-1 ring-[#EAE1D2]">
+                               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-[#22201F] text-[#8A7E6F] dark:text-[#A89F91] ring-1 ring-[#EAE1D2]">
                                  <User size={14} />
                                </span>
                                <span className="min-w-0 flex-1">
                                  <span className="flex items-center justify-between gap-2">
-                                   <span className="truncate text-sm font-bold text-[#22201F]">{d.name}</span>
+                                   <span className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{d.name}</span>
                                    <span className="dash-mono shrink-0 text-[10px] text-[#A79A88]">{fmtDate(d.createdAt)}</span>
                                  </span>
-                                 <span className="line-clamp-1 text-xs text-[#8A7E6F]">{d.question}</span>
+                                 <span className="line-clamp-1 text-xs text-[#8A7E6F] dark:text-[#A89F91]">{d.question}</span>
                                </span>
                                <ArrowRight size={15} className="mt-1 shrink-0 text-[#C0A98B]" />
                              </button>
@@ -1072,17 +1072,17 @@ export default function ProfessorDashboard({
                   </PremiumCard>
 
                   <PremiumCard padding="large" accentLine>
-                    <h3 className="dash-serif mb-4 text-lg font-semibold text-[#22201F]">Recent uploads</h3>
+                    <h3 className="dash-serif mb-4 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Recent uploads</h3>
                     {recentUploads.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-[#8A7E6F]">Nothing uploaded yet.</p>
+                      <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91]">Nothing uploaded yet.</p>
                     ) : (
                       <div className="space-y-1">
                         {recentUploads.map((item, i) => (
-                          <div key={i} className="flex items-center gap-3 border-b border-[#F2ECDF] py-2.5 last:border-0">
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] text-[#4A0E1B]">{typeIcon[item.type]}</span>
+                          <div key={i} className="flex items-center gap-3 border-b border-[#F2ECDF] dark:border-[#383330] py-2.5 last:border-0">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">{typeIcon[item.type]}</span>
                             <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-semibold text-[#22201F]">{item.title}</p>
-                              <p className="truncate text-xs text-[#8A7E6F]">{item.detail}</p>
+                              <p className="truncate text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">{item.title}</p>
+                              <p className="truncate text-xs text-[#8A7E6F] dark:text-[#A89F91]">{item.detail}</p>
                             </div>
                             <ExamChip course={item.course} label={examTitle(item.course)} />
                           </div>
@@ -1120,14 +1120,14 @@ export default function ProfessorDashboard({
                 ) : (
                   <Table head={['Exam & subject', 'Title & chapter', 'Downloads', '']}>
                     {notesFiltered.map((n) => (
-                      <tr key={n.id} className="transition-colors hover:bg-[#FBF7F0]">
+                      <tr key={n.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
                         <td className="px-5 py-3.5">
                           <ExamChip course={n.course} label={examTitle(n.course)} />
                           <span className="mt-1 block"><SubjectBadge subject={n.subject} /></span>
                         </td>
                         <td className="px-5 py-3.5">
-                          <span className="font-semibold text-[#22201F]">{n.title}</span>
-                          <span className="mt-0.5 block text-xs text-[#8A7E6F]">{n.chapter}</span>
+                          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{n.title}</span>
+                          <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{n.chapter}</span>
                         </td>
                         <td className="px-5 py-3.5">
                           <span className="dash-mono inline-flex items-center gap-1.5 text-sm font-medium tabular-nums text-[#4A443E]">
@@ -1175,14 +1175,14 @@ export default function ProfessorDashboard({
                 ) : (
                   <Table head={['Exam & subject', 'Lecture & chapter', 'Duration', '']}>
                     {videosFiltered.map((v) => (
-                      <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0]">
+                      <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
                         <td className="px-5 py-3.5">
                           <ExamChip course={v.course} label={examTitle(v.course)} />
                           <span className="mt-1 block"><SubjectBadge subject={v.subject} /></span>
                         </td>
                         <td className="px-5 py-3.5">
-                          <span className="font-semibold text-[#22201F]">{v.title}</span>
-                          <span className="mt-0.5 block text-xs text-[#8A7E6F]">{v.chapter}</span>
+                          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{v.title}</span>
+                          <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{v.chapter}</span>
                         </td>
                         <td className="px-5 py-3.5">
                           <span className="dash-mono text-sm tabular-nums text-[#4A443E]">{v.duration}</span>
@@ -1231,14 +1231,14 @@ export default function ProfessorDashboard({
                 ) : (
                   <Table head={['Exam & subject', 'Chapter & year', 'Difficulty', '']}>
                     {pyqsFiltered.map((p) => (
-                      <tr key={p.id} className="transition-colors hover:bg-[#FBF7F0]">
+                      <tr key={p.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
                         <td className="px-5 py-3.5">
                           <ExamChip course={p.course} label={examTitle(p.course)} />
                           <span className="mt-1 block"><SubjectBadge subject={p.subject} /></span>
                         </td>
                         <td className="px-5 py-3.5">
-                          <span className="font-semibold text-[#22201F]">{p.chapter}</span>
-                          <span className="dash-mono mt-0.5 block text-xs tabular-nums text-[#8A7E6F]">Year {p.year}</span>
+                          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{p.chapter}</span>
+                          <span className="dash-mono mt-0.5 block text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">Year {p.year}</span>
                         </td>
                         <td className="px-5 py-3.5">
                           <DifficultyChip level={p.difficulty} />
@@ -1283,13 +1283,13 @@ export default function ProfessorDashboard({
                 ) : (
                   <Table head={['Exam & subject', 'Title', 'Chapter', '']}>
                     {sheetsFiltered.map((s) => (
-                      <tr key={s.id} className="transition-colors hover:bg-[#FBF7F0]">
+                      <tr key={s.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
                         <td className="px-5 py-3.5">
                           <ExamChip course={s.course} label={examTitle(s.course)} />
                           <span className="mt-1 block"><SubjectBadge subject={s.subject} /></span>
                         </td>
-                        <td className="px-5 py-3.5 font-semibold text-[#22201F]">{s.title}</td>
-                        <td className="px-5 py-3.5 text-sm text-[#8A7E6F]">{s.chapter}</td>
+                        <td className="px-5 py-3.5 font-semibold text-[#22201F] dark:text-[#F6F2EA]">{s.title}</td>
+                        <td className="px-5 py-3.5 text-sm text-[#8A7E6F] dark:text-[#A89F91]">{s.chapter}</td>
                         <td className="px-5 py-3.5">
                           <RowActions
                             onView={s.fileUrl ? () => openPDF({ title: s.title, fileUrl: s.fileUrl, fileSize: s.fileSize, entityType: 'sheet', entityId: s.id, isProfessor: true, onDelete: () => { askDelete('this sheet', () => onDeletePracticeSheet(s.id)); setPdfDoc(null); } }) : undefined}
@@ -1308,7 +1308,7 @@ export default function ProfessorDashboard({
             {activeTab === 'doubts' && (
               <div className="space-y-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="inline-flex rounded-xl border border-[#EAE1D2] bg-white p-1">
+                  <div className="inline-flex rounded-xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] p-1">
                     {(['unanswered', 'answered', 'all'] as const).map((t) => {
                       const c = t === 'unanswered' ? doubts.filter((d) => !d.isAnswered).length : t === 'answered' ? doubts.filter((d) => d.isAnswered).length : doubts.length;
                       const active = doubtsTab === t;
@@ -1316,7 +1316,7 @@ export default function ProfessorDashboard({
                         <button
                           key={t}
                           onClick={() => setDoubtsTab(t)}
-                          className={`rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors ${active ? 'bg-[#4A0E1B] text-white' : 'text-[#6E645A] hover:text-[#22201F]'}`}
+                          className={`rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors ${active ? 'bg-[#4A0E1B] text-white' : 'text-[#6E645A] hover:text-[#22201F] dark:text-[#F6F2EA]'}`}
                         >
                           {t} <span className={active ? 'text-white/70' : 'text-[#A79A88]'}>({c})</span>
                         </button>
@@ -1341,12 +1341,12 @@ export default function ProfessorDashboard({
                       <PremiumCard key={doubt.id} padding="medium" className={!doubt.isAnswered ? 'ring-1 ring-[#4A0E1B]/12' : ''}>
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-start gap-3">
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
                               <User size={16} />
                             </span>
                             <div>
-                              <h4 className="text-sm font-bold text-[#22201F]">{doubt.name}</h4>
-                              <span className="dash-mono text-[11px] text-[#8A7E6F]">{doubt.email}</span>
+                              <h4 className="text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{doubt.name}</h4>
+                              <span className="dash-mono text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{doubt.email}</span>
                             </div>
                           </div>
                           <div className="flex flex-col items-end gap-1.5">
@@ -1354,7 +1354,7 @@ export default function ProfessorDashboard({
                             {!doubt.isAnswered ? (
                               <span className="rounded-full bg-[#F4E4E4] px-2 py-0.5 text-[10px] font-bold text-[#4A0E1B]">Awaiting reply</span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F7EFD9] px-2 py-0.5 text-[10px] font-bold text-[#8A6A16]">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F7EFD9] dark:bg-[#362A0D] px-2 py-0.5 text-[10px] font-bold text-[#8A6A16]">
                                 <Check size={11} /> Answered
                               </span>
                             )}
@@ -1362,26 +1362,26 @@ export default function ProfessorDashboard({
                         </div>
 
                         <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">{doubt.subject}</p>
-                        <p className="mt-1.5 rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
+                        <p className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
 
                         {doubt.attachmentName && (
                           <div className="mt-2">
                             {doubt.attachmentDataUrl ? (
                               doubt.attachmentDataUrl.startsWith('data:image/') ? (
                                 /* Image: show thumbnail + open in new tab */
-                                <div className="rounded-xl border border-[#EFE7D8] overflow-hidden">
+                                <div className="rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] overflow-hidden">
                                   <img
                                     src={doubt.attachmentDataUrl}
                                     alt={doubt.attachmentName}
-                                    className="w-full max-h-48 object-contain bg-[#FBF7F0] cursor-pointer"
+                                    className="w-full max-h-48 object-contain bg-[#FBF7F0] dark:bg-[#2A2726] cursor-pointer"
                                     onClick={() => {
                                       const win = window.open();
                                       if (win) { win.document.write(`<img src="${doubt.attachmentDataUrl}" style="max-width:100%">`); }
                                     }}
                                     title="Click to open full size"
                                   />
-                                  <div className="flex items-center justify-between px-3 py-1.5 bg-[#FBF7F0] border-t border-[#EFE7D8]">
-                                    <span className="text-[10px] text-[#8A7E6F] truncate">📎 {doubt.attachmentName}</span>
+                                  <div className="flex items-center justify-between px-3 py-1.5 bg-[#FBF7F0] dark:bg-[#2A2726] border-t border-[#EFE7D8] dark:border-[#4A433E]">
+                                    <span className="text-[10px] text-[#8A7E6F] dark:text-[#A89F91] truncate">📎 {doubt.attachmentName}</span>
                                     <a
                                       href={doubt.attachmentDataUrl}
                                       download={doubt.attachmentName}
@@ -1391,7 +1391,7 @@ export default function ProfessorDashboard({
                                 </div>
                               ) : (
                                 /* Other file type: download button */
-                                <div className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] px-3.5 py-2.5">
+                                <div className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5">
                                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                   </div>
@@ -1407,7 +1407,7 @@ export default function ProfessorDashboard({
                               )
                             ) : (
                               /* Legacy: no data URL stored */
-                              <span className="inline-flex items-center gap-1.5 text-xs text-[#8A7E6F]">
+                              <span className="inline-flex items-center gap-1.5 text-xs text-[#8A7E6F] dark:text-[#A89F91]">
                                 📎 <span className="italic">{doubt.attachmentName}</span>
                                 <span className="text-[10px] text-[#C7C7CC]">(file not available)</span>
                               </span>
@@ -1419,7 +1419,7 @@ export default function ProfessorDashboard({
                         {doubt.replies && doubt.replies.length > 0 ? (
                           <div className="mt-4 space-y-4">
                             {doubt.replies.map(reply => (
-                              <div key={reply.id} className="rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] p-4">
+                              <div key={reply.id} className="rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-4">
                                 <div className="flex items-start gap-2.5">
                                   <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
                                   <div className="flex-1">
@@ -1434,7 +1434,7 @@ export default function ProfessorDashboard({
                                     {reply.image_urls && reply.image_urls.length > 0 && (
                                       <div className="mt-3 flex flex-wrap gap-2">
                                         {reply.image_urls.map((url, i) => (
-                                          <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8]" />
+                                          <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8] dark:border-[#4A433E]" />
                                         ))}
                                       </div>
                                     )}
@@ -1442,7 +1442,7 @@ export default function ProfessorDashboard({
                                     {reply.video_urls && reply.video_urls.length > 0 && (
                                       <div className="mt-3 space-y-2">
                                         {reply.video_urls.map((url, i) => (
-                                          <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8]" />
+                                          <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8] dark:border-[#4A433E]" />
                                         ))}
                                       </div>
                                     )}
@@ -1458,7 +1458,7 @@ export default function ProfessorDashboard({
                                     {reply.attachment_urls && reply.attachment_urls.length > 0 && (
                                       <div className="mt-3 space-y-2">
                                         {reply.attachment_urls.map((url, i) => (
-                                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#EAE1D2] bg-white px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA]">
+                                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA] dark:bg-[#2A2726]">
                                             <FileText size={14} /> Attachment {i + 1}
                                           </a>
                                         ))}
@@ -1468,7 +1468,7 @@ export default function ProfessorDashboard({
                                 </div>
                               </div>
                             ))}
-                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] pt-4">
+                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] dark:border-[#4A433E] pt-4">
                               <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
                                 <Plus size={13} /> Add another reply
                               </button>
@@ -1478,7 +1478,7 @@ export default function ProfessorDashboard({
                             </div>
                           </div>
                         ) : doubt.answerText ? (
-                          <div className="mt-4 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] p-4">
+                          <div className="mt-4 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-4">
                             <div className="flex items-start gap-2.5">
                               <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
                               <div className="flex-1">
@@ -1486,7 +1486,7 @@ export default function ProfessorDashboard({
                                 <p className="mt-1 text-sm leading-relaxed text-[#3A342E]">{doubt.answerText}</p>
                               </div>
                             </div>
-                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] pt-4">
+                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] dark:border-[#4A433E] pt-4">
                               <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
                                 <Plus size={13} /> Add rich reply
                               </button>
@@ -1527,7 +1527,7 @@ export default function ProfessorDashboard({
             {activeTab === 'announcements' && (
               <div className="space-y-5">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-[#8A7E6F]">
+                  <p className="text-sm text-[#8A7E6F] dark:text-[#A89F91]">
                     {announcements.length} notice{announcements.length === 1 ? '' : 's'} · pinned ones show first for students
                   </p>
                   <button className={PRIMARY_BTN} onClick={openAddAnnouncement}>
@@ -1550,11 +1550,11 @@ export default function ProfessorDashboard({
                               </span>
                             )}
                           </div>
-                          <span className="dash-mono shrink-0 text-[11px] text-[#8A7E6F]">{fmtDate(a.createdAt)}</span>
+                          <span className="dash-mono shrink-0 text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{fmtDate(a.createdAt)}</span>
                         </div>
-                        <h4 className="dash-serif mt-3 text-lg font-semibold text-[#22201F]">{a.title}</h4>
-                        <p className="mt-1.5 text-sm leading-relaxed text-[#5A534B]">{a.body}</p>
-                        <div className="mt-4 flex items-center gap-1 border-t border-[#F2ECDF] pt-3">
+                        <h4 className="dash-serif mt-3 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">{a.title}</h4>
+                        <p className="mt-1.5 text-sm leading-relaxed text-[#5A534B] dark:text-[#C7BCAD]">{a.body}</p>
+                        <div className="mt-4 flex items-center gap-1 border-t border-[#F2ECDF] dark:border-[#383330] pt-3">
                           <button className={ROW_BTN} onClick={() => onTogglePinAnnouncement(a.id)}>
                             {a.pinned ? <PinOff size={13} /> : <Pin size={13} />} {a.pinned ? 'Unpin' : 'Pin'}
                           </button>
@@ -1576,8 +1576,8 @@ export default function ProfessorDashboard({
             {activeTab === 'settings' && (
               <div className="space-y-6">
                 <PremiumCard padding="large" accentLine>
-                  <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Profile</h3>
-                  <p className="text-xs text-[#8A7E6F]">Shown across the professor workspace.</p>
+                  <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Profile</h3>
+                  <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">Shown across the professor workspace.</p>
                   <div className="mt-5 grid max-w-xl gap-4 sm:grid-cols-2">
                     <Field label="Display name">
                       <input className={INPUT} value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
@@ -1595,8 +1595,8 @@ export default function ProfessorDashboard({
                 </PremiumCard>
 
                 <PremiumCard padding="large" accentLine>
-                  <h3 className="dash-serif text-lg font-semibold text-[#22201F]">Data</h3>
-                  <p className="mt-1 max-w-xl text-sm leading-relaxed text-[#5A534B]">
+                  <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Data</h3>
+                  <p className="mt-1 max-w-xl text-sm leading-relaxed text-[#5A534B] dark:text-[#C7BCAD]">
                     Notes, videos, PYQs, sheets, doubts and announcements are stored in this browser only. Resetting restores the original sample library.
                   </p>
                   <button
@@ -1821,7 +1821,7 @@ export default function ProfessorDashboard({
             <Field label="Message">
               <textarea className={INPUT} required rows={4} value={annForm.body} onChange={(e) => setAnnForm({ ...annForm, body: e.target.value })} placeholder="Share the details students need to know…" />
             </Field>
-            <label className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] bg-[#FBF7F0] px-3.5 py-3">
+            <label className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3">
               <input type="checkbox" className="h-4 w-4 accent-[#4A0E1B]" checked={annForm.pinned} onChange={(e) => setAnnForm({ ...annForm, pinned: e.target.checked })} />
               <span className="text-sm font-medium text-[#3A342E]">Pin to the top of the board</span>
             </label>
@@ -1840,7 +1840,7 @@ export default function ProfessorDashboard({
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FBF0EE] text-[#B23B2E]">
               <AlertTriangle size={18} />
             </span>
-            <p className="text-sm leading-relaxed text-[#5A534B]">{confirm.message}</p>
+            <p className="text-sm leading-relaxed text-[#5A534B] dark:text-[#C7BCAD]">{confirm.message}</p>
           </div>
           <div className="mt-6 flex justify-end gap-2">
             <button className={GHOST_BTN} onClick={() => setConfirm(null)}>Cancel</button>
@@ -1883,8 +1883,8 @@ function ResourceSection({
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-[#8A7E6F]">
-          <span className="font-semibold text-[#22201F]">{count}</span>
+        <p className="text-sm text-[#8A7E6F] dark:text-[#A89F91]">
+          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{count}</span>
           {count === total ? '' : ` of ${total}`} {title}
         </p>
         <button className={PRIMARY_BTN} onClick={onAdd}>
@@ -1925,9 +1925,9 @@ function Table({ head, children }: { head: string[]; children: React.ReactNode }
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm border-collapse">
           <thead>
-            <tr className="border-b border-[#EAE1D2] bg-[#FBF7F0]">
+            <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726]">
               {head.map((h, i) => (
-                <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] ${i === head.length - 1 ? 'text-right' : ''}`}>
+                <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
                   {h}
                 </th>
               ))}
@@ -1944,14 +1944,14 @@ function RowActions({ onView, onEdit, onDelete }: { onView?: () => void; onEdit:
   return (
     <div className="flex justify-end gap-1">
       {onView && (
-        <button onClick={onView} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F4E7E5] hover:text-[#4A0E1B]" aria-label="View PDF">
+        <button onClick={onView} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="View PDF">
           <Eye size={15} />
         </button>
       )}
-      <button onClick={onEdit} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F4E7E5] hover:text-[#4A0E1B]" aria-label="Edit">
+      <button onClick={onEdit} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="Edit">
         <Pencil size={15} />
       </button>
-      <button onClick={onDelete} className="rounded-lg p-2 text-[#8A7E6F] transition-colors hover:bg-[#F6E5E1] hover:text-[#B23B2E]" aria-label="Delete">
+      <button onClick={onDelete} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F6E5E1] hover:text-[#B23B2E]" aria-label="Delete">
         <Trash2 size={15} />
       </button>
     </div>

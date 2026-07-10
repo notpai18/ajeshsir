@@ -117,7 +117,7 @@ export function MultimediaUploader({ onUploadComplete, onRemove, files }: Multim
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-2">
-            <div className="w-12 h-12 rounded-full bg-[#F7F3EC] flex items-center justify-center mb-2">
+            <div className="w-12 h-12 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] flex items-center justify-center mb-2">
               <UploadCloud className="w-6 h-6 text-[#4A0E1B]" />
             </div>
             <p className="text-sm font-medium text-gray-700">
@@ -152,7 +152,7 @@ export function MultimediaUploader({ onUploadComplete, onRemove, files }: Multim
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="relative group rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm flex items-center p-2 gap-3"
+                className="relative group rounded-xl border border-gray-200 overflow-hidden bg-white dark:bg-[#22201F] shadow-sm flex items-center p-2 gap-3"
               >
                 <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
                   {file.type === 'image' ? (

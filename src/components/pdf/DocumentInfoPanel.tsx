@@ -11,9 +11,9 @@ import { usePDF } from './PDFContext';
 import { downloadPDF } from '../../lib/pdfUrl';
 import { PremiumCard } from '../PremiumCard';
 
-const GHOST_BTN = 'inline-flex items-center justify-center gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] duration-200 hover:-translate-y-0.5 shadow-sm';
+const GHOST_BTN = 'inline-flex items-center justify-center gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] duration-200 hover:-translate-y-0.5 shadow-sm';
 const PRIMARY_BTN = 'inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E1B] px-3 py-2 text-xs font-bold tracking-wide text-white transition-all hover:bg-[#7C2532] shadow-sm hover:-translate-y-0.5 duration-200';
-const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60';
+const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60';
 
 export function DocumentInfoPanel() {
   const {
@@ -36,7 +36,7 @@ export function DocumentInfoPanel() {
 
   return (
     <aside
-      className="hidden w-[240px] shrink-0 flex-col gap-4 overflow-y-auto border-l border-[#D9C2A2]/30 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] p-4 lg:flex"
+      className="hidden w-[240px] shrink-0 flex-col gap-4 overflow-y-auto border-l border-[#D9C2A2]/30 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817] p-4 lg:flex"
       aria-label="Document information"
     >
       {/* Header */}
@@ -44,7 +44,7 @@ export function DocumentInfoPanel() {
         <p className={MICRO}>Document Info</p>
         <button
           onClick={() => setInfoPanelOpen(false)}
-          className="flex h-6 w-6 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 transition-colors hover:bg-[#D9C2A2]/20 hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]"
+          className="flex h-6 w-6 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 transition-colors hover:bg-[#D9C2A2]/20 hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]"
           aria-label="Close info panel"
         >
           <X size={13} />
@@ -72,28 +72,28 @@ export function DocumentInfoPanel() {
         <div className="mt-4 space-y-2.5">
           {docInfo.fileSize && (
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+              <span className="flex items-center gap-1.5 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
                 <HardDrive size={12} className="text-[#4A0E1B] dark:text-[#F4E7E5]" /> Size
               </span>
-              <span className="dash-mono text-[11px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{docInfo.fileSize}</span>
+              <span className="dash-mono text-[11px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{docInfo.fileSize}</span>
             </div>
           )}
           {docInfo.uploadDate && (
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+              <span className="flex items-center gap-1.5 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
                 <Calendar size={12} className="text-[#4A0E1B] dark:text-[#F4E7E5]" /> Uploaded
               </span>
-              <span className="dash-mono text-[11px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
+              <span className="dash-mono text-[11px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
                 {new Date(docInfo.uploadDate).toLocaleDateString()}
               </span>
             </div>
           )}
           {docInfo.downloadCount !== undefined && (
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+              <span className="flex items-center gap-1.5 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
                 <Eye size={12} className="text-[#4A0E1B] dark:text-[#F4E7E5]" /> Downloads
               </span>
-              <span className="dash-mono text-[11px] tabular-nums text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{docInfo.downloadCount}</span>
+              <span className="dash-mono text-[11px] tabular-nums text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{docInfo.downloadCount}</span>
             </div>
           )}
         </div>
@@ -103,8 +103,8 @@ export function DocumentInfoPanel() {
       <PremiumCard padding="medium" accentLine>
         <PremiumCard.Category className="mb-3">Reading Progress</PremiumCard.Category>
         <div className="mb-1.5 flex items-baseline justify-between">
-          <span className="text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Page {currentPage} of {numPages || '…'}</span>
-          <span className="dash-mono text-[10px] tabular-nums text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+          <span className="text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Page {currentPage} of {numPages || '…'}</span>
+          <span className="dash-mono text-[10px] tabular-nums text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
             {numPages ? Math.round((currentPage / numPages) * 100) : 0}%
           </span>
         </div>
@@ -124,7 +124,7 @@ export function DocumentInfoPanel() {
             {bookmarks.sort((a, b) => a.page - b.page).map(bm => (
               <div
                 key={bm.id}
-                className="group flex cursor-pointer items-center justify-between rounded-xl px-2 py-1.5 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]"
+                className="group flex cursor-pointer items-center justify-between rounded-xl px-2 py-1.5 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817]"
               >
                 <button
                   onClick={() => goToPage(bm.page)}
@@ -132,11 +132,11 @@ export function DocumentInfoPanel() {
                   aria-label={`Go to ${bm.label}`}
                 >
                   <Bookmark size={12} className="shrink-0 text-[#4A0E1B] dark:text-[#F4E7E5]" />
-                  <span className="text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] truncate">{bm.label}</span>
+                  <span className="text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA] truncate">{bm.label}</span>
                 </button>
                 <button
                   onClick={() => removeBookmark(bm.id)}
-                  className="ml-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 opacity-0 transition-all hover:bg-[#4A0E1B]/8 hover:text-[#4A0E1B] dark:hover:text-[#F4E7E5] dark:text-[#F4E7E5] group-hover:opacity-100"
+                  className="ml-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 opacity-0 transition-all hover:bg-[#4A0E1B]/8 hover:text-[#4A0E1B] dark:hover:text-[#F4E7E5] dark:text-[#F4E7E5] group-hover:opacity-100"
                   aria-label={`Remove bookmark: ${bm.label}`}
                 >
                   <X size={10} />
@@ -177,7 +177,7 @@ export function DocumentInfoPanel() {
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#4A0E1B]/8 text-[#4A0E1B] dark:text-[#F4E7E5]">
                     <AlertTriangle size={15} />
                   </span>
-                  <p className="text-xs leading-relaxed text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
+                  <p className="text-xs leading-relaxed text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
                     Delete this PDF? This cannot be undone.
                   </p>
                 </div>

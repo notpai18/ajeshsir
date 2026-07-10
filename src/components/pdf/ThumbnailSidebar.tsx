@@ -60,11 +60,11 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
 
   return (
     <aside
-      className="relative flex h-full w-[168px] shrink-0 flex-col border-r border-[#D9C2A2]/30 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]"
+      className="relative flex h-full w-[168px] shrink-0 flex-col border-r border-[#D9C2A2]/30 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817]"
       aria-label="Page thumbnails"
     >
       <div className="border-b border-[#D9C2A2]/30 px-3 py-2">
-        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
+        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60">
           Pages · {numPages}
         </p>
       </div>
@@ -112,14 +112,14 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
                     loading={
-                      <div className="h-full w-full animate-pulse bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]" />
+                      <div className="h-full w-full animate-pulse bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817]" />
                     }
                     className="pointer-events-none"
                   />
                 </Document>
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]">
-                  <span className="dash-mono text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40">{pageNum}</span>
+                <div className="flex h-full w-full items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] dark:bg-[#1A1817]">
+                  <span className="dash-mono text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40">{pageNum}</span>
                 </div>
               )}
 
@@ -129,7 +129,7 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
                 className={`absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-md transition-all ${
                   bookmarked
                     ? 'bg-[#4A0E1B] text-white opacity-100'
-                    : 'bg-white dark:bg-[#22201F] dark:bg-[#22201F]/80 text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 opacity-0 group-hover:opacity-100'
+                    : 'bg-white dark:bg-[#22201F] dark:bg-[#22201F] dark:bg-[#22201F]/80 text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/60 opacity-0 group-hover:opacity-100'
                 }`}
                 aria-label={bookmarked ? `Remove bookmark from page ${pageNum}` : `Bookmark page ${pageNum}`}
               >
@@ -147,7 +147,7 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
         {numPages === 0 && (
           <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
             <div className="h-8 w-8 animate-pulse rounded-lg bg-[#D9C2A2]/20" />
-            <p className="text-[10px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40">Loading…</p>
+            <p className="text-[10px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] dark:text-[#F6F2EA]/40">Loading…</p>
           </div>
         )}
       </div>

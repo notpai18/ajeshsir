@@ -60,7 +60,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
   );
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm focus-within:ring-2 focus-within:ring-[#4A0E1B]/20 focus-within:border-[#4A0E1B] transition-all duration-200">
+    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white dark:bg-[#22201F] shadow-sm focus-within:ring-2 focus-within:ring-[#4A0E1B]/20 focus-within:border-[#4A0E1B] transition-all duration-200">
       <div className="flex items-center gap-1 border-b border-gray-200 bg-gray-50/50 p-2 overflow-x-auto">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}

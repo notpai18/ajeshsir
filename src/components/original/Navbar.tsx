@@ -168,7 +168,7 @@ export default function Navbar({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="border-b border-gray-100 bg-white px-4 pt-2 pb-4 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900 lg:hidden">
+        <div className="border-b border-gray-100 bg-white dark:bg-[#22201F] px-4 pt-2 pb-4 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900 lg:hidden">
           <div className="space-y-1.5">
             {navItems.map((item) => {
               const isActive = 
