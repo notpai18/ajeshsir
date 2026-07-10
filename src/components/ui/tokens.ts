@@ -33,3 +33,7 @@ export const PILL_GHOST =
 
 export const PILL_GOLD =
   'inline-flex items-center gap-1.5 rounded-lg bg-[#F7EFD9] dark:bg-[#362A0D] px-2.5 py-1.5 text-[11px] font-bold text-[#8A6A16] transition-colors hover:bg-[#F1E6C9]';
+
+export const ROW_BTN = 'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-[#8A7E6F] transition-colors hover:bg-[#F4E7E5] hover:text-[#4A0E1B]';
+
+export const ROW_BTN_DANGER = 'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold text-[#8A7E6F] transition-colors hover:bg-[#F6E5E1] hover:text-[#B23B2E]';

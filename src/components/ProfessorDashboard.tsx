@@ -362,6 +362,13 @@ interface ProfessorDashboardProps {
   onTogglePinAnnouncement: (id: string) => void;
 }
 
+import { OverviewSection } from './professor/OverviewSection';
+import { NotesSection } from './professor/NotesSection';
+import { VideosSection } from './professor/VideosSection';
+import { PYQSection } from './professor/PYQSection';
+import { SheetsSection } from './professor/SheetsSection';
+import { DoubtsSection } from './professor/DoubtsSection';
+import { AnnouncementsSection } from './professor/AnnouncementsSection';
 import { uploadFile } from '../services/storageService';
 import { AnswerDoubtModal } from './doubts/AnswerDoubtModal';
 
@@ -436,16 +443,6 @@ export default function ProfessorDashboard({
   const [pyqSolutionFile, setPyqSolutionFile] = useState<File | null>(null);
   const [sheetFile, setSheetFile] = useState<File | null>(null);
 
-  // Doubts inbox
-  const [doubtsTab, setDoubtsTab] = useState<'unanswered' | 'answered' | 'all'>('unanswered');
-  const [replyingDoubtId, setReplyingDoubtId] = useState<string | null>(null);
-  const [replyText, setReplyText] = useState('');
-
-  // Per-section search + filters
-  const [queries, setQueries] = useState({ notes: '', videos: '', pyqs: '', sheets: '', doubts: '' });
-  const [filters, setFilters] = useState({ noteExam: 'all', videoExam: 'all', pyqExam: 'all', pyqDiff: 'all', sheetExam: 'all' });
-  const setQuery = (k: keyof typeof queries, v: string) => setQueries((q) => ({ ...q, [k]: v }));
-  const setFilter = (k: keyof typeof filters, v: string) => setFilters((f) => ({ ...f, [k]: v }));
 
   // Profile / settings (persisted independently, self-contained)
   const [profile, setProfile] = useState(() => {
@@ -469,102 +466,8 @@ export default function ProfessorDashboard({
   const [sheetForm, setSheetForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
   const [annForm, setAnnForm] = useState({ title: '', body: '', category: 'general' as AnnouncementCategory, pinned: false });
 
-  /* ---------------- Derived data ---------------- */
+/* ---------------- Helpers ---------------- */
   const pendingDoubtsCount = doubts.filter((d) => !d.isAnswered).length;
-  const totalResources = notes.length + videos.length + pyqs.length + practiceSheets.length;
-  const totalDownloads = notes.reduce((s, n) => s + n.downloadCount, 0);
-
-  const examTitle = (id: string) => exams.find((e) => e.id === id)?.title ?? id;
-
-  const topNotes = useMemo(() => [...notes].sort((a, b) => b.downloadCount - a.downloadCount).slice(0, 5), [notes]);
-  const maxDownload = topNotes[0]?.downloadCount ?? 0;
-
-  const libraryByExam = useMemo(() => {
-    return exams
-      .map((e) => ({
-        id: e.id,
-        label: e.title,
-        count:
-          notes.filter((n) => n.course === e.id).length +
-          videos.filter((v) => v.course === e.id).length +
-          pyqs.filter((p) => p.course === e.id).length +
-          practiceSheets.filter((s) => s.course === e.id).length
-      }))
-      .sort((a, b) => b.count - a.count);
-  }, [exams, notes, videos, pyqs, practiceSheets]);
-  const maxExam = Math.max(1, ...libraryByExam.map((x) => x.count));
-
-  const recentUploads = useMemo(() => {
-    const list = [
-      ...notes.map((n) => ({ type: 'Note' as const, title: n.title, course: n.course, detail: n.chapter })),
-      ...videos.map((v) => ({ type: 'Video' as const, title: v.title, course: v.course, detail: v.chapter })),
-      ...pyqs.map((p) => ({ type: 'PYQ' as const, title: `${p.chapter} · ${p.year}`, course: p.course, detail: `${p.difficulty} difficulty` })),
-      ...practiceSheets.map((s) => ({ type: 'Sheet' as const, title: s.title, course: s.course, detail: s.chapter }))
-    ];
-    return list.slice(-6).reverse();
-  }, [notes, videos, pyqs, practiceSheets]);
-
-  const typeIcon: Record<string, React.ReactNode> = {
-    Note: <FileText size={13} />,
-    Video: <VideoIcon size={13} />,
-    PYQ: <FileSpreadsheet size={13} />,
-    Sheet: <ClipboardList size={13} />
-  };
-
-  const notesFiltered = useMemo(() => {
-    const q = queries.notes.trim().toLowerCase();
-    return notes.filter((n) => {
-      if (filters.noteExam !== 'all' && n.course !== filters.noteExam) return false;
-      return !q || [n.title, n.chapter, n.subject].some((f) => f.toLowerCase().includes(q));
-    });
-  }, [notes, filters.noteExam, queries.notes]);
-
-  const videosFiltered = useMemo(() => {
-    const q = queries.videos.trim().toLowerCase();
-    return videos.filter((v) => {
-      if (filters.videoExam !== 'all' && v.course !== filters.videoExam) return false;
-      return !q || [v.title, v.chapter, v.subject].some((f) => f.toLowerCase().includes(q));
-    });
-  }, [videos, filters.videoExam, queries.videos]);
-
-  const pyqsFiltered = useMemo(() => {
-    const q = queries.pyqs.trim().toLowerCase();
-    return pyqs.filter((p) => {
-      if (filters.pyqExam !== 'all' && p.course !== filters.pyqExam) return false;
-      if (filters.pyqDiff !== 'all' && p.difficulty !== filters.pyqDiff) return false;
-      return !q || [p.chapter, p.subject, String(p.year)].some((f) => f.toLowerCase().includes(q));
-    });
-  }, [pyqs, filters.pyqExam, filters.pyqDiff, queries.pyqs]);
-
-  const sheetsFiltered = useMemo(() => {
-    const q = queries.sheets.trim().toLowerCase();
-    return practiceSheets.filter((s) => {
-      if (filters.sheetExam !== 'all' && s.course !== filters.sheetExam) return false;
-      return !q || [s.title, s.chapter, s.subject].some((f) => f.toLowerCase().includes(q));
-    });
-  }, [practiceSheets, filters.sheetExam, queries.sheets]);
-
-  const doubtsFiltered = useMemo(() => {
-    const q = queries.doubts.trim().toLowerCase();
-    return [...doubts]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .filter((d) => {
-        if (doubtsTab === 'unanswered' && d.isAnswered) return false;
-        if (doubtsTab === 'answered' && !d.isAnswered) return false;
-        return !q || [d.name, d.subject, d.question, d.email].some((f) => f.toLowerCase().includes(q));
-      });
-  }, [doubts, doubtsTab, queries.doubts]);
-
-  const annSorted = useMemo(
-    () =>
-      [...announcements].sort((a, b) => {
-        if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      }),
-    [announcements]
-  );
-
-  /* ---------------- Helpers ---------------- */
   const now = new Date();
   const greeting = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
   const today = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -645,12 +548,7 @@ export default function ProfessorDashboard({
     setActiveModal('edit-announcement');
   };
 
-  const goAnswer = (id: string) => {
-    setActiveTab('doubts');
-    setDoubtsTab('unanswered');
-    setReplyingDoubtId(id);
-    setReplyText('');
-  };
+  
 
   /* ---------------- Submit handlers ---------------- */
   const handleNoteSubmit = async (e: React.FormEvent) => {
@@ -781,14 +679,7 @@ export default function ProfessorDashboard({
     }
     closeModal();
   };
-  const handleReplySubmit = (id: string) => {
-    if (!replyText.trim()) return;
-    onReplyDoubt(id, { reply_text: replyText });
-    setReplyText('');
-    setReplyingDoubtId(null);
-  };
-
-  const resetDemoData = () => {
+const resetDemoData = () => {
     ['prof_portal_notes_v1', 'prof_portal_videos_v1', 'prof_portal_pyqs_v1', 'prof_portal_sheets_v1', 'prof_portal_doubts_v1', 'prof_portal_announcements_v1'].forEach((k) => {
       try {
         localStorage.removeItem(k);
@@ -942,634 +833,65 @@ export default function ProfessorDashboard({
 
           {/* ============ MAIN ============ */}
           <main className="lg:col-span-9">
+            
             {/* ---------- OVERVIEW ---------- */}
             {activeTab === 'overview' && (
-              <div className="space-y-6">
-                {/* Hero band */}
-                <div className="relative overflow-hidden rounded-hero bg-gradient-to-r from-[#4A0E1B] to-[#7C2532] p-6 text-white shadow-soft-xl border border-[#D9C2A2]/20 sm:p-7">
-                  <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#C9A13B]/20 blur-3xl" />
-                  <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
-                  <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                    <div className="max-w-md">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#D9C2A2]">Repository health</p>
-                      <h2 className="dash-serif mt-2 text-2xl font-semibold leading-snug">A living library across {exams.length} exam tracks</h2>
-                      <p className="mt-2 text-sm leading-relaxed text-white/70">Everything students download flows from here. Keep it fresh and clear their doubts to keep engagement high.</p>
-                    </div>
-                    <div className="flex shrink-0 gap-7 sm:gap-9">
-                      {[
-                        { v: totalResources, l: 'Resources' },
-                        { v: totalDownloads.toLocaleString(), l: 'Downloads' },
-                        { v: pendingDoubtsCount, l: 'Open doubts' }
-                      ].map((m) => (
-                        <div key={m.l}>
-                          <p className="dash-serif text-3xl font-semibold tabular-nums">{m.v}</p>
-                          <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#D9C2A2]">{m.l}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* KPI cards */}
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                  <StatCard icon={<FileText size={17} />} label="Study Notes" value={notes.length} sub={`${totalDownloads.toLocaleString()} total downloads`} />
-                  <StatCard icon={<VideoIcon size={17} />} label="Lectures" value={videos.length} sub="Video walkthroughs" />
-                  <StatCard icon={<FileSpreadsheet size={17} />} label="PYQ Sets" value={pyqs.length} sub="With worked solutions" />
-                  <StatCard icon={<ClipboardList size={17} />} label="Practice Sheets" value={practiceSheets.length} sub="Chapter-wise drills" />
-                </div>
-
-                {/* Analytics */}
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <PremiumCard padding="large" accentLine>
-                    <div className="mb-5 flex items-center justify-between">
-                      <div>
-                        <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Most downloaded notes</h3>
-                        <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">What students reach for most</p>
-                      </div>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
-                        <TrendingUp size={17} />
-                      </span>
-                    </div>
-                    {topNotes.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91]">No notes yet.</p>
-                    ) : (
-                      <div className="space-y-4">
-                        {topNotes.map((n) => (
-                          <Bar key={n.id} label={n.title} sub={`${n.downloadCount.toLocaleString()}`} value={n.downloadCount} max={maxDownload} />
-                        ))}
-                      </div>
-                    )}
-                  </PremiumCard>
-
-                  <PremiumCard padding="large" accentLine>
-                    <div className="mb-5 flex items-center justify-between">
-                      <div>
-                        <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Library by exam</h3>
-                        <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">How your content is spread</p>
-                      </div>
-                      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
-                        <LayoutDashboard size={17} />
-                      </span>
-                    </div>
-                    <div className="space-y-4">
-                      {libraryByExam.map((e) => (
-                        <Bar
-                          key={e.id}
-                          label={e.label}
-                          sub={`${e.count} item${e.count === 1 ? '' : 's'}`}
-                          value={e.count}
-                          max={maxExam}
-                          barClass={(EXAM_STYLES[e.id] ?? EXAM_STYLES['jee-main']).dot}
-                        />
-                      ))}
-                    </div>
-                  </PremiumCard>
-                </div>
-
-                {/* Attention + recent */}
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <PremiumCard padding="large" accentLine>
-                    <div className="mb-4 flex items-center justify-between">
-                      <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Needs your attention</h3>
-                      {pendingDoubtsCount > 0 && (
-                        <span className="rounded-full bg-[#F4E4E4] px-2.5 py-1 text-[10px] font-bold text-[#4A0E1B]">{pendingDoubtsCount} unanswered</span>
-                      )}
-                    </div>
-                    {pendingDoubtsCount === 0 ? (
-                      <div className="flex flex-col items-center py-6 text-center">
-                        <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
-                          <Check size={20} />
-                        </span>
-                        <p className="mt-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">You're all caught up</p>
-                        <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">Every student doubt has an answer.</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-2.5">
-                        {doubts
-                           .filter((d) => !d.isAnswered)
-                           .slice(0, 4)
-                           .map((d) => (
-                             <button
-                               key={d.id}
-                               onClick={() => goAnswer(d.id)}
-                               className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
-                             >
-                               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-[#22201F] text-[#8A7E6F] dark:text-[#A89F91] ring-1 ring-[#EAE1D2]">
-                                 <User size={14} />
-                               </span>
-                               <span className="min-w-0 flex-1">
-                                 <span className="flex items-center justify-between gap-2">
-                                   <span className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{d.name}</span>
-                                   <span className="dash-mono shrink-0 text-[10px] text-[#A79A88]">{fmtDate(d.createdAt)}</span>
-                                 </span>
-                                 <span className="line-clamp-1 text-xs text-[#8A7E6F] dark:text-[#A89F91]">{d.question}</span>
-                               </span>
-                               <ArrowRight size={15} className="mt-1 shrink-0 text-[#C0A98B]" />
-                             </button>
-                           ))}
-                      </div>
-                    )}
-                  </PremiumCard>
-
-                  <PremiumCard padding="large" accentLine>
-                    <h3 className="dash-serif mb-4 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Recent uploads</h3>
-                    {recentUploads.length === 0 ? (
-                      <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91]">Nothing uploaded yet.</p>
-                    ) : (
-                      <div className="space-y-1">
-                        {recentUploads.map((item, i) => (
-                          <div key={i} className="flex items-center gap-3 border-b border-[#F2ECDF] dark:border-[#383330] py-2.5 last:border-0">
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">{typeIcon[item.type]}</span>
-                            <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">{item.title}</p>
-                              <p className="truncate text-xs text-[#8A7E6F] dark:text-[#A89F91]">{item.detail}</p>
-                            </div>
-                            <ExamChip course={item.course} label={examTitle(item.course)} />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </PremiumCard>
-                </div>
-              </div>
+              <OverviewSection 
+                exams={exams} notes={notes} videos={videos} pyqs={pyqs} practiceSheets={practiceSheets} doubts={doubts}
+                onNavigateToDoubt={(id) => { setActiveTab('doubts'); }} 
+              />
             )}
 
             {/* ---------- NOTES ---------- */}
             {activeTab === 'notes' && (
-              <ResourceSection
-                title="notes"
-                count={notesFiltered.length}
-                total={notes.length}
-                onAdd={openAddNote}
-                addLabel="Add note"
-                toolbar={
-                  <Toolbar
-                    placeholder="Search notes, chapters, subjects…"
-                    query={queries.notes}
-                    onQuery={(v) => setQuery('notes', v)}
-                    selects={
-                      <select className={`${INPUT} sm:w-44`} value={filters.noteExam} onChange={(e) => setFilter('noteExam', e.target.value)}>
-                        {examOptions}
-                      </select>
-                    }
-                  />
-                }
-              >
-                {notesFiltered.length === 0 ? (
-                  <EmptyState icon={<FileText size={22} />} title="No notes here yet" message="Add your first study note or adjust the filters above." action={<button className={PRIMARY_BTN} onClick={openAddNote}><Plus size={15} /> Add note</button>} />
-                ) : (
-                  <Table head={['Exam & subject', 'Title & chapter', 'Downloads', '']}>
-                    {notesFiltered.map((n) => (
-                      <tr key={n.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
-                        <td className="px-5 py-3.5">
-                          <ExamChip course={n.course} label={examTitle(n.course)} />
-                          <span className="mt-1 block"><SubjectBadge subject={n.subject} /></span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{n.title}</span>
-                          <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{n.chapter}</span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="dash-mono inline-flex items-center gap-1.5 text-sm font-medium tabular-nums text-[#4A443E]">
-                            <Download size={13} className="text-[#8A6A16]" />
-                            {n.downloadCount.toLocaleString()}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <RowActions
-                            onView={n.fileUrl ? () => openPDF({ title: n.title, fileUrl: n.fileUrl, fileSize: n.fileSize, entityType: 'note', entityId: n.id, isProfessor: true, downloadCount: n.downloadCount, onDelete: () => { askDelete('this note', () => onDeleteNote(n.id)); setPdfDoc(null); } }) : undefined}
-                            onEdit={() => openEditNote(n)}
-                            onDelete={() => askDelete('this note', () => onDeleteNote(n.id))}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </Table>
-                )}
-              </ResourceSection>
+              <NotesSection 
+                exams={exams} notes={notes}
+                openAddNote={openAddNote} openEditNote={openEditNote} askDelete={askDelete} onDeleteNote={onDeleteNote}
+                openPDF={openPDF} setPdfDoc={setPdfDoc}
+              />
             )}
 
             {/* ---------- VIDEOS ---------- */}
             {activeTab === 'videos' && (
-              <ResourceSection
-                title="lectures"
-                count={videosFiltered.length}
-                total={videos.length}
-                onAdd={openAddVideo}
-                addLabel="Add lecture"
-                toolbar={
-                  <Toolbar
-                    placeholder="Search lectures, chapters, subjects…"
-                    query={queries.videos}
-                    onQuery={(v) => setQuery('videos', v)}
-                    selects={
-                      <select className={`${INPUT} sm:w-44`} value={filters.videoExam} onChange={(e) => setFilter('videoExam', e.target.value)}>
-                        {examOptions}
-                      </select>
-                    }
-                  />
-                }
-              >
-                {videosFiltered.length === 0 ? (
-                  <EmptyState icon={<VideoIcon size={22} />} title="No lectures here yet" message="Publish a video lecture or adjust the filters above." action={<button className={PRIMARY_BTN} onClick={openAddVideo}><Plus size={15} /> Add lecture</button>} />
-                ) : (
-                  <Table head={['Exam & subject', 'Lecture & chapter', 'Duration', '']}>
-                    {videosFiltered.map((v) => (
-                      <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
-                        <td className="px-5 py-3.5">
-                          <ExamChip course={v.course} label={examTitle(v.course)} />
-                          <span className="mt-1 block"><SubjectBadge subject={v.subject} /></span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{v.title}</span>
-                          <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{v.chapter}</span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="dash-mono text-sm tabular-nums text-[#4A443E]">{v.duration}</span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <RowActions onEdit={() => openEditVideo(v)} onDelete={() => askDelete('this lecture', () => onDeleteVideo(v.id))} />
-                        </td>
-                      </tr>
-                    ))}
-                  </Table>
-                )}
-              </ResourceSection>
+              <VideosSection 
+                exams={exams} videos={videos}
+                openAddVideo={openAddVideo} openEditVideo={openEditVideo} askDelete={askDelete} onDeleteVideo={onDeleteVideo}
+              />
             )}
 
             {/* ---------- PYQS ---------- */}
             {activeTab === 'pyqs' && (
-              <ResourceSection
-                title="PYQ sets"
-                count={pyqsFiltered.length}
-                total={pyqs.length}
-                onAdd={openAddPyq}
-                addLabel="Add PYQ"
-                toolbar={
-                  <Toolbar
-                    placeholder="Search by chapter, subject, year…"
-                    query={queries.pyqs}
-                    onQuery={(v) => setQuery('pyqs', v)}
-                    selects={
-                      <>
-                        <select className={`${INPUT} sm:w-40`} value={filters.pyqExam} onChange={(e) => setFilter('pyqExam', e.target.value)}>
-                          {examOptions}
-                        </select>
-                        <select className={`${INPUT} sm:w-36`} value={filters.pyqDiff} onChange={(e) => setFilter('pyqDiff', e.target.value)}>
-                          <option value="all">All levels</option>
-                          <option value="Easy">Easy</option>
-                          <option value="Medium">Medium</option>
-                          <option value="Hard">Hard</option>
-                        </select>
-                      </>
-                    }
-                  />
-                }
-              >
-                {pyqsFiltered.length === 0 ? (
-                  <EmptyState icon={<FileSpreadsheet size={22} />} title="No PYQs here yet" message="Add a previous-year booklet or adjust the filters above." action={<button className={PRIMARY_BTN} onClick={openAddPyq}><Plus size={15} /> Add PYQ</button>} />
-                ) : (
-                  <Table head={['Exam & subject', 'Chapter & year', 'Difficulty', '']}>
-                    {pyqsFiltered.map((p) => (
-                      <tr key={p.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
-                        <td className="px-5 py-3.5">
-                          <ExamChip course={p.course} label={examTitle(p.course)} />
-                          <span className="mt-1 block"><SubjectBadge subject={p.subject} /></span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{p.chapter}</span>
-                          <span className="dash-mono mt-0.5 block text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">Year {p.year}</span>
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <DifficultyChip level={p.difficulty} />
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <RowActions
-                            onView={p.questionUrl ? () => openPDF({ title: `${p.chapter} · ${p.year} (Question)`, fileUrl: p.questionUrl, fileSize: p.questionSize, entityType: 'pyq', entityId: p.id, isProfessor: true, onDelete: () => { askDelete('this PYQ', () => onDeletePyq(p.id)); setPdfDoc(null); } }) : undefined}
-                            onEdit={() => openEditPyq(p)}
-                            onDelete={() => askDelete('this PYQ', () => onDeletePyq(p.id))}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </Table>
-                )}
-              </ResourceSection>
+              <PYQSection 
+                exams={exams} pyqs={pyqs}
+                openAddPyq={openAddPyq} openEditPyq={openEditPyq} askDelete={askDelete} onDeletePyq={onDeletePyq}
+                openPDF={openPDF} setPdfDoc={setPdfDoc}
+              />
             )}
 
             {/* ---------- SHEETS ---------- */}
             {activeTab === 'sheets' && (
-              <ResourceSection
-                title="sheets"
-                count={sheetsFiltered.length}
-                total={practiceSheets.length}
-                onAdd={openAddSheet}
-                addLabel="Add sheet"
-                toolbar={
-                  <Toolbar
-                    placeholder="Search sheets, chapters, subjects…"
-                    query={queries.sheets}
-                    onQuery={(v) => setQuery('sheets', v)}
-                    selects={
-                      <select className={`${INPUT} sm:w-44`} value={filters.sheetExam} onChange={(e) => setFilter('sheetExam', e.target.value)}>
-                        {examOptions}
-                      </select>
-                    }
-                  />
-                }
-              >
-                {sheetsFiltered.length === 0 ? (
-                  <EmptyState icon={<ClipboardList size={22} />} title="No practice sheets yet" message="Add a drill or adjust the filters above." action={<button className={PRIMARY_BTN} onClick={openAddSheet}><Plus size={15} /> Add sheet</button>} />
-                ) : (
-                  <Table head={['Exam & subject', 'Title', 'Chapter', '']}>
-                    {sheetsFiltered.map((s) => (
-                      <tr key={s.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]">
-                        <td className="px-5 py-3.5">
-                          <ExamChip course={s.course} label={examTitle(s.course)} />
-                          <span className="mt-1 block"><SubjectBadge subject={s.subject} /></span>
-                        </td>
-                        <td className="px-5 py-3.5 font-semibold text-[#22201F] dark:text-[#F6F2EA]">{s.title}</td>
-                        <td className="px-5 py-3.5 text-sm text-[#8A7E6F] dark:text-[#A89F91]">{s.chapter}</td>
-                        <td className="px-5 py-3.5">
-                          <RowActions
-                            onView={s.fileUrl ? () => openPDF({ title: s.title, fileUrl: s.fileUrl, fileSize: s.fileSize, entityType: 'sheet', entityId: s.id, isProfessor: true, onDelete: () => { askDelete('this sheet', () => onDeletePracticeSheet(s.id)); setPdfDoc(null); } }) : undefined}
-                            onEdit={() => openEditSheet(s)}
-                            onDelete={() => askDelete('this sheet', () => onDeletePracticeSheet(s.id))}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </Table>
-                )}
-              </ResourceSection>
+              <SheetsSection 
+                exams={exams} practiceSheets={practiceSheets}
+                openAddSheet={openAddSheet} openEditSheet={openEditSheet} askDelete={askDelete} onDeletePracticeSheet={onDeletePracticeSheet}
+                openPDF={openPDF} setPdfDoc={setPdfDoc}
+              />
             )}
 
             {/* ---------- DOUBTS ---------- */}
             {activeTab === 'doubts' && (
-              <div className="space-y-5">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="inline-flex rounded-xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] p-1">
-                    {(['unanswered', 'answered', 'all'] as const).map((t) => {
-                      const c = t === 'unanswered' ? doubts.filter((d) => !d.isAnswered).length : t === 'answered' ? doubts.filter((d) => d.isAnswered).length : doubts.length;
-                      const active = doubtsTab === t;
-                      return (
-                        <button
-                          key={t}
-                          onClick={() => setDoubtsTab(t)}
-                          className={`rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors ${active ? 'bg-[#4A0E1B] text-white' : 'text-[#6E645A] hover:text-[#22201F] dark:text-[#F6F2EA]'}`}
-                        >
-                          {t} <span className={active ? 'text-white/70' : 'text-[#A79A88]'}>({c})</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <div className="relative sm:w-72">
-                    <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-                    <input className={`${INPUT} pl-10`} placeholder="Search doubts…" value={queries.doubts} onChange={(e) => setQuery('doubts', e.target.value)} />
-                  </div>
-                </div>
-
-                {doubtsFiltered.length === 0 ? (
-                  <EmptyState
-                    icon={<Inbox size={22} />}
-                    title={doubtsTab === 'unanswered' ? 'Inbox zero' : 'Nothing to show'}
-                    message={doubtsTab === 'unanswered' ? 'There are no unanswered doubts right now. Beautifully done.' : 'No doubts match this view.'}
-                  />
-                ) : (
-                  <div className="space-y-4">
-                    {doubtsFiltered.map((doubt) => (
-                      <PremiumCard key={doubt.id} padding="medium" className={!doubt.isAnswered ? 'ring-1 ring-[#4A0E1B]/12' : ''}>
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-start gap-3">
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
-                              <User size={16} />
-                            </span>
-                            <div>
-                              <h4 className="text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{doubt.name}</h4>
-                              <span className="dash-mono text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{doubt.email}</span>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end gap-1.5">
-                            <span className="dash-mono text-[11px] text-[#A79A88]">{fmtDate(doubt.createdAt)}</span>
-                            {!doubt.isAnswered ? (
-                              <span className="rounded-full bg-[#F4E4E4] px-2 py-0.5 text-[10px] font-bold text-[#4A0E1B]">Awaiting reply</span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F7EFD9] dark:bg-[#362A0D] px-2 py-0.5 text-[10px] font-bold text-[#8A6A16]">
-                                <Check size={11} /> Answered
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">{doubt.subject}</p>
-                        <p className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
-
-                        {doubt.attachmentName && (
-                          <div className="mt-2">
-                            {doubt.attachmentDataUrl ? (
-                              doubt.attachmentDataUrl.startsWith('data:image/') ? (
-                                /* Image: show thumbnail + open in new tab */
-                                <div className="rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] overflow-hidden">
-                                  <img
-                                    src={doubt.attachmentDataUrl}
-                                    alt={doubt.attachmentName}
-                                    className="w-full max-h-48 object-contain bg-[#FBF7F0] dark:bg-[#2A2726] cursor-pointer"
-                                    onClick={() => {
-                                      const win = window.open();
-                                      if (win) { win.document.write(`<img src="${doubt.attachmentDataUrl}" style="max-width:100%">`); }
-                                    }}
-                                    title="Click to open full size"
-                                  />
-                                  <div className="flex items-center justify-between px-3 py-1.5 bg-[#FBF7F0] dark:bg-[#2A2726] border-t border-[#EFE7D8] dark:border-[#4A433E]">
-                                    <span className="text-[10px] text-[#8A7E6F] dark:text-[#A89F91] truncate">📎 {doubt.attachmentName}</span>
-                                    <a
-                                      href={doubt.attachmentDataUrl}
-                                      download={doubt.attachmentName}
-                                      className="text-[10px] font-semibold text-[#8A6A16] hover:text-[#4A0E1B] shrink-0 ml-2"
-                                    >Download</a>
-                                  </div>
-                                </div>
-                              ) : (
-                                /* Other file type: download button */
-                                <div className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5">
-                                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-semibold text-[#3A342E] truncate">📎 {doubt.attachmentName}</p>
-                                  </div>
-                                  <a
-                                    href={doubt.attachmentDataUrl}
-                                    download={doubt.attachmentName}
-                                    className="shrink-0 rounded-lg bg-[#8A6A16] px-2.5 py-1 text-[10px] font-bold text-white hover:bg-[#4A0E1B] transition-colors"
-                                  >Open / Download</a>
-                                </div>
-                              )
-                            ) : (
-                              /* Legacy: no data URL stored */
-                              <span className="inline-flex items-center gap-1.5 text-xs text-[#8A7E6F] dark:text-[#A89F91]">
-                                📎 <span className="italic">{doubt.attachmentName}</span>
-                                <span className="text-[10px] text-[#C7C7CC]">(file not available)</span>
-                              </span>
-                            )}
-                          </div>
-                        )}
-
-                        {/* Answer / reply zone */}
-                        {doubt.replies && doubt.replies.length > 0 ? (
-                          <div className="mt-4 space-y-4">
-                            {doubt.replies.map(reply => (
-                              <div key={reply.id} className="rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-4">
-                                <div className="flex items-start gap-2.5">
-                                  <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
-                                  <div className="flex-1">
-                                    <div className="flex items-center justify-between">
-                                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response</p>
-                                    </div>
-                                    <div 
-                                      className="mt-2 text-sm leading-relaxed text-[#3A342E] prose prose-sm max-w-none"
-                                      dangerouslySetInnerHTML={{ __html: reply.reply_text || '' }} 
-                                    />
-                                    {/* Images */}
-                                    {reply.image_urls && reply.image_urls.length > 0 && (
-                                      <div className="mt-3 flex flex-wrap gap-2">
-                                        {reply.image_urls.map((url, i) => (
-                                          <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8] dark:border-[#4A433E]" />
-                                        ))}
-                                      </div>
-                                    )}
-                                    {/* Videos */}
-                                    {reply.video_urls && reply.video_urls.length > 0 && (
-                                      <div className="mt-3 space-y-2">
-                                        {reply.video_urls.map((url, i) => (
-                                          <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8] dark:border-[#4A433E]" />
-                                        ))}
-                                      </div>
-                                    )}
-                                    {/* Audio */}
-                                    {reply.audio_urls && reply.audio_urls.length > 0 && (
-                                      <div className="mt-3 space-y-2">
-                                        {reply.audio_urls.map((url, i) => (
-                                          <audio key={i} src={url} controls className="w-full max-w-xs" />
-                                        ))}
-                                      </div>
-                                    )}
-                                    {/* Docs */}
-                                    {reply.attachment_urls && reply.attachment_urls.length > 0 && (
-                                      <div className="mt-3 space-y-2">
-                                        {reply.attachment_urls.map((url, i) => (
-                                          <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA] dark:bg-[#2A2726]">
-                                            <FileText size={14} /> Attachment {i + 1}
-                                          </a>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] dark:border-[#4A433E] pt-4">
-                              <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
-                                <Plus size={13} /> Add another reply
-                              </button>
-                              <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                                <Trash2 size={13} /> Delete Ticket
-                              </button>
-                            </div>
-                          </div>
-                        ) : doubt.answerText ? (
-                          <div className="mt-4 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-4">
-                            <div className="flex items-start gap-2.5">
-                              <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
-                              <div className="flex-1">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response (Legacy)</p>
-                                <p className="mt-1 text-sm leading-relaxed text-[#3A342E]">{doubt.answerText}</p>
-                              </div>
-                            </div>
-                            <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] dark:border-[#4A433E] pt-4">
-                              <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
-                                <Plus size={13} /> Add rich reply
-                              </button>
-                              <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                                <Trash2 size={13} /> Delete Ticket
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="mt-4 flex items-center justify-between">
-                            <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
-                              <Send size={13} /> Answer query
-                            </button>
-                            <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                              <Trash2 size={13} /> Delete
-                            </button>
-                          </div>
-                        )}
-
-                        {replyingDoubtId === doubt.id && (
-                          <AnswerDoubtModal
-                            doubt={doubt}
-                            onClose={() => setReplyingDoubtId(null)}
-                            onPublish={async (data) => {
-                              await onReplyDoubt(doubt.id, data);
-                              setReplyingDoubtId(null);
-                            }}
-                          />
-                        )}
-                      </PremiumCard>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <DoubtsSection 
+                doubts={doubts}
+                askDelete={askDelete} onDeleteDoubt={onDeleteDoubt} onReplyDoubt={onReplyDoubt}
+              />
             )}
 
             {/* ---------- ANNOUNCEMENTS ---------- */}
             {activeTab === 'announcements' && (
-              <div className="space-y-5">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-[#8A7E6F] dark:text-[#A89F91]">
-                    {announcements.length} notice{announcements.length === 1 ? '' : 's'} · pinned ones show first for students
-                  </p>
-                  <button className={PRIMARY_BTN} onClick={openAddAnnouncement}>
-                    <Plus size={15} /> New announcement
-                  </button>
-                </div>
-
-                {annSorted.length === 0 ? (
-                  <EmptyState icon={<Megaphone size={22} />} title="No announcements yet" message="Post exam dates, new uploads or study tips for your students." action={<button className={PRIMARY_BTN} onClick={openAddAnnouncement}><Plus size={15} /> New announcement</button>} />
-                ) : (
-                  <div className="space-y-4">
-                    {annSorted.map((a) => (
-                      <PremiumCard key={a.id} padding="medium" className={a.pinned ? 'ring-1 ring-[#4A0E1B]/15' : ''}>
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${ANN_CAT[a.category].cls}`}>{ANN_CAT[a.category].label}</span>
-                            {a.pinned && (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#4A0E1B]">
-                                <Pin size={11} /> Pinned
-                              </span>
-                            )}
-                          </div>
-                          <span className="dash-mono shrink-0 text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{fmtDate(a.createdAt)}</span>
-                        </div>
-                        <h4 className="dash-serif mt-3 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">{a.title}</h4>
-                        <p className="mt-1.5 text-sm leading-relaxed text-[#5A534B] dark:text-[#C7BCAD]">{a.body}</p>
-                        <div className="mt-4 flex items-center gap-1 border-t border-[#F2ECDF] dark:border-[#383330] pt-3">
-                          <button className={ROW_BTN} onClick={() => onTogglePinAnnouncement(a.id)}>
-                            {a.pinned ? <PinOff size={13} /> : <Pin size={13} />} {a.pinned ? 'Unpin' : 'Pin'}
-                          </button>
-                          <button className={ROW_BTN} onClick={() => openEditAnnouncement(a)}>
-                            <Pencil size={13} /> Edit
-                          </button>
-                          <button className={ROW_BTN_DANGER} onClick={() => askDelete('this announcement', () => onDeleteAnnouncement(a.id))}>
-                            <Trash2 size={13} /> Delete
-                          </button>
-                        </div>
-                      </PremiumCard>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <AnnouncementsSection 
+                announcements={announcements}
+                openAddAnnouncement={openAddAnnouncement} openEditAnnouncement={openEditAnnouncement}
+                onTogglePinAnnouncement={onTogglePinAnnouncement} askDelete={askDelete} onDeleteAnnouncement={onDeleteAnnouncement}
+              />
             )}
 
             {/* ---------- SETTINGS ---------- */}
