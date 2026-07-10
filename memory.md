@@ -5,6 +5,8 @@ This document is the single source of truth for the state of the project. It tra
 ## Change History
 
 *   **2026-07-10**:
+    *   **Professor Dashboard Refactor (Phase 4)**: Extracted all major tabs from the monolithic `ProfessorDashboard.tsx` into individual, self-contained components in `src/components/professor/` (`OverviewSection`, `NotesSection`, `VideosSection`, `PYQSection`, `SheetsSection`, `DoubtsSection`, `AnnouncementsSection`). Shared UI components were extracted to `ui.tsx`. Removed redundant state variables and centralized layout logic, successfully passing TypeScript validation.
+    *   **Student Dashboard Refactor (Phase 3)**: Extracted section rendering into separate components within `src/components/student`.
     *   **React Router Migration**: Installed `react-router-dom` and refactored the application shell (`AppNew.tsx`) to utilize standard `<Routes>` and `<Route>`. Replaced manual `currentView` and `selectedExam` state in `StudentDashboard` with URL parameters (`/resources/:examId/:categoryId`) to enable deep-linking and a more robust architecture.
     *   **Architecture**: Modified `AppNew.tsx` and `StudentDashboard.tsx` to handle dynamic nested routes (`/resources/:examId/:categoryId`) replacing hardcoded component states. This allows deep linking to specific exams directly.
     *   **Data Generation**: Scrapped all placeholder math/physics notes and used a script to dynamically generate 65+ rich Chemistry-only notes spanning all 5 exams (`src/data.ts`).
