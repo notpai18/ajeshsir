@@ -424,64 +424,7 @@ export default function StudentDashboard({
               ))}
             </div>
 
-            {/* Supporting Panels - Reduced Visual Weight */}
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start border-t border-[#EAE1D2] pt-8">
-              
-              {/* Quick Statistics */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Platform Stats</h3>
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Notes</span><span className="text-xs font-bold">{notes.length}</span></div>
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Videos</span><span className="text-xs font-bold">{videos.length}</span></div>
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">Practice Sheets</span><span className="text-xs font-bold">{practiceSheets.length}</span></div>
-                  <div className="flex items-center justify-between"><span className="text-xs text-[#5A534B]">PYQs</span><span className="text-xs font-bold">{pyqs.length}</span></div>
-                </div>
-              </div>
 
-              {/* Featured Announcements */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                 <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Announcements</h3>
-                 <div className="space-y-4">
-                   {sortedAnnouncements.filter(a => a.pinned).slice(0, 2).map(ann => (
-                     <div key={ann.id}>
-                       <p className="text-xs font-bold text-[#22201F] line-clamp-1">{ann.title}</p>
-                       <p className="mt-1 text-[10px] text-[#5A534B] line-clamp-2">{ann.body}</p>
-                     </div>
-                   ))}
-                   {sortedAnnouncements.filter(a => a.pinned).length === 0 && <p className="text-xs text-[#8A7E6F]">No pinned announcements.</p>}
-                 </div>
-              </div>
-
-              {/* Recently Added */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Recently Added</h3>
-                <div className="space-y-3">
-                  {recentUploads.map((item, i) => (
-                    <div key={i} className="flex items-center gap-2.5">
-                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F4E7E5] text-[#4A0E1B]">{item.type === 'Note' ? <BookOpen size={10} /> : <VideoIcon size={10} />}</span>
-                       <div>
-                         <p className="text-xs font-semibold text-[#22201F] line-clamp-1">{item.title}</p>
-                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Popular Resources */}
-              <div className="rounded-2xl border border-[#EAE1D2] bg-white p-5 shadow-sm lg:col-span-1">
-                <h3 className="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8A7E6F]">Popular</h3>
-                <div className="space-y-3">
-                  {popularResources.map(res => (
-                    <div key={res.id} className="cursor-pointer group flex items-center gap-2.5" onClick={() => setActivePdfViewer({ title: res.title, fileUrl: res.fileUrl })}>
-                       <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#F7EFD9] text-[#8A6A16]"><Download size={10} /></span>
-                       <div>
-                         <p className="text-xs font-semibold text-[#22201F] line-clamp-1 group-hover:text-[#4A0E1B] transition-colors">{res.title}</p>
-                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         )}
 

@@ -4,6 +4,9 @@ This document is the single source of truth for the state of the project. It tra
 
 ## Change History
 
+*   **2026-07-10**:
+    *   **Removed Supporting Panels**: Completely removed the "Platform Stats", "Announcements", "Recently Added", and "Popular" panels from the bottom of the Student Dashboard landing page per user request.
+    *   **Pulled changes from main**: Pulled the latest updates from the `main` branch. Resolved merge conflicts in `src/components/StudentDashboard.tsx` (combined imports and accepted incoming Redesigned V2 Landing Page structure while removing old STEP 1 block).
 *   **2026-07-09**:
     *   **Created `AGENTS.md`**: Established strict agent rules regarding the use of `design.md` for UI/frontend tasks and `MEMORY.md` for overall state tracking.
     *   **Redesigned Exam Selection Grid**: Refactored the `StudentDashboard.tsx` exam selection grid to strictly follow the `design.md` Professor's Study aesthetic. Applied a custom 5-color palette (Deep Maroon, Maroon Red, Mustard Gold, Warm Sand, Charcoal) specifically to the 5 exam tracks.
