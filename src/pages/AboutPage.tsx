@@ -45,7 +45,7 @@ const INTERESTS = [
 ];
 
 const EXPERIENCE = [
-  { year: '2014 — Present', title: 'Chemistry Professor', place: 'Premier Coaching Institute, Pala' }
+  { year: '2014 — Present', title: 'Chemistry Professor', place: 'Brilliant Study Centre Pala' }
 ];
 
 export default function AboutPage({ onNavigate }: AboutPageProps) {
@@ -82,7 +82,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
 
               <div className="mt-5 flex flex-wrap justify-center gap-2 md:justify-start">
                 {[
-                  { icon: <Building2 size={13} />, text: 'Premier Coaching Institute, Pala' },
+                  { icon: <Building2 size={13} />, text: 'Brilliant Study Centre Pala' },
                   { icon: <MapPin size={13} />, text: 'Kerala, India' },
                   { icon: <CalendarClock size={13} />, text: '12+ Years Teaching Experience' }
                 ].map((chip, i) => (
@@ -119,7 +119,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
           <div className={`${CARD} mt-4 p-6 sm:p-8`}>
             <div className="space-y-4 text-[15px] font-medium leading-relaxed text-[#5A534B] dark:text-[#C7BCAD]">
               <p>
-                Prof. Ajesh (Ajeesh) is a popular Chemistry faculty member at a premier coaching institute in Pala, Kerala. He is well-known among medical and engineering aspirants for his expert strategies in preparing students for competitive exams like JEE Main, JEE Advanced, NEET, and KEAM.
+                Prof. Ajesh (Ajeesh) is a popular Chemistry faculty member at the Brilliant Study Centre in Pala, Kerala. He is well-known among medical and engineering aspirants for his expert strategies in preparing students for competitive exams like JEE Main, JEE Advanced, NEET, and KEAM.
               </p>
               <p>
                 Recognising how often students struggle to bridge foundational theory with high-difficulty problem structures, he began writing unified note modules, previous-year guides, and concept booklets. Aside from his classroom teaching, he has built a significant online presence, particularly among students in the Kerala entrance coaching community, creating a complete, open-access repository for scientific entrance examinations.
@@ -183,7 +183,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
 
         {/* ================= STUDY MATERIALS & SESSIONS ================= */}
         <section className="mt-10">
-          <p className={MICRO}>Educational Programs</p>
+          <p className={MICRO}>Brilliant Study Centre</p>
           <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Study Materials & Live Sessions</h2>
           <div className={`${CARD} mt-4 p-6 sm:p-8`}>
             <div className="grid gap-6 md:grid-cols-3">
@@ -193,7 +193,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
                   <h4 className="font-bold text-[#22201F] dark:text-[#F7F3EC]">Live Classes</h4>
                 </div>
                 <p className="text-sm leading-relaxed text-[#5A534B] dark:text-[#A89F91]">
-                  Regular interactive sessions broadcasted via the E-Learning Portal and official YouTube streams covering high-weightage test segments.
+                  Regular interactive sessions broadcasted via the Brilliant E-Learning Portal and official YouTube streams covering high-weightage test segments.
                 </p>
               </div>
               <div className="space-y-2">

@@ -47,7 +47,7 @@ export default function LegalPage({ documentType }: LegalPageProps) {
             },
             {
               heading: '2. Intellectual Property',
-              body: 'All study materials, lecture notes, question banks, and structural diagrams provided on this portal are the intellectual property of Prof. Ajesh Joe. Unauthorized commercial redistribution is strictly prohibited.'
+              body: 'All study materials, lecture notes, question banks, and structural diagrams provided on this portal are the intellectual property of Prof. Ajesh Joe and Brilliant Study Centre. Unauthorized commercial redistribution is strictly prohibited.'
             },
             {
               heading: '3. User Conduct',

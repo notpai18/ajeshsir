@@ -49,7 +49,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               Chemistry Professor
             </p>
             <p className="text-[14px] font-normal text-white/60">
-              Independent Coaching, Pala
+              Brilliant Study Centre Pala
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                 <span className="absolute bottom-0 left-0 h-[1px] w-full bg-[#D9C2A2] origin-left scale-x-0 transition-transform duration-200 ease-out group-hover:scale-x-100" />
               </span>
             </a>
-            <p>Independent Coaching</p>
+            <p>Brilliant Study Centre</p>
             <p className="text-[13px] text-white/60">
               Pala, Kerala
             </p>

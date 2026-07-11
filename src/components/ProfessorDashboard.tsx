@@ -397,7 +397,7 @@ const DEFAULT_PROFILE = {
   name: 'Ajesh Joe',
   role: 'Repository Editor',
   designation: 'Professor of Chemistry',
-  office: 'Independent Coaching'
+  office: 'Brilliant Study Centre Pala'
 };
 
 export default function ProfessorDashboard({
