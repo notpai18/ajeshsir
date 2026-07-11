@@ -53,7 +53,7 @@ export function ResourceHero({ courseTitle, title, description, totalCount, tota
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-4">
-          <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/20 text-center min-w-[100px]">
+          <div className="rounded-2xl bg-white dark:bg-[#22201F]/10 p-4 backdrop-blur-md border border-white/20 text-center min-w-[100px]">
             <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#D9C2A2]">{totalLabel}</p>
             <p className="dash-mono text-2xl font-bold mt-1">{totalCount}</p>
           </div>
@@ -91,7 +91,7 @@ export function ResourceToolbar({
   extraFilters
 }: ResourceToolbarProps) {
   return (
-    <div className="rounded-[28px] border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)] mb-6 flex flex-col p-2 sm:flex-row sm:items-center sm:justify-between gap-2 overflow-hidden">
+    <div className="rounded-[28px] border border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#4A433E] bg-white dark:bg-[#22201F] dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)] mb-6 flex flex-col p-2 sm:flex-row sm:items-center sm:justify-between gap-2 overflow-hidden">
       <div className="flex flex-1 items-center gap-1 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar pl-2">
         {subjects.map((subject) => (
           <button
@@ -100,7 +100,7 @@ export function ResourceToolbar({
             className={`whitespace-nowrap rounded-lg px-4 py-2 text-[11px] font-bold transition-all ${
               selectedSubject === subject
                 ? 'bg-[#4A0E1B] text-white shadow-md'
-                : 'text-[#6E645A] hover:bg-[#F6F2EA] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]'
+                : 'text-[#6E645A] hover:bg-[#F6F2EA] dark:bg-[#1A1817] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]'
             }`}
           >
             {subject === 'All' ? 'All' : subject}
@@ -108,7 +108,7 @@ export function ResourceToolbar({
         ))}
       </div>
       
-      <div className="flex flex-wrap items-center gap-2 border-t border-[#F2ECDF] dark:border-[#383330] pt-2 sm:border-none sm:pt-0 pl-2 pr-2">
+      <div className="flex flex-wrap items-center gap-2 border-t border-[#F2ECDF] dark:border-[#383330] dark:border-[#383330] pt-2 sm:border-none sm:pt-0 pl-2 pr-2">
         {extraFilters}
         
         {/* Search */}
@@ -119,7 +119,7 @@ export function ResourceToolbar({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search resources..."
-            className="w-full rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] py-2 pl-9 pr-3 text-xs text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B3A996] outline-none transition focus:border-[#4A0E1B]/50 focus:bg-white dark:bg-[#22201F] focus:ring-2 focus:ring-[#4A0E1B]/10"
+            className="w-full rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] py-2 pl-9 pr-3 text-xs text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] placeholder:text-[#B3A996] outline-none transition focus:border-[#4A0E1B]/50 focus:bg-white dark:bg-[#22201F] dark:bg-[#22201F] focus:ring-2 focus:ring-[#4A0E1B]/10"
           />
         </div>
         
@@ -127,7 +127,7 @@ export function ResourceToolbar({
         {onSortToggle && (
           <button 
             onClick={onSortToggle}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] text-[#6E645A] transition-colors hover:bg-white dark:bg-[#22201F] hover:text-[#22201F] dark:text-[#F6F2EA]"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] text-[#6E645A] transition-colors hover:bg-white dark:bg-[#22201F] dark:bg-[#22201F] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]"
             title={`Sort: ${sortLabel || sortMode}`}
           >
             <ArrowDownUp size={14} />
@@ -135,17 +135,17 @@ export function ResourceToolbar({
         )}
 
         {/* View Toggle (Visual) */}
-        <div className="flex h-9 shrink-0 items-center rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] p-1">
+        <div className="flex h-9 shrink-0 items-center rounded-lg border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] p-1">
           <button
             onClick={() => onViewModeChange('grid')}
-            className={`flex h-full w-8 items-center justify-center rounded-md transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-[#22201F] text-[#4A0E1B] shadow-sm' : 'text-[#8A7E6F] dark:text-[#A89F91] hover:text-[#22201F] dark:text-[#F6F2EA]'}`}
+            className={`flex h-full w-8 items-center justify-center rounded-md transition-all ${viewMode === 'grid' ? 'bg-white dark:bg-[#22201F] dark:bg-[#22201F] text-[#4A0E1B] shadow-sm' : 'text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]'}`}
             title="Grid View"
           >
             <LayoutGrid size={14} />
           </button>
           <button
             onClick={() => onViewModeChange('list')}
-            className={`flex h-full w-8 items-center justify-center rounded-md transition-all ${viewMode === 'list' ? 'bg-white dark:bg-[#22201F] text-[#4A0E1B] shadow-sm' : 'text-[#8A7E6F] dark:text-[#A89F91] hover:text-[#22201F] dark:text-[#F6F2EA]'}`}
+            className={`flex h-full w-8 items-center justify-center rounded-md transition-all ${viewMode === 'list' ? 'bg-white dark:bg-[#22201F] dark:bg-[#22201F] text-[#4A0E1B] shadow-sm' : 'text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] hover:text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]'}`}
             title="List View"
           >
             <List size={14} />
@@ -158,12 +158,12 @@ export function ResourceToolbar({
 
 export function ResourceEmptyState({ label }: { label: string }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] px-6 py-16 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] px-6 py-16 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D] text-[#8A6A16]">
         <Search size={22} />
       </div>
-      <p className="mt-4 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">Nothing found</p>
-      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91]">{label}</p>
+      <p className="mt-4 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Nothing found</p>
+      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{label}</p>
     </div>
   );
 }

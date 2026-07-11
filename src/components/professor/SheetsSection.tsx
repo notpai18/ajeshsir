@@ -13,10 +13,10 @@ import type { ExamInfo, PracticeSheet } from '../../types';
 import type { PDFDocumentInfo } from '../pdf/PDFContext';
 
 const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
+  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
   'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
+  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
+  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
   'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
 };
 
@@ -100,13 +100,13 @@ export function SheetsSection({
       ) : (
         <Table head={['Exam & subject', 'Title', 'Chapter', '']}>
           {sheetsFiltered.map((s) => (
-            <tr key={s.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726]">
+            <tr key={s.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
               <td className="px-5 py-3.5">
                 <ExamChip course={s.course} label={examTitle(s.course)} />
                 <span className="mt-1 block"><SubjectBadge subject={s.subject} /></span>
               </td>
-              <td className="px-5 py-3.5 font-semibold text-[#22201F] dark:text-[#F6F2EA]">{s.title}</td>
-              <td className="px-5 py-3.5 text-sm text-[#8A7E6F] dark:text-[#A89F91]">{s.chapter}</td>
+              <td className="px-5 py-3.5 font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{s.title}</td>
+              <td className="px-5 py-3.5 text-sm text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{s.chapter}</td>
               <td className="px-5 py-3.5">
                 <RowActions
                   onView={s.fileUrl ? () => openPDF({ title: s.title, fileUrl: s.fileUrl, fileSize: s.fileSize, entityType: 'sheet', entityId: s.id, isProfessor: true, onDelete: () => { askDelete('this sheet', () => onDeletePracticeSheet(s.id)); setPdfDoc(null); } }) : undefined}

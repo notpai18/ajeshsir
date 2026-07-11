@@ -29,7 +29,7 @@ export default function Navbar({
   const accentBg = 'bg-[#4A0E1B]';
   const accentBorder = 'border-[#4A0E1B]';
   const accentHoverBg = 'hover:bg-[#7C2532]';
-  const badgeBg = 'bg-[#F7F3EC] dark:bg-[#1A1817]';
+  const badgeBg = 'bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]';
   const badgeHoverBg = 'hover:bg-[#D9C2A2]/20';
   const mobileActiveBg = 'bg-[#4A0E1B]/8 text-[#4A0E1B] dark:text-[#F4E7E5]';
   const mobileActionText = 'text-[#4A0E1B] dark:text-[#F4E7E5]';
@@ -47,7 +47,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="sticky top-5 z-50 mx-auto mt-5 w-[90%] max-w-7xl rounded-full border border-[#D9C2A2]/30 bg-white/80 backdrop-blur-[20px] shadow-soft-md transition-all duration-300">
+    <nav className="sticky top-5 z-50 mx-auto mt-5 w-[90%] max-w-7xl rounded-full border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F]/80 backdrop-blur-[20px] shadow-soft-md transition-all duration-300">
       <div className="mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex h-16 items-center justify-between">
           
@@ -65,7 +65,7 @@ export default function Navbar({
               />
             </div>
             <div className="flex flex-col whitespace-nowrap">
-              <span className="text-xl font-['Outfit'] font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA]">
+              <span className="text-xl font-['Outfit'] font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
                 Prof. Ajesh Joe
               </span>
               <span className="text-[11px] font-semibold tracking-wide text-[#C9A13B] transition-colors duration-300">
@@ -90,7 +90,7 @@ export default function Navbar({
                     className={`relative py-2 text-base font-['Outfit'] transition-colors duration-200 hover:text-[#4A0E1B] dark:hover:text-[#F4E7E5] dark:text-[#F4E7E5] ${
                       isActive 
                         ? 'text-[#4A0E1B] dark:text-[#F4E7E5] font-bold' 
-                        : 'text-[#22201F]/60 font-medium'
+                        : 'text-[#22201F] dark:text-[#F6F2EA]/60 font-medium'
                     }`}
                     id={`nav-item-${item.label.toLowerCase().replace(' ', '-')}`}
                   >
@@ -109,7 +109,7 @@ export default function Navbar({
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className={`flex items-center gap-2 rounded-full border border-[#D9C2A2]/40 ${badgeBg} px-3 py-1.5 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA] transition-all ${badgeHoverBg}`}
+                className={`flex items-center gap-2 rounded-full border border-[#D9C2A2]/40 ${badgeBg} px-3 py-1.5 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-all ${badgeHoverBg}`}
                 id="theme-toggle-btn"
               >
                 {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
@@ -119,7 +119,7 @@ export default function Navbar({
               {/* Portal Access Badge */}
               {userRole ? (
                 <div className="flex items-center space-x-2">
-                  <span className={`flex items-center space-x-1 border border-[#D9C2A2]/40 ${badgeBg} px-2.5 py-1 text-xs font-medium text-[#22201F]/70 rounded-lg transition-colors duration-300`}>
+                  <span className={`flex items-center space-x-1 border border-[#D9C2A2]/40 ${badgeBg} px-2.5 py-1 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA]/70 rounded-lg transition-colors duration-300`}>
                     <UserCheck size={14} className={`${accentText} transition-colors duration-300`} />
                     <span className="hidden xl:inline">Role: </span>
                     <span>{userRole === 'professor' ? 'Professor' : 'Student'}</span>
@@ -129,7 +129,7 @@ export default function Navbar({
                       onRoleChange(null);
                       handleNavClick('selection');
                     }}
-                    className="text-xs font-medium text-[#22201F]/60 hover:text-[#4A0E1B] dark:hover:text-[#F4E7E5] dark:text-[#F4E7E5] transition-colors underline decoration-transparent hover:decoration-[#4A0E1B] underline-offset-4"
+                    className="text-xs font-medium text-[#22201F] dark:text-[#F6F2EA]/60 hover:text-[#4A0E1B] dark:hover:text-[#F4E7E5] dark:text-[#F4E7E5] transition-colors underline decoration-transparent hover:decoration-[#4A0E1B] underline-offset-4"
                     id="switch-role-btn"
                   >
                     Switch
@@ -151,7 +151,7 @@ export default function Navbar({
           <div className="flex items-center space-x-3 lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="rounded-xl p-2 text-[#22201F]/60 hover:bg-[#F7F3EC] dark:bg-[#1A1817]"
+              className="rounded-xl p-2 text-[#22201F] dark:text-[#F6F2EA]/60 hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]"
               id="mobile-menu-toggle-btn"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -163,7 +163,7 @@ export default function Navbar({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-4 pt-2 pb-4 shadow-soft-lg transition-colors duration-300 lg:hidden">
+        <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-4 pt-2 pb-4 shadow-soft-lg transition-colors duration-300 lg:hidden">
           <div className="space-y-1.5">
             {navItems.map((item) => {
               const isActive = 
@@ -178,7 +178,7 @@ export default function Navbar({
                   className={`block w-full rounded-xl px-4 py-2.5 text-left text-sm font-medium transition-colors ${
                     isActive 
                       ? `${mobileActiveBg}` 
-                      : 'text-[#22201F]/80 hover:bg-[#F7F3EC] dark:bg-[#1A1817]'
+                      : 'text-[#22201F] dark:text-[#F6F2EA]/80 hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]'
                   }`}
                   id={`mobile-nav-item-${item.label.toLowerCase().replace(' ', '-')}`}
                 >
@@ -192,8 +192,8 @@ export default function Navbar({
 
           <div>
             {userRole ? (
-              <div className="flex items-center justify-between px-4 py-2 bg-[#F7F3EC] dark:bg-[#1A1817] rounded-xl border border-[#D9C2A2]/30">
-                <span className="font-sans text-xs font-semibold text-[#22201F]/70">
+              <div className="flex items-center justify-between px-4 py-2 bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] rounded-xl border border-[#D9C2A2]/30">
+                <span className="font-sans text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA]/70">
                   Role: {userRole === 'professor' ? 'Professor' : 'Student'}
                 </span>
                 <button
@@ -221,7 +221,7 @@ export default function Navbar({
           <div className="border-t border-[#D9C2A2]/30 pt-4 mt-4">
             <button
               onClick={toggleTheme}
-              className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817]"
+              className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817]"
             >
               <span>{theme === 'dark' ? 'Switch to Current Theme' : 'Switch to Original Dark'}</span>
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}

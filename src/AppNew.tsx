@@ -62,7 +62,7 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
 
   // ─── Main Render ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F3EC] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA] transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] transition-colors duration-300">
       <Navbar
         theme={theme}
         toggleTheme={toggleTheme}

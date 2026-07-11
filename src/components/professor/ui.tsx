@@ -9,7 +9,7 @@ import React from 'react';
 import { Search, Plus, Eye, Pencil, Trash2 } from 'lucide-react';
 import { PremiumCard } from '../PremiumCard';
 
-const INPUT = 'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#22201F]/30 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
+const INPUT = 'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] placeholder:text-[#22201F] dark:text-[#F6F2EA]/30 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
 const PRIMARY_BTN = 'inline-flex items-center justify-center gap-2 rounded-btn bg-[#4A0E1B] hover:bg-[#7C2532] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all shadow-soft-sm hover:-translate-y-0.5 duration-200 disabled:opacity-50';
 
 export function ResourceSection({
@@ -32,8 +32,8 @@ export function ResourceSection({
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-[#8A7E6F] dark:text-[#A89F91]">
-          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{count}</span>
+        <p className="text-sm text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">
+          <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{count}</span>
           {count === total ? '' : ` of ${total}`} {title}
         </p>
         <button className={PRIMARY_BTN} onClick={onAdd}>
@@ -74,9 +74,9 @@ export function Table({ head, children }: { head: string[]; children: React.Reac
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm border-collapse">
           <thead>
-            <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726]">
+            <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726]">
               {head.map((h, i) => (
-                <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
+                <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
                   {h}
                 </th>
               ))}
@@ -93,14 +93,14 @@ export function RowActions({ onView, onEdit, onDelete }: { onView?: () => void; 
   return (
     <div className="flex justify-end gap-1">
       {onView && (
-        <button onClick={onView} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="View PDF">
+        <button onClick={onView} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="View PDF">
           <Eye size={15} />
         </button>
       )}
-      <button onClick={onEdit} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="Edit">
+      <button onClick={onEdit} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="Edit">
         <Pencil size={15} />
       </button>
-      <button onClick={onDelete} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F6E5E1] hover:text-[#B23B2E]" aria-label="Delete">
+      <button onClick={onDelete} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] transition-colors hover:bg-[#F6E5E1] hover:text-[#B23B2E]" aria-label="Delete">
         <Trash2 size={15} />
       </button>
     </div>
@@ -119,10 +119,10 @@ export function ProfEmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] px-6 py-14 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">{icon}</div>
-      <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F] dark:text-[#F6F2EA]">{title}</h4>
-      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91]">{message}</p>
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] px-6 py-14 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D] text-[#8A6A16]">{icon}</div>
+      <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{title}</h4>
+      <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{message}</p>
       {action && <div className="mt-5">{action}</div>}
     </div>
   );

@@ -21,10 +21,10 @@ interface OverviewSectionProps {
 }
 
 const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
+  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
   'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
+  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
+  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
   'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
 };
 
@@ -45,7 +45,7 @@ function StatCard({ icon, label, value, sub }: { icon: React.ReactNode; label: s
         <PremiumCard.Category>{label}</PremiumCard.Category>
         <PremiumCard.Icon className="h-10 w-10 rounded-full">{icon}</PremiumCard.Icon>
       </div>
-      <p className="mt-4 text-3xl font-bold leading-none tabular-nums text-[#22201F] dark:text-[#F6F2EA]">{value}</p>
+      <p className="mt-4 text-3xl font-bold leading-none tabular-nums text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{value}</p>
       {sub && <PremiumCard.Metadata className="mt-2 block">{sub}</PremiumCard.Metadata>}
     </PremiumCard>
   );
@@ -57,7 +57,7 @@ function Bar({ label, sub, value, max, barClass = 'bg-[#4A0E1B]' }: { label: str
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
         <span className="truncate text-sm font-semibold text-[#3A342E]">{label}</span>
-        <span className="dash-mono shrink-0 text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">{sub}</span>
+        <span className="dash-mono shrink-0 text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{sub}</span>
       </div>
       <div className="h-2.5 overflow-hidden rounded-full bg-[#F0E9DB]">
         <div className={`h-full rounded-full ${barClass}`} style={{ width: `${pct}%` }} />
@@ -118,7 +118,7 @@ export function OverviewSection({
       {/* Hero band */}
       <div className="relative overflow-hidden rounded-hero bg-gradient-to-r from-[#4A0E1B] to-[#7C2532] p-6 text-white shadow-soft-xl border border-[#D9C2A2]/20 sm:p-7">
         <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#C9A13B]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
+        <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-white dark:bg-[#22201F]/10 blur-2xl" />
         <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="max-w-md">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#D9C2A2]">Repository health</p>
@@ -153,15 +153,15 @@ export function OverviewSection({
         <PremiumCard padding="large" accentLine>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Most downloaded notes</h3>
-              <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">What students reach for most</p>
+              <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Most downloaded notes</h3>
+              <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">What students reach for most</p>
             </div>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A] text-[#4A0E1B]">
               <TrendingUp size={17} />
             </span>
           </div>
           {topNotes.length === 0 ? (
-            <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91]">No notes yet.</p>
+            <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">No notes yet.</p>
           ) : (
             <div className="space-y-4">
               {topNotes.map((n) => (
@@ -174,10 +174,10 @@ export function OverviewSection({
         <PremiumCard padding="large" accentLine>
           <div className="mb-5 flex items-center justify-between">
             <div>
-              <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Library by exam</h3>
-              <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">How your content is spread</p>
+              <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Library by exam</h3>
+              <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">How your content is spread</p>
             </div>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D] text-[#8A6A16]">
               <LayoutDashboard size={17} />
             </span>
           </div>
@@ -200,18 +200,18 @@ export function OverviewSection({
       <div className="grid gap-6 lg:grid-cols-2">
         <PremiumCard padding="large" accentLine>
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Needs your attention</h3>
+            <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Needs your attention</h3>
             {pendingDoubtsCount > 0 && (
               <span className="rounded-full bg-[#F4E4E4] px-2.5 py-1 text-[10px] font-bold text-[#4A0E1B]">{pendingDoubtsCount} unanswered</span>
             )}
           </div>
           {pendingDoubtsCount === 0 ? (
             <div className="flex flex-col items-center py-6 text-center">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D] text-[#8A6A16]">
                 <Check size={20} />
               </span>
-              <p className="mt-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">You're all caught up</p>
-              <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">Every student doubt has an answer.</p>
+              <p className="mt-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">You're all caught up</p>
+              <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Every student doubt has an answer.</p>
             </div>
           ) : (
             <div className="space-y-2.5">
@@ -222,17 +222,17 @@ export function OverviewSection({
                    <button
                      key={d.id}
                      onClick={() => onNavigateToDoubt(d.id)}
-                     className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
+                     className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
                    >
-                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-[#22201F] text-[#8A7E6F] dark:text-[#A89F91] ring-1 ring-[#EAE1D2]">
+                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-[#22201F] dark:bg-[#22201F] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] ring-1 ring-[#EAE1D2]">
                        <User size={14} />
                      </span>
                      <span className="min-w-0 flex-1">
                        <span className="flex items-center justify-between gap-2">
-                         <span className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{d.name}</span>
+                         <span className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{d.name}</span>
                          <span className="dash-mono shrink-0 text-[10px] text-[#A79A88]">{fmtDate(d.createdAt)}</span>
                        </span>
-                       <span className="line-clamp-1 text-xs text-[#8A7E6F] dark:text-[#A89F91]">{d.question}</span>
+                       <span className="line-clamp-1 text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{d.question}</span>
                      </span>
                      <ArrowRight size={15} className="mt-1 shrink-0 text-[#C0A98B]" />
                    </button>
@@ -242,17 +242,17 @@ export function OverviewSection({
         </PremiumCard>
 
         <PremiumCard padding="large" accentLine>
-          <h3 className="dash-serif mb-4 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Recent uploads</h3>
+          <h3 className="dash-serif mb-4 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Recent uploads</h3>
           {recentUploads.length === 0 ? (
-            <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91]">Nothing uploaded yet.</p>
+            <p className="py-8 text-center text-sm text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Nothing uploaded yet.</p>
           ) : (
             <div className="space-y-1">
               {recentUploads.map((item, i) => (
-                <div key={i} className="flex items-center gap-3 border-b border-[#F2ECDF] dark:border-[#383330] py-2.5 last:border-0">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">{typeIcon[item.type]}</span>
+                <div key={i} className="flex items-center gap-3 border-b border-[#F2ECDF] dark:border-[#383330] dark:border-[#383330] py-2.5 last:border-0">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A] text-[#4A0E1B]">{typeIcon[item.type]}</span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">{item.title}</p>
-                    <p className="truncate text-xs text-[#8A7E6F] dark:text-[#A89F91]">{item.detail}</p>
+                    <p className="truncate text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{item.title}</p>
+                    <p className="truncate text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{item.detail}</p>
                   </div>
                   <ExamChip course={item.course} label={examTitle(item.course)} />
                 </div>

@@ -29,7 +29,7 @@ export function PYQSection({
     <div>
       <div className="mt-4 mb-6">
         <p className={MICRO}>{currentExamInfo?.title} · Previous year questions</p>
-        <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Previous year questions</h2>
+        <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Previous year questions</h2>
       </div>
 
       <div className="mb-8 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
@@ -57,26 +57,26 @@ export function PYQSection({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead>
-                <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726]">
-                  <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Subject &amp; chapter</th>
-                  <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Year</th>
-                  <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Difficulty</th>
-                  <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Question paper</th>
-                  <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Step solution</th>
+                <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726]">
+                  <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Subject &amp; chapter</th>
+                  <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Year</th>
+                  <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Difficulty</th>
+                  <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Question paper</th>
+                  <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Step solution</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F2ECDF]">
                 {filteredPyqs.map((pyq) => (
-                  <tr key={pyq.id} className="transition-colors hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726]">
+                  <tr key={pyq.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:hover:bg-[#2A2726]">
                     <td className="px-5 py-3.5">
                       <SubjectBadge subject={pyq.subject} />
-                      <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{pyq.chapter}</span>
+                      <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{pyq.chapter}</span>
                     </td>
                     <td className="px-5 py-3.5 dash-mono text-xs font-medium tabular-nums text-[#6E645A]">{pyq.year}</td>
                     <td className="px-5 py-3.5"><DifficultyChip level={pyq.difficulty as any} /></td>
                     <td className="px-5 py-3.5 text-right">
                       <div className="inline-flex justify-end gap-1.5">
-                        <button onClick={() => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] hover:text-[#4A0E1B]">
+                        <button onClick={() => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]">
                           <Eye size={15} />
                         </button>
                         <button onClick={() => triggerDownload(pyq.questionUrl)} className={PILL_SOFT}>
@@ -86,7 +86,7 @@ export function PYQSection({
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <div className="inline-flex justify-end gap-1.5">
-                        <button onClick={() => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F7EFD9] hover:text-[#8A6A16]">
+                        <button onClick={() => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] transition-colors hover:bg-[#F7EFD9] dark:bg-[#362A0D] hover:text-[#8A6A16]">
                           <Eye size={15} />
                         </button>
                         <button onClick={() => triggerDownload(pyq.solutionUrl)} className={PILL_GOLD}>

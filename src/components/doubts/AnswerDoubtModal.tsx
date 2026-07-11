@@ -85,10 +85,10 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-4xl max-h-[90vh] bg-[#F7F3EC] dark:bg-[#1A1817] rounded-[24px] shadow-2xl flex flex-col overflow-hidden"
+        className="relative w-full max-w-4xl max-h-[90vh] bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] rounded-[24px] shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F]">
+        <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] dark:bg-[#22201F]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-[#4A0E1B]/10 flex items-center justify-center text-[#4A0E1B] font-semibold dash-serif">
               {doubt.name.charAt(0).toUpperCase()}
@@ -109,7 +109,7 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Original Question Card */}
-          <div className="bg-white dark:bg-[#22201F] rounded-2xl p-5 border border-[#D9C2A2]/30 shadow-sm">
+          <div className="bg-white dark:bg-[#22201F] dark:bg-[#22201F] rounded-2xl p-5 border border-[#D9C2A2]/30 shadow-sm">
             <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">Student's Question</h4>
             <p className="text-gray-800 whitespace-pre-wrap">{doubt.question}</p>
             
@@ -118,7 +118,7 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
                 href={doubt.attachmentUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 px-3 py-2 rounded-lg bg-[#F7F3EC] dark:bg-[#1A1817] text-[#4A0E1B] text-sm font-medium hover:bg-[#D9C2A2]/30 transition-colors"
+                className="inline-flex items-center gap-2 mt-4 px-3 py-2 rounded-lg bg-[#F7F3EC] dark:bg-[#1A1817] dark:bg-[#1A1817] text-[#4A0E1B] text-sm font-medium hover:bg-[#D9C2A2]/30 transition-colors"
               >
                 <FileText className="w-4 h-4" />
                 {doubt.attachmentName || 'View Attachment'}
@@ -151,7 +151,7 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 px-6 py-4 border-t border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] flex items-center justify-between">
+        <div className="flex-shrink-0 px-6 py-4 border-t border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] dark:bg-[#22201F] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}

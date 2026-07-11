@@ -13,10 +13,10 @@ import type { ExamInfo, PYQ } from '../../types';
 import type { PDFDocumentInfo } from '../pdf/PDFContext';
 
 const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
+  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
   'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
+  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
+  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
   'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
 };
 
@@ -32,7 +32,7 @@ function ExamChip({ course, label }: { course: string; label: string }) {
 
 function DifficultyChip({ level }: { level: 'Easy' | 'Medium' | 'Hard' }) {
   const map = {
-    Easy: 'bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]',
+    Easy: 'bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D] text-[#8A6A16]',
     Medium: 'bg-[#F4E2E5] text-[#7C2532]',
     Hard: 'bg-[#F4E4E4] text-[#4A0E1B]'
   } as const;
@@ -119,14 +119,14 @@ export function PYQSection({
       ) : (
         <Table head={['Exam & subject', 'Chapter & year', 'Difficulty', '']}>
           {pyqsFiltered.map((p) => (
-            <tr key={p.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726]">
+            <tr key={p.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
               <td className="px-5 py-3.5">
                 <ExamChip course={p.course} label={examTitle(p.course)} />
                 <span className="mt-1 block"><SubjectBadge subject={p.subject} /></span>
               </td>
               <td className="px-5 py-3.5">
-                <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{p.chapter}</span>
-                <span className="dash-mono mt-0.5 block text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">Year {p.year}</span>
+                <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{p.chapter}</span>
+                <span className="dash-mono mt-0.5 block text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">Year {p.year}</span>
               </td>
               <td className="px-5 py-3.5">
                 <DifficultyChip level={p.difficulty as any} />

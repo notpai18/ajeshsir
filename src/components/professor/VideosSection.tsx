@@ -12,10 +12,10 @@ import { PRIMARY_BTN, INPUT } from '../ui/tokens';
 import type { ExamInfo, Video } from '../../types';
 
 const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
+  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
   'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
+  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
+  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
   'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
 };
 
@@ -95,14 +95,14 @@ export function VideosSection({
       ) : (
         <Table head={['Exam & subject', 'Lecture & chapter', 'Duration', '']}>
           {videosFiltered.map((v) => (
-            <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726]">
+            <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
               <td className="px-5 py-3.5">
                 <ExamChip course={v.course} label={examTitle(v.course)} />
                 <span className="mt-1 block"><SubjectBadge subject={v.subject} /></span>
               </td>
               <td className="px-5 py-3.5">
-                <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{v.title}</span>
-                <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{v.chapter}</span>
+                <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{v.title}</span>
+                <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{v.chapter}</span>
               </td>
               <td className="px-5 py-3.5">
                 <span className="dash-mono text-sm tabular-nums text-[#4A443E]">{v.duration}</span>

@@ -71,7 +71,7 @@ import { StudentHome } from './student/StudentHome';
 const ANN_CAT: Record<AnnouncementCategory, { label: string; cls: string }> = {
   general: { label: 'General', cls: 'bg-[#EFE7D8] text-[#6E645A]' },
   exam: { label: 'Exam', cls: 'bg-[#F4E4E4] text-[#4A0E1B]' },
-  resource: { label: 'Resource', cls: 'bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]' },
+  resource: { label: 'Resource', cls: 'bg-[#F7EFD9] dark:bg-[#362A0D] dark:bg-[#362A0D] text-[#8A6A16]' },
   schedule: { label: 'Schedule', cls: 'bg-[#F4E2E5] text-[#7C2532]' }
 };
 
@@ -382,7 +382,7 @@ function StudentDashboardContent({
   ];
 
   return (
-    <div className="dash-root min-h-screen bg-[#F6F2EA] dark:bg-[#1A1817] py-12 text-[#22201F] dark:text-[#F6F2EA]">
+    <div className="dash-root min-h-screen bg-[#F6F2EA] dark:bg-[#1A1817] dark:bg-[#1A1817] py-12 text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* ================= LANDING PAGE (REDESIGNED V2) ================= */}
@@ -401,7 +401,7 @@ function StudentDashboardContent({
 
         {/* ================= BREADCRUMBS ================= */}
         {(selectedExam || activeCategory) && (
-          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#8A7E6F] dark:text-[#A89F91]">
+          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">
             <button onClick={handleBackToExams} className="transition-colors hover:text-[#4A0E1B]">Library</button>
             {selectedExam && (
               <>
@@ -431,16 +431,16 @@ function StudentDashboardContent({
               <ArrowLeft size={14} /> Back to examinations
             </button>
 
-            <div className="mb-10 border-b border-[#EAE1D2] dark:border-[#4A433E] pb-8">
+            <div className="mb-10 border-b border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#4A433E] pb-8">
               <div className="flex items-center gap-4">
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
                   {renderExamIcon(currentExamInfo?.icon)}
                 </span>
-                <h2 className="dash-serif text-3xl font-semibold text-[#22201F] dark:text-[#F6F2EA] sm:text-4xl">
+                <h2 className="dash-serif text-3xl font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] sm:text-4xl">
                   {currentExamInfo?.title} Library
                 </h2>
               </div>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8A7E6F] dark:text-[#A89F91]">{currentExamInfo?.description}</p>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{currentExamInfo?.description}</p>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -452,15 +452,15 @@ function StudentDashboardContent({
                   id={`cat-card-${cat.id}`}
                 >
                   <div className="flex items-start justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">{cat.icon}</span>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#38151A] text-[#4A0E1B]">{cat.icon}</span>
                     {cat.count !== null && (
-                      <span className="dash-mono rounded-full border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-2.5 py-1 text-[11px] font-medium text-[#8A7E6F] dark:text-[#A89F91]">
+                      <span className="dash-mono rounded-full border border-[#EFE7D8] dark:border-[#4A433E] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] dark:bg-[#2A2726] px-2.5 py-1 text-[11px] font-medium text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">
                         {cat.count} {cat.unit}
                       </span>
                     )}
                   </div>
-                  <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">{cat.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F] dark:text-[#A89F91]">{cat.desc}</p>
+                  <h3 className="dash-serif mt-4 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">{cat.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">{cat.desc}</p>
                 </button>
               ))}
             </div>

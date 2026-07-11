@@ -17,7 +17,7 @@ export function SubjectBadge({ subject }: SubjectBadgeProps) {
   const s = SUBJECT_BADGE[subject as keyof typeof SUBJECT_BADGE];
   if (!s)
     return (
-      <span className="text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">
+      <span className="text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91]">
         {subject}
       </span>
     );

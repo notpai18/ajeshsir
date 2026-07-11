@@ -54,7 +54,7 @@ export function NotesSection({
                   else IconEl = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
 
                   return (
-                    <div key={idx} className="flex items-center gap-2.5 rounded-[12px] border border-white/10 bg-white/5 px-3 py-2.5 backdrop-blur-md transition-all hover:bg-white/10 group">
+                    <div key={idx} className="flex items-center gap-2.5 rounded-[12px] border border-white/10 bg-white dark:bg-[#22201F]/5 px-3 py-2.5 backdrop-blur-md transition-all hover:bg-white dark:bg-[#22201F]/10 group">
                       <span className="text-white/80 transition-transform group-hover:scale-110">{IconEl}</span>
                       <div>
                         <div className="text-[15px] font-bold leading-none text-white">{stat.value}</div>
@@ -72,8 +72,8 @@ export function NotesSection({
           </div>
           <div className="flex shrink-0 items-center gap-4">
             <div className="rounded-[12px] bg-[#C9A13B] p-4 text-center min-w-[160px]">
-              <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#22201F]">Total Notes</p>
-              <p className="dash-mono text-[32px] font-bold text-[#22201F] mt-2 leading-none">{notes.filter(n => n.course === selectedExam).length}</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#22201F] dark:text-[#F6F2EA]">Total Notes</p>
+              <p className="dash-mono text-[32px] font-bold text-[#22201F] dark:text-[#F6F2EA] mt-2 leading-none">{notes.filter(n => n.course === selectedExam).length}</p>
               <div className="mt-[8px] text-left w-full">
                 <div className="text-[11px] font-medium text-[#5B5048] mb-1">Progress</div>
                 <div className="h-[6px] w-full bg-[rgba(34,32,31,0.15)] rounded-[3px] overflow-hidden">
@@ -138,7 +138,7 @@ export function NotesSection({
               onBlur={() => setIsSearchFocused(false)}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search notes..."
-              className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#FAF6F1] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B0A296] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
+              className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#FAF6F1] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] placeholder:text-[#B0A296] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
             />
             {!searchQuery && !isSearchFocused && (
               <div className="pointer-events-none absolute right-[12px] flex h-[20px] items-center justify-center rounded-[4px] bg-[#EBE3DC] px-[6px] text-[11px] font-bold text-[#C4B6AA]">
@@ -154,7 +154,7 @@ export function NotesSection({
                 onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
                 className={`h-[40px] w-full sm:w-auto flex items-center justify-between gap-[8px] rounded-[10px] border-[1.5px] bg-[#FAF6F1] px-[14px] text-[13px] font-medium text-[#3A2E28] transition-all duration-[250ms] ${
                   isSortDropdownOpen
-                    ? 'border-[#D9A9A0] bg-white dark:bg-[#22201F] shadow-[0_0_0_4px_rgba(217,169,160,0.15)]'
+                    ? 'border-[#D9A9A0] bg-white dark:bg-[#22201F] dark:bg-[#22201F] shadow-[0_0_0_4px_rgba(217,169,160,0.15)]'
                     : 'border-[#F0E9E2] hover:border-[#D9C7B8]'
                 }`}
               >
@@ -173,7 +173,7 @@ export function NotesSection({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 5, scale: 0.95 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute right-0 top-[calc(100%+8px)] z-50 w-full sm:min-w-[180px] rounded-[10px] bg-white dark:bg-[#22201F] p-[6px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] border border-[#F0E9E2]"
+                    className="absolute right-0 top-[calc(100%+8px)] z-50 w-full sm:min-w-[180px] rounded-[10px] bg-white dark:bg-[#22201F] dark:bg-[#22201F] p-[6px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] border border-[#F0E9E2]"
                   >
                     {[
                       { id: 'recent', label: 'Most Recent' },
@@ -206,7 +206,7 @@ export function NotesSection({
                   {noteViewMode === mode && (
                     <motion.div
                       layoutId="view-pill"
-                      className="absolute inset-0 bg-white dark:bg-[#22201F] rounded-[7px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] -z-10"
+                      className="absolute inset-0 bg-white dark:bg-[#22201F] dark:bg-[#22201F] rounded-[7px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] -z-10"
                       transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
                     />
                   )}
@@ -258,7 +258,7 @@ export function NotesSection({
                         {note.subject}
                       </span>
                     </div>
-                    <h4 className="text-[15px] font-bold text-[#22201F] dark:text-[#F6F2EA] line-clamp-2 leading-[1.3]">
+                    <h4 className="text-[15px] font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] line-clamp-2 leading-[1.3]">
                       {note.title}
                     </h4>
                   </div>
@@ -283,7 +283,7 @@ export function NotesSection({
                       </span>
                     </label>
                     <div className="flex gap-[8px]">
-                      <button onClick={() => setActivePdfViewer({ title: note.title, fileUrl: note.fileUrl })} className="flex h-[40px] items-center justify-center rounded-[8px] border border-[#E0D5CC] bg-white dark:bg-[#22201F] px-[16px] text-[13px] font-bold text-[#5A2436] transition-all hover:bg-[#F9F7F5]">
+                      <button onClick={() => setActivePdfViewer({ title: note.title, fileUrl: note.fileUrl })} className="flex h-[40px] items-center justify-center rounded-[8px] border border-[#E0D5CC] bg-white dark:bg-[#22201F] dark:bg-[#22201F] px-[16px] text-[13px] font-bold text-[#5A2436] transition-all hover:bg-[#F9F7F5]">
                         <Eye size={14} className="mr-1.5" /> View
                       </button>
                       <button onClick={() => handleDownloadFile(note.id, note.fileUrl)} className="flex h-[40px] items-center justify-center rounded-[8px] bg-[#F3D9CE] px-[16px] text-[13px] font-bold text-[#8A3D2C] transition-all hover:bg-[#EBD2C7]">

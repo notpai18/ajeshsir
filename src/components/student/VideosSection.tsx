@@ -27,7 +27,7 @@ export function VideosSection({
     <div>
       <div className="mt-4 mb-6">
         <p className={MICRO}>{currentExamInfo?.title} · Video lectures</p>
-        <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Video lectures</h2>
+        <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA]">Video lectures</h2>
       </div>
 
       <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
@@ -56,7 +56,7 @@ export function VideosSection({
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-[#22201F]/25 opacity-80 transition-opacity group-hover:opacity-100">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-[#4A0E1B] shadow-lg transition-transform group-hover:scale-105">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-[#22201F]/95 text-[#4A0E1B] shadow-lg transition-transform group-hover:scale-105">
                     <Play size={20} className="ml-0.5" fill="currentColor" />
                   </div>
                 </div>
@@ -68,8 +68,8 @@ export function VideosSection({
                   <SubjectBadge subject={video.subject} />
                   <span className={MICRO}>{video.chapter}</span>
                 </div>
-                <h4 className="mt-3.5 text-sm font-bold text-[#22201F] dark:text-[#F6F2EA] line-clamp-1">{video.title}</h4>
-                <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F] dark:text-[#A89F91] line-clamp-2">{video.description}</p>
+                <h4 className="mt-3.5 text-sm font-bold text-[#22201F] dark:text-[#F6F2EA] dark:text-[#F6F2EA] line-clamp-1">{video.title}</h4>
+                <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F] dark:text-[#A89F91] dark:text-[#A89F91] line-clamp-2">{video.description}</p>
                 <button onClick={() => setActiveVideoModal(video)} className={`${PRIMARY_BTN} mt-5 w-full`}>
                   Watch lecture
                 </button>
