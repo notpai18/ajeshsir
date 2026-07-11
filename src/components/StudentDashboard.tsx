@@ -53,6 +53,7 @@ import { uploadDoubtAttachment } from '../services/doubtsService';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
 import type { PDFDocumentInfo } from './pdf/PDFContext';
 import { PremiumCard } from './PremiumCard';
+import { PremiumBreadcrumb } from './PremiumBreadcrumb';
 import { SUBJECTS, SUBJECT_BADGE } from '../constants/subjects';
 
 /* ------------------------------------------------------------------ *
@@ -185,7 +186,9 @@ function StudentDashboardContent({
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    
+  
+  return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Ref and logic for "/" search hotkey
@@ -423,7 +426,26 @@ function StudentDashboardContent({
     { id: 'resources' as const, title: 'Additional Resources', desc: 'Syllabus blueprints, formula sheets and reference constants.', icon: <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20Index%20Dividers.png" alt="Resources" className="h-10 w-10" />, count: null, unit: '' }
   ];
 
-  return (
+  // Generate Breadcrumbs
+  const breadcrumbItems = [];
+  if (selectedExam || activeCategory) {
+    breadcrumbItems.push({ id: 'library', label: 'Library', icon: <Library size={16} />, onClick: handleBackToExams });
+  }
+  if (selectedExam) {
+    breadcrumbItems.push({ 
+      id: 'exam', 
+      label: currentExamInfo?.title || 'Exam', 
+      onClick: activeCategory ? handleBackToCategories : undefined 
+    });
+  }
+  if (activeCategory) {
+    const catTitles: Record<string, string> = { notes: 'Study Notes', videos: 'Video Lectures', pyqs: 'Previous Year Questions', sheets: 'Practice Sheets', doubts: 'Doubts & FAQ', resources: 'Additional Resources' };
+    breadcrumbItems.push({ id: 'category', label: catTitles[activeCategory] || activeCategory });
+  }
+
+  const breadcrumbOnBack = activeCategory ? handleBackToCategories : (selectedExam ? handleBackToExams : undefined);
+  const breadcrumbBackLabel = activeCategory ? `Back to ${currentExamInfo?.title || 'Categories'}` : (selectedExam ? 'Back to Library' : undefined);
+return (
     <div className="dash-root min-h-screen bg-[#F6F2EA] dark:bg-[#1A1817] py-12 text-[#22201F] dark:text-[#F6F2EA]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -511,35 +533,18 @@ function StudentDashboardContent({
 
         {/* ================= BREADCRUMBS ================= */}
         {(selectedExam || activeCategory) && (
-          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#8A7E6F] dark:text-[#A89F91]">
-            <button onClick={handleBackToExams} className="transition-colors hover:text-[#4A0E1B]">Library</button>
-            {selectedExam && (
-              <>
-                <ChevronRight size={13} className="text-[#C0A98B]" />
-                <button
-                  onClick={handleBackToCategories}
-                  className={`transition-colors hover:text-[#4A0E1B] ${!activeCategory ? 'text-[#4A0E1B]' : ''}`}
-                >
-                  {currentExamInfo?.title}
-                </button>
-              </>
-            )}
-            {activeCategory && (
-              <>
-                <ChevronRight size={13} className="text-[#C0A98B]" />
-                <span className="capitalize text-[#4A0E1B]">{activeCategory}</span>
-              </>
-            )}
-          </nav>
+          <PremiumBreadcrumb
+            items={breadcrumbItems}
+            onBack={breadcrumbOnBack}
+            backLabel={breadcrumbBackLabel}
+          />
         )}
 
 
         {/* ================= STEP 2: CATEGORY DASHBOARD ================= */}
         {selectedExam && !activeCategory && (
           <div>
-            <button onClick={handleBackToExams} className={`${BACK_BTN} mb-4`} id="back-to-exams-btn">
-              <ArrowLeft size={14} /> Back to examinations
-            </button>
+            
 
             <div className="mb-10 border-b border-[#EAE1D2] dark:border-[#4A433E] pb-8">
               <div className="flex items-center gap-4">
@@ -581,14 +586,7 @@ function StudentDashboardContent({
         {selectedExam && activeCategory === 'notes' && (
           <div key={selectedExam} className="animate-[fadeInUp_0.4s_ease-out_forwards]">
             
-            {/* Dynamic Breadcrumbs */}
-            <div className="mb-4 flex items-center gap-2 text-xs font-medium text-[#8A7E6F] dark:text-[#A89F91]">
-              <button onClick={handleBackToExams} className="transition-colors hover:text-[#4A0E1B]">Library</button>
-              <span>›</span>
-              <button onClick={handleBackToCategories} className="transition-colors hover:text-[#4A0E1B]">{currentExamInfo?.title}</button>
-              <span>›</span>
-              <span className="text-[#22201F] dark:text-[#F6F2EA]">Study Notes</span>
-            </div>
+            
             
             {/* 1. Premium Hero */}
             <div className={`relative overflow-hidden rounded-[24px] bg-gradient-to-br ${currentExamInfo?.themeGradient || 'from-[#4A0E1B] to-[#7C2532]'} p-6 sm:p-8 text-white shadow-[0_12px_24px_-12px_rgba(74,14,27,0.5)] mb-8`}>
@@ -622,21 +620,21 @@ function StudentDashboardContent({
                   )}
                 </div>
                 <div className="flex shrink-0 items-center gap-4">
-                  <div className="rounded-[12px] bg-[#22201F] p-4 text-center min-w-[160px]">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#A8909A]">Total Notes</p>
-                    <p className="dash-mono text-[32px] font-bold text-white mt-2 leading-none">{notes.filter(n => n.course === selectedExam).length}</p>
+                  <div className="rounded-[12px] bg-[#C9A13B] p-4 text-center min-w-[160px]">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#22201F]">Total Notes</p>
+                    <p className="dash-mono text-[32px] font-bold text-[#22201F] mt-2 leading-none">{notes.filter(n => n.course === selectedExam).length}</p>
                     
                     <div className="mt-[8px] text-left w-full">
-                      <div className="text-[11px] font-medium text-[#C9B8C0] mb-1">
+                      <div className="text-[11px] font-medium text-[#5B5048] mb-1">
                         Progress
                       </div>
-                      <div className="h-[6px] w-full bg-[#4A1D2D] rounded-[3px] overflow-hidden">
+                      <div className="h-[6px] w-full bg-[rgba(34,32,31,0.15)] rounded-[3px] overflow-hidden">
                         <div 
-                          className="h-full bg-[#E8B4A8] transition-all duration-500 ease-out" 
+                          className="h-full bg-[#5A1D2C] transition-all duration-500 ease-out" 
                           style={{ width: `${Math.max(5, Math.round((notes.filter(n => n.course === selectedExam && studiedNotes.has(n.id)).length / Math.max(1, notes.filter(n => n.course === selectedExam).length)) * 100))}%`, borderRadius: '3px' }} 
                         />
                       </div>
-                      <div className="mt-1 text-[11px] font-medium text-[#C9B8C0]">
+                      <div className="mt-1 text-[11px] font-medium text-[#5B5048]">
                         {notes.filter(n => n.course === selectedExam && studiedNotes.has(n.id)).length} / {notes.filter(n => n.course === selectedExam).length} reviewed
                       </div>
                     </div>
@@ -694,10 +692,10 @@ function StudentDashboardContent({
                     onBlur={() => setIsSearchFocused(false)}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search notes..."
-                    className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#F2ECDF] dark:bg-[#332E2C] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#8A7E6F] dark:placeholder:text-[#A89F91] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] dark:focus:bg-[#22201F] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
+                    className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#FAF6F1] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B0A296] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
                   />
                   {!searchQuery && !isSearchFocused && (
-                    <div className="pointer-events-none absolute right-[12px] flex h-[20px] items-center justify-center rounded-[4px] bg-[#E3D8C5] dark:bg-[#4A433E] px-[6px] text-[11px] font-bold text-[#8A7E6F] dark:text-[#A89F91]">
+                    <div className="pointer-events-none absolute right-[12px] flex h-[20px] items-center justify-center rounded-[4px] bg-[#EBE3DC] px-[6px] text-[11px] font-bold text-[#C4B6AA]">
                       /
                     </div>
                   )}
@@ -873,7 +871,6 @@ function StudentDashboardContent({
         {/* ================= LECTURES EXPLORER ================= */}
         {selectedExam && activeCategory === 'videos' && (
           <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
             <div className="mt-4 mb-6">
               <p className={MICRO}>{currentExamInfo?.title} · Video lectures</p>
               <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Video lectures</h2>
@@ -933,7 +930,6 @@ function StudentDashboardContent({
         {/* ================= PYQ EXPLORER ================= */}
         {selectedExam && activeCategory === 'pyqs' && (
           <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
             <div className="mt-4 mb-6">
               <p className={MICRO}>{currentExamInfo?.title} · Previous year questions</p>
               <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Previous year questions</h2>
@@ -1006,7 +1002,6 @@ function StudentDashboardContent({
         {/* ================= PRACTICE SHEETS ================= */}
         {selectedExam && activeCategory === 'sheets' && (
           <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
             <div className="mt-4 mb-6">
               <p className={MICRO}>{currentExamInfo?.title} · Practice sheets</p>
               <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Practice sheets</h2>
@@ -1056,7 +1051,6 @@ function StudentDashboardContent({
         {/* ================= DOUBT SUBMISSION ================= */}
         {selectedExam && activeCategory === 'doubts' && (
           <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
             <div className="mt-4 mb-8">
               <p className={MICRO}>{currentExamInfo?.title} · Doubt clarification</p>
               <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Ask a doubt</h2>
@@ -1148,7 +1142,6 @@ function StudentDashboardContent({
         {/* ================= ADDITIONAL RESOURCES ================= */}
         {selectedExam && activeCategory === 'resources' && (
           <div>
-            <button onClick={handleBackToCategories} className={BACK_BTN}><ArrowLeft size={14} /> Back to categories</button>
             <div className="mt-4 mb-8">
               <p className={MICRO}>{currentExamInfo?.title} · Additional resources</p>
               <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Additional resources</h2>

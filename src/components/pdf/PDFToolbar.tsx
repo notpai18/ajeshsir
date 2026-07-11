@@ -10,7 +10,7 @@ import {
   PanelRight, Bookmark, BookmarkCheck, Info
 } from 'lucide-react';
 import { usePDF } from './PDFContext';
-import { BreadcrumbBar } from '../BreadcrumbBar';
+import { PremiumBreadcrumb } from '../PremiumBreadcrumb';
 import { downloadPDF } from '../../lib/pdfUrl';
 
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0, 4.0];
@@ -140,7 +140,7 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
       aria-label="PDF viewer toolbar"
     >
       <div className="flex-1 flex items-center overflow-hidden">
-        <BreadcrumbBar
+        <PremiumBreadcrumb
           className="m-0"
           backLabel="Back"
           onBack={onClose}

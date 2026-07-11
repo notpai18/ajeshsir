@@ -9,9 +9,18 @@ interface ResourcePageLayoutProps {
   children: ReactNode; // Grid/List of items or EmptyState
 }
 
+import { PremiumBreadcrumb } from '../PremiumBreadcrumb';
+
 export function ResourcePageLayout({ onBack, backLabel = 'Back to categories', hero, toolbar, children }: ResourcePageLayoutProps) {
   return (
     <div className="animate-[fadeInUp_0.4s_ease-out_forwards]">
+      {onBack && (
+        <PremiumBreadcrumb
+          items={[]}
+          onBack={onBack}
+          backLabel={backLabel}
+        />
+      )}
       {hero}
       {toolbar}
       {children}
