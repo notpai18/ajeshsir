@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Atom, Compass, FileText, VideoIcon, BookOpen, FileSpreadsheet, ArrowRight, Bell } from 'lucide-react';
+import { Atom, Compass, FileText, VideoIcon, BookOpen, FileSpreadsheet, ArrowRight, Bell, Quote } from 'lucide-react';
 import type { ExamType, Announcement } from '../../types';
 
 interface StudentHomeProps {
@@ -32,8 +32,50 @@ export function StudentHome({
 
   return (
     <div className="flex flex-col gap-6 pb-12">
+      {/* New Introduction Hero */}
+      <div className="pt-8 pb-8 md:pt-16 md:pb-16 animate-[fadeInUp_0.8s_ease-out_forwards]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#C9A13B] mb-6">
+          PROF. AJESH JOE · CHEMISTRY
+        </p>
+        <h1 className="dash-serif text-[44px] sm:text-6xl md:text-[80px] font-bold text-[#22201F] dark:text-[#F6F2EA] leading-[1.05] tracking-tight">
+          Understand<br className="hidden sm:block"/>
+          chemistry. Don't<br className="hidden sm:block"/>
+          just <span className="relative inline-block text-[#8A7E6F] dark:text-[#A89F91]">
+            memorise
+            <span className="absolute left-[-5%] right-[-5%] top-[55%] h-[4px] md:h-[6px] bg-[#C9A13B] -translate-y-1/2 opacity-90 rounded-full"></span>
+          </span> it.
+        </h1>
+        <p className="mt-8 max-w-2xl text-[17px] md:text-[20px] text-[#5A534B] dark:text-[#C7BCAD] leading-[1.6]">
+          A free, rigorous chemistry library for JEE, NEET, CSIR-NET and M.Sc aspirants — concept-first notes, lectures and problem practice from Prof. Ajesh Joe.
+        </p>
+        <div className="mt-10 flex flex-wrap gap-4">
+          <button 
+            onClick={() => document.getElementById('library-section')?.scrollIntoView({ behavior: 'smooth' })}
+            className="rounded-[14px] bg-[#4A0E1B] px-8 py-4 text-[15px] font-bold text-white transition-all hover:bg-[#7C2532] hover:shadow-[0_8px_20px_rgba(74,14,27,0.25)] hover:-translate-y-0.5"
+          >
+            Enter the library
+          </button>
+          <button className="rounded-[14px] border-2 border-[#D9C2A2]/40 bg-transparent px-8 py-4 text-[15px] font-bold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#D9C2A2]/10 hover:border-[#D9C2A2]">
+            About the professor
+          </button>
+        </div>
+      </div>
+
+      {/* Blockquote Section */}
+      <div className="mb-16 mt-4 pl-6 md:pl-10 relative animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+        <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-[#C9A13B] to-[#7C2532] rounded-full opacity-60"></div>
+        <Quote className="mb-6 text-[#C9A13B] opacity-40 fill-[#C9A13B]" size={42} />
+        <p className="dash-serif text-[22px] md:text-3xl lg:text-[34px] leading-[1.5] md:leading-[1.5] font-medium text-[#22201F] dark:text-[#F6F2EA] max-w-4xl">
+          A chemistry problem is simply a mechanism waiting to be written in <span className="text-[#C9A13B]">the elegant language of electrons</span> — our role is to teach students its <span className="text-[#C9A13B]">grammar</span>, so they can write their own solutions.
+        </p>
+        <div className="mt-10 flex items-center gap-4">
+          <div className="h-[2px] w-8 bg-[#C9A13B]"></div>
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#5A534B] dark:text-[#C7BCAD]">PROF. AJESH JOE</span>
+        </div>
+      </div>
+
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(74,14,27,0.75)] sm:p-10 animate-[fadeInUp_0.8s_ease-out_forwards]">
+      <div id="library-section" className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(74,14,27,0.75)] sm:p-10 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
         <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />
 
