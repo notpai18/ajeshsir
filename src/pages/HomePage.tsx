@@ -28,8 +28,8 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
               </span>
             </div>
 
-            <h1 className="text-5xl font-serif font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] sm:text-6xl md:text-7xl leading-[1.05]">
-              Understand<br className="hidden sm:block"/>
+            <h1 className="text-5xl font-sans font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] sm:text-6xl md:text-7xl leading-[1.05]">
+              <span className="font-serif italic font-medium">Understand</span><br className="hidden sm:block"/>
               chemistry. Don't<br className="hidden sm:block"/>
               just <span className="relative inline-block text-[#8A7E6F] dark:text-[#A89F91]">
                 memorise
