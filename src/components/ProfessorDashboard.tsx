@@ -60,8 +60,7 @@ import { SUBJECTS, SUBJECT_BADGE } from '../constants/subjects';
  * the chosen palette: Deep Maroon #4A0E1B · Charcoal #22201F · Sand #D9C2A2
  * ------------------------------------------------------------------ */
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
-const INPUT =
-  'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#22201F] dark:text-[#F6F2EA]/30 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
+const INPUT = 'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#8A7E6F] dark:placeholder:text-[#F6F2EA]/50 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
 const PRIMARY_BTN =
   'inline-flex items-center justify-center gap-2 rounded-btn bg-[#4A0E1B] hover:bg-[#7C2532] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all shadow-soft-sm hover:-translate-y-0.5 duration-200 disabled:opacity-50';
 const GHOST_BTN =

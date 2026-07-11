@@ -92,10 +92,10 @@ export function NotesSection({
       </div>
 
       {/* 2. Unified Toolbar */}
-      <div className="my-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-[16px] bg-[#FFFFFF] rounded-[16px] py-[10px] px-[16px] shadow-[0_2px_8px_rgba(90,36,54,0.05),0_1px_2px_rgba(90,36,54,0.04)] border border-[#F0E9E2]">
+      <div className="my-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-[16px] bg-[#FFFFFF] dark:bg-[#22201F] rounded-[16px] py-[10px] px-[16px] shadow-[0_2px_8px_rgba(90,36,54,0.05),0_1px_2px_rgba(90,36,54,0.04)] border border-[#F0E9E2] dark:border-[#4A433E]">
 
         {/* LEFT — Subject tabs */}
-        <div className="flex relative bg-[#F7F2EC] rounded-[12px] p-[4px] gap-[2px] w-full sm:w-auto overflow-x-auto no-scrollbar">
+        <div className="flex relative bg-[#F7F2EC] dark:bg-[#1A1817] rounded-[12px] p-[4px] gap-[2px] w-full sm:w-auto overflow-x-auto no-scrollbar">
           {(currentExamInfo?.filters || availableSubjects).map((subject) => {
             const isActive = selectedSubject === subject;
             let Icon: React.ElementType = LayoutGrid;
@@ -108,7 +108,7 @@ export function NotesSection({
                 key={subject}
                 onClick={() => setSelectedSubject(subject)}
                 className={`relative z-10 flex items-center gap-[6px] px-[16px] py-[8px] text-[13px] font-semibold rounded-[9px] transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)] shrink-0 active:scale-95 ${
-                  isActive ? 'text-[#FFFFFF]' : 'text-[#6B5D54] hover:bg-[#EFE6DC] hover:text-[#3A2E28]'
+                  isActive ? 'text-[#FFFFFF] dark:text-[#F6F2EA]' : 'text-[#6B5D54] hover:bg-[#EFE6DC] dark:hover:bg-[#2A2726] hover:text-[#3A2E28] dark:text-[#A89F91]'
                 }`}
               >
                 {isActive && (
@@ -138,10 +138,10 @@ export function NotesSection({
               onBlur={() => setIsSearchFocused(false)}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search notes..."
-              className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#FAF6F1] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B0A296] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
+              className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#FAF6F1] dark:bg-[#2A2726] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B0A296] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] dark:focus:bg-[#22201F] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
             />
             {!searchQuery && !isSearchFocused && (
-              <div className="pointer-events-none absolute right-[12px] flex h-[20px] items-center justify-center rounded-[4px] bg-[#EBE3DC] px-[6px] text-[11px] font-bold text-[#C4B6AA]">
+              <div className="pointer-events-none absolute right-[12px] flex h-[20px] items-center justify-center rounded-[4px] bg-[#EBE3DC] dark:bg-[#383330] px-[6px] text-[11px] font-bold text-[#C4B6AA] dark:text-[#8A7E6F]">
                 /
               </div>
             )}
@@ -155,7 +155,7 @@ export function NotesSection({
                 className={`h-[40px] w-full sm:w-auto flex items-center justify-between gap-[8px] rounded-[10px] border-[1.5px] bg-[#FAF6F1] px-[14px] text-[13px] font-medium text-[#3A2E28] transition-all duration-[250ms] ${
                   isSortDropdownOpen
                     ? 'border-[#D9A9A0] bg-white dark:bg-[#22201F] shadow-[0_0_0_4px_rgba(217,169,160,0.15)]'
-                    : 'border-[#F0E9E2] hover:border-[#D9C7B8]'
+                    : 'border-[#F0E9E2] dark:border-[#4A433E] hover:border-[#D9C7B8]'
                 }`}
               >
                 <span className="whitespace-nowrap">
@@ -184,7 +184,7 @@ export function NotesSection({
                       <button
                         key={opt.id}
                         onClick={() => { setNoteSort(opt.id as any); setIsSortDropdownOpen(false); }}
-                        className="flex w-full items-center justify-between rounded-[6px] px-[12px] py-[8px] text-left text-[13px] text-[#3A2E28] transition-colors hover:bg-[#F7F2EC]"
+                        className="flex w-full items-center justify-between rounded-[6px] px-[12px] py-[8px] text-left text-[13px] text-[#3A2E28] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F2EC] dark:hover:bg-[#383330]"
                       >
                         {opt.label}
                         {noteSort === opt.id && <Check size={14} className="text-[#5A2436]" />}
@@ -196,7 +196,7 @@ export function NotesSection({
             </div>
 
             {/* Grid/List View Toggle */}
-            <div className="flex relative bg-[#F7F2EC] rounded-[10px] p-[3px] h-[40px] shrink-0 ml-auto sm:ml-0">
+            <div className="flex relative bg-[#F7F2EC] dark:bg-[#1A1817] rounded-[10px] p-[3px] h-[40px] shrink-0 ml-auto sm:ml-0">
               {(['grid', 'list'] as const).map((mode) => (
                 <button
                   key={mode}
@@ -240,7 +240,7 @@ export function NotesSection({
             }
 
             return (
-              <div key={note.id} className="flex flex-col h-full p-[20px] rounded-[16px] bg-[#FFFFFF] shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] hover:-translate-y-[2px] transition-all duration-[0.15s] ease-[ease] group">
+              <div key={note.id} className="flex flex-col h-full p-[20px] rounded-[16px] bg-[#FFFFFF] dark:bg-[#22201F] shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] dark:border dark:border-[#383330] hover:-translate-y-[2px] transition-all duration-[0.15s] ease-[ease] group">
                 <div className="flex items-start gap-4">
                   <span
                     className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-[10px]"
@@ -264,12 +264,12 @@ export function NotesSection({
                   </div>
                 </div>
 
-                <p className="mt-[12px] text-[13px] leading-[1.5] text-[#5C5C5C] line-clamp-2">
+                <p className="mt-[12px] text-[13px] leading-[1.5] text-[#5C5C5C] dark:text-[#C7BCAD] line-clamp-2">
                   {note.description}
                 </p>
 
                 <div className="mt-auto pt-[16px]">
-                  <div className="h-[1px] w-full bg-[#EEE8E0] mb-[16px]" />
+                  <div className="h-[1px] w-full bg-[#EEE8E0] dark:bg-[#383330] mb-[16px]" />
                   <div className="flex items-center justify-between">
                     <label className="flex items-center gap-2 cursor-pointer group/check">
                       <input

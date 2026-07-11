@@ -105,7 +105,7 @@ export default function ContactPage() {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-[#FBF7F0] dark:bg-[#1A1817] border border-[#D9C2A2]/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-sm text-[#22201F] dark:text-[#F7F3EC] outline-none focus:border-[#4A0E1B] focus:ring-2 focus:ring-[#4A0E1B]/10 dark:focus:ring-[#4A0E1B]/50 transition-all placeholder:text-[#8A7E6F]/50 dark:placeholder:text-[#F7F3EC]/20 shadow-inner"
+                      className="w-full bg-[#FBF7F0] dark:bg-[#1A1817] border border-[#D9C2A2]/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-sm text-[#22201F] dark:text-[#F7F3EC] outline-none focus:border-[#4A0E1B] focus:ring-2 focus:ring-[#4A0E1B]/10 dark:focus:ring-[#4A0E1B]/50 transition-all placeholder:text-[#8A7E6F]/70 dark:placeholder:text-[#F7F3EC]/50 shadow-inner"
                       placeholder="e.g. Rahul Gupta"
                     />
                   </div>
@@ -118,7 +118,7 @@ export default function ContactPage() {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-[#FBF7F0] dark:bg-[#1A1817] border border-[#D9C2A2]/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-sm text-[#22201F] dark:text-[#F7F3EC] outline-none focus:border-[#4A0E1B] focus:ring-2 focus:ring-[#4A0E1B]/10 dark:focus:ring-[#4A0E1B]/50 transition-all placeholder:text-[#8A7E6F]/50 dark:placeholder:text-[#F7F3EC]/20 shadow-inner"
+                      className="w-full bg-[#FBF7F0] dark:bg-[#1A1817] border border-[#D9C2A2]/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-sm text-[#22201F] dark:text-[#F7F3EC] outline-none focus:border-[#4A0E1B] focus:ring-2 focus:ring-[#4A0E1B]/10 dark:focus:ring-[#4A0E1B]/50 transition-all placeholder:text-[#8A7E6F]/70 dark:placeholder:text-[#F7F3EC]/50 shadow-inner"
                       placeholder="e.g. rahul@student.in"
                     />
                   </div>
@@ -144,7 +144,7 @@ export default function ContactPage() {
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-[#FBF7F0] dark:bg-[#1A1817] border border-[#D9C2A2]/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-sm text-[#22201F] dark:text-[#F7F3EC] outline-none focus:border-[#4A0E1B] focus:ring-2 focus:ring-[#4A0E1B]/10 dark:focus:ring-[#4A0E1B]/50 transition-all placeholder:text-[#8A7E6F]/50 dark:placeholder:text-[#F7F3EC]/20 resize-none shadow-inner"
+                    className="w-full bg-[#FBF7F0] dark:bg-[#1A1817] border border-[#D9C2A2]/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-sm text-[#22201F] dark:text-[#F7F3EC] outline-none focus:border-[#4A0E1B] focus:ring-2 focus:ring-[#4A0E1B]/10 dark:focus:ring-[#4A0E1B]/50 transition-all placeholder:text-[#8A7E6F]/70 dark:placeholder:text-[#F7F3EC]/50 resize-none shadow-inner"
                     placeholder="How can we help you today?"
                   />
                 </div>

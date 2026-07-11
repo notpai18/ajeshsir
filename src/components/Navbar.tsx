@@ -48,7 +48,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="sticky top-5 z-50 mx-auto mt-5 w-[90%] max-w-7xl rounded-full border border-[#D9C2A2]/30 bg-white/80 backdrop-blur-[20px] shadow-soft-md transition-all duration-300">
+    <nav className="sticky top-5 z-50 mx-auto mt-5 w-[90%] max-w-7xl rounded-full border border-[#D9C2A2]/30 bg-white/80 dark:bg-[#22201F]/80 backdrop-blur-[20px] shadow-soft-md transition-all duration-300">
       <div className="mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex h-16 items-center justify-between">
           
@@ -60,9 +60,9 @@ export default function Navbar({
           >
             <div className="flex h-11 w-11 shrink-0 items-center justify-center drop-shadow-sm">
               <img 
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" 
+                src="/favicon.svg" 
                 alt="Portal Logo" 
-                className="h-full w-full object-contain transition-transform duration-300 hover:-rotate-6 hover:scale-110"
+                className="h-[28px] w-[28px] object-contain transition-transform duration-300 hover:-rotate-6 hover:scale-110 opacity-90 dark:opacity-100"
               />
             </div>
             <div className="flex flex-col whitespace-nowrap">

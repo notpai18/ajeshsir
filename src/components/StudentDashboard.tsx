@@ -431,16 +431,22 @@ function StudentDashboardContent({
               <ArrowLeft size={14} /> Back to examinations
             </button>
 
-            <div className="mb-10 border-b border-[#EAE1D2] dark:border-[#4A433E] pb-8">
-              <div className="flex items-center gap-4">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4E7E5] to-[#F3EAD8] text-[#4A0E1B]">
+            <div className="mb-10 rounded-[32px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-8 shadow-[0_8px_30px_rgba(74,14,27,0.15)] relative overflow-hidden">
+              {/* Decorative background shapes */}
+              <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />
+              
+              <div className="relative z-10 flex items-center gap-5">
+                <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-[#F6F2EA] shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] backdrop-blur-sm border border-white/10">
                   {renderExamIcon(currentExamInfo?.icon)}
                 </span>
-                <h2 className="dash-serif text-3xl font-semibold text-[#22201F] dark:text-[#F6F2EA] sm:text-4xl">
-                  {currentExamInfo?.title} Library
-                </h2>
+                <div>
+                  <h2 className="dash-serif text-3xl font-semibold text-[#F6F2EA] sm:text-4xl">
+                    {currentExamInfo?.title} Library
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#F6F2EA]/80">{currentExamInfo?.description}</p>
+                </div>
               </div>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8A7E6F] dark:text-[#A89F91]">{currentExamInfo?.description}</p>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -40,12 +40,9 @@ export function StudentHome({
         <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:items-center md:gap-9 md:text-left">
           {/* Academic Icon */}
           <div className="relative shrink-0 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
-            <div className="flex h-28 w-28 items-center justify-center rounded-[28px] bg-gradient-to-br from-[#EAD3AE] to-[#D9C2A2] shadow-lg sm:h-32 sm:w-32">
-              <Atom className="text-[#4A0E1B]" size={48} strokeWidth={1.5} />
+            <div className="flex h-28 w-28 items-center justify-center rounded-[28px] bg-[#22201F] sm:h-32 sm:w-32 border border-white/5">
+              <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/2697.svg" alt="Chemistry Icon" className="h-14 w-14 sm:h-16 sm:w-16" />
             </div>
-            <span className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-2xl border-4 border-[#4A0E1B] bg-white dark:bg-[#22201F] text-[#4A0E1B]">
-              <BookOpen size={18} />
-            </span>
           </div>
 
           {/* Identity / Text */}
@@ -89,7 +86,7 @@ export function StudentHome({
             <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-[#C9A13B] transition-transform duration-[220ms] ease-out group-hover:scale-x-100 origin-left"></div>
             
             <div className="flex items-start justify-between w-full">
-              <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B] transition-colors duration-[220ms] ease-out group-hover:bg-[#F7EFD9] dark:bg-[#362A0D] group-hover:text-[#8A6A16]">
+              <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#22201F] dark:bg-[#1A1817] text-[#F6F2EA] transition-colors duration-[220ms] ease-out group-hover:bg-[#1A1817] dark:group-hover:bg-[#000000] group-hover:text-[#D9C2A2]">
                 {renderExamIcon(exam.icon)}
               </span>
               <span className="dash-mono rounded-full border border-[#7C2532] bg-[#4A0E1B] px-2.5 py-1 text-[10px] font-medium text-[#F7F3EC] shadow-sm">
@@ -114,18 +111,20 @@ export function StudentHome({
             <Bell size={20} className="text-[#8A6A16]" />
             <h2 className="dash-serif text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Recent Announcements</h2>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {sortedAnnouncements.slice(0, 4).map((a) => (
-              <div key={a.id} className="rounded-2xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] p-5 shadow-sm transition-transform hover:-translate-y-1">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-[#FBF7F0] dark:bg-[#2A2726] px-2.5 py-1 text-[10px] font-bold text-[#6E645A] uppercase tracking-wider">{a.category}</span>
-                    {a.pinned && <span className="text-[10px] font-bold text-[#B23B2E] uppercase tracking-wider">Pinned</span>}
+          <div className="flex flex-col border border-[#EAE1D2] dark:border-[#4A433E] rounded-[24px] bg-white dark:bg-[#22201F] overflow-hidden shadow-[0_4px_12px_rgba(34,32,31,0.02)]">
+            {sortedAnnouncements.slice(0, 4).map((a, i) => (
+              <div key={a.id} className={`p-6 transition-colors duration-200 hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] ${i !== 0 ? 'border-t border-[#EAE1D2] dark:border-[#4A433E]' : ''}`}>
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <span className="rounded-full bg-[#E8D3D8] dark:bg-[#4A242B] px-2.5 py-1 text-[10px] font-bold text-[#4A0E1B] dark:text-[#F6F2EA] uppercase tracking-widest">{a.category}</span>
+                      {a.pinned && <span className="rounded-full bg-[#F5E6CD] dark:bg-[#4D3C1A] px-2.5 py-1 text-[10px] font-bold text-[#8A6A16] dark:text-[#F7EFD9] uppercase tracking-widest">Pinned</span>}
+                    </div>
+                    <h4 className="dash-serif text-lg font-bold text-[#22201F] dark:text-[#F6F2EA] group-hover:text-[#4A0E1B] transition-colors">{a.title}</h4>
+                    <p className="mt-1.5 text-sm leading-relaxed text-[#5A534B] dark:text-[#A89F91] line-clamp-2">{a.body}</p>
                   </div>
-                  <span className="dash-mono text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{fmtDate(a.createdAt)}</span>
+                  <span className="dash-mono shrink-0 text-[11px] font-medium text-[#8A7E6F] dark:text-[#A89F91] sm:mt-1">{fmtDate(a.createdAt)}</span>
                 </div>
-                <h4 className="dash-serif mt-3 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">{a.title}</h4>
-                <p className="mt-1.5 text-sm leading-relaxed text-[#5A534B] dark:text-[#C7BCAD] line-clamp-2">{a.body}</p>
               </div>
             ))}
           </div>
