@@ -15,8 +15,10 @@ interface HeroProps {
 export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
   return (
     <section className="relative overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] py-16 md:py-24">
+      {/* Subtle Chemistry Hexagon Background Pattern */}
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.03] dark:opacity-[0.02]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='103.923' viewBox='0 0 60 103.923' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 17.32l15 8.66v17.32l-15 8.66l-15-8.66v-17.32l15-8.66zm0-2l-16.732 9.66v19.32l16.732 9.66l16.732-9.66v-19.32l-16.732-9.66zm0 51.961l15 8.66v17.32l-15 8.66l-15-8.66v-17.32l15-8.66zm0-2l-16.732 9.66v19.32l16.732 9.66l16.732-9.66v-19.32l-16.732-9.66zm30-23.98l15 8.66v17.32l-15 8.66l-15-8.66v-17.32l15-8.66zm0-2l-16.732 9.66v19.32l16.732 9.66l16.732-9.66v-19.32l-16.732-9.66zm-60 0l15 8.66v17.32l-15 8.66l-15-8.66v-17.32l15-8.66zm0-2l-16.732 9.66v19.32l16.732 9.66l16.732-9.66v-19.32l-16.732-9.66z' fill='%234A0E1B' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`, backgroundSize: '60px 103.923px' }}></div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
           
           {/* Text Content Block */}
@@ -51,7 +53,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
               </button>
               <button
                 onClick={() => onNavigate('about')}
-                className="group flex items-center justify-center border-2 border-[#D9C2A2]/40 bg-transparent text-[#22201F] dark:text-[#F6F2EA] px-8 py-4 text-[15px] font-bold rounded-xl hover:bg-[#D9C2A2]/10 hover:border-[#D9C2A2] transition-all"
+                className="group flex items-center justify-center bg-[#22201F] hover:bg-[#3A342E] dark:bg-[#3A342E] dark:hover:bg-[#4A433E] text-[#F7F3EC] px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(34,32,31,0.2)] hover:shadow-[0_6px_20px_rgba(34,32,31,0.3)] hover:-translate-y-0.5 transition-all"
               >
                 About the professor
               </button>
