@@ -61,7 +61,7 @@ export function PDFViewer({ docInfo, onClose }: PDFViewerProps) {
     return (
       <ModalShell onClose={onClose}>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#D9C2A2]/30">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#22201F]/20">
             <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
             </svg>
@@ -105,7 +105,7 @@ function ModalShell({ children, onClose }: { children: React.ReactNode; onClose:
         onClick={onClose}
         tabIndex={-1}
       />
-      <div className="relative z-10 flex h-full flex-col overflow-hidden rounded-none bg-white dark:bg-[#22201F] sm:m-4 sm:rounded-card border border-[#D9C2A2]/30 shadow-soft-xl">
+      <div className="relative z-10 flex h-full flex-col overflow-hidden rounded-none bg-white dark:bg-[#22201F] sm:m-4 sm:rounded-card border border-[#22201F]/20 shadow-soft-xl">
         {children}
       </div>
     </div>

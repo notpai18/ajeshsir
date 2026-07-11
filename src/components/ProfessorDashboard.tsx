@@ -60,11 +60,11 @@ import { SUBJECTS, SUBJECT_BADGE } from '../constants/subjects';
  * the chosen palette: Deep Maroon #4A0E1B · Charcoal #22201F · Sand #D9C2A2
  * ------------------------------------------------------------------ */
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
-const INPUT = 'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#8A7E6F] dark:placeholder:text-[#F6F2EA]/50 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
+const INPUT = 'w-full rounded-input border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#8A7E6F] dark:placeholder:text-[#F6F2EA]/50 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
 const PRIMARY_BTN =
   'inline-flex items-center justify-center gap-2 rounded-btn bg-[#4A0E1B] hover:bg-[#7C2532] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all shadow-soft-sm hover:-translate-y-0.5 duration-200 disabled:opacity-50';
 const GHOST_BTN =
-  'inline-flex items-center justify-center gap-2 rounded-btn border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-4 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:-translate-y-0.5 duration-200';
+  'inline-flex items-center justify-center gap-2 rounded-btn border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-4 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:-translate-y-0.5 duration-200';
 const ROW_BTN =
   'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#4A0E1B]';
 const ROW_BTN_DANGER =
@@ -216,8 +216,8 @@ function Modal({
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <button aria-label="Close" onClick={onClose} className="absolute inset-0 cursor-default bg-[#22201F]/40 backdrop-blur-[2px]" />
-      <div className={`relative w-full ${wide ? 'max-w-2xl' : 'max-w-lg'} overflow-hidden rounded-modal border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] shadow-soft-xl`}>
-        <div className="flex items-start justify-between gap-4 border-b border-[#D9C2A2]/20 px-6 py-5">
+      <div className={`relative w-full ${wide ? 'max-w-2xl' : 'max-w-lg'} overflow-hidden rounded-modal border border-[#22201F]/20 bg-white dark:bg-[#22201F] shadow-soft-xl`}>
+        <div className="flex items-start justify-between gap-4 border-b border-[#22201F]/20 px-6 py-5">
           <div>
             <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">{title}</h3>
             {subtitle && <p className="mt-0.5 text-xs text-[#22201F] dark:text-[#F6F2EA]/60">{subtitle}</p>}
@@ -368,10 +368,11 @@ import { PYQSection } from './professor/PYQSection';
 import { SheetsSection } from './professor/SheetsSection';
 import { DoubtsSection } from './professor/DoubtsSection';
 import { AnnouncementsSection } from './professor/AnnouncementsSection';
+import { StatisticsSection } from './professor/StatisticsSection';
 import { uploadFile } from '../services/storageService';
 import { AnswerDoubtModal } from './doubts/AnswerDoubtModal';
 
-type Tab = 'overview' | 'notes' | 'videos' | 'pyqs' | 'sheets' | 'doubts' | 'announcements' | 'settings';
+type Tab = 'overview' | 'notes' | 'videos' | 'pyqs' | 'sheets' | 'doubts' | 'announcements' | 'statistics' | 'settings';
 type ModalKind =
   | 'add-note'
   | 'edit-note'
@@ -696,6 +697,7 @@ const resetDemoData = () => {
     { id: 'sheets', label: 'Practice Sheets', icon: <ClipboardList size={17} /> },
     { id: 'doubts', label: 'Student Doubts', icon: <HelpCircle size={17} />, badge: pendingDoubtsCount },
     { id: 'announcements', label: 'Announcements', icon: <Megaphone size={17} /> },
+    { id: 'statistics', label: 'Usage Statistics', icon: <TrendingUp size={17} /> },
     { id: 'settings', label: 'Settings', icon: <SettingsIcon size={17} /> }
   ];
 
@@ -707,6 +709,7 @@ const resetDemoData = () => {
     sheets: 'Practice Sheets',
     doubts: 'Student Doubts',
     announcements: 'Announcements',
+    statistics: 'Usage Statistics',
     settings: 'Settings'
   };
   const pageSub: Record<Tab, string> = {
@@ -717,6 +720,7 @@ const resetDemoData = () => {
     sheets: 'Targeted practice drills by chapter',
     doubts: 'Answer academic questions from students',
     announcements: 'Broadcast notices to everyone in the portal',
+    statistics: 'Monitor student engagement and platform health',
     settings: 'Your profile and repository controls'
   };
 
@@ -762,7 +766,7 @@ const resetDemoData = () => {
             {quickAddOpen && (
               <>
                 <button className="fixed inset-0 z-40 cursor-default" aria-hidden onClick={() => setQuickAddOpen(false)} />
-                <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] p-1.5 shadow-soft-lg">
+                <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-[#22201F]/20 bg-white dark:bg-[#22201F] p-1.5 shadow-soft-lg">
                   {quickAdd.map((item) => (
                     <button
                       key={item.label}
@@ -788,7 +792,7 @@ const resetDemoData = () => {
             <div className="lg:sticky lg:top-24">
               <PremiumCard padding="small">
                 {/* Profile */}
-                <div className="mb-3 flex items-center gap-3 rounded-xl bg-gradient-to-br from-[#4A0E1B]/8 to-[#C9A13B]/8 border border-[#D9C2A2]/20 p-3">
+                <div className="mb-3 flex items-center gap-3 rounded-xl bg-gradient-to-br from-[#4A0E1B]/8 to-[#C9A13B]/8 border border-[#22201F]/20 p-3">
                   <div className="dash-serif flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#4A0E1B] text-base font-semibold text-[#D9C2A2]">
                     {initials(profile.name)}
                   </div>
@@ -823,7 +827,7 @@ const resetDemoData = () => {
                 </nav>
               </PremiumCard>
 
-              <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3 text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">
+              <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3 text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">
                 <Check size={14} className="text-[#8A6A16]" />
                 Changes save automatically to this browser.
               </div>
@@ -891,6 +895,11 @@ const resetDemoData = () => {
                 openAddAnnouncement={openAddAnnouncement} openEditAnnouncement={openEditAnnouncement}
                 onTogglePinAnnouncement={onTogglePinAnnouncement} askDelete={askDelete} onDeleteAnnouncement={onDeleteAnnouncement}
               />
+            )}
+
+            {/* ---------- STATISTICS ---------- */}
+            {activeTab === 'statistics' && (
+              <StatisticsSection />
             )}
 
             {/* ---------- SETTINGS ---------- */}
@@ -1142,7 +1151,7 @@ const resetDemoData = () => {
             <Field label="Message">
               <textarea className={INPUT} required rows={4} value={annForm.body} onChange={(e) => setAnnForm({ ...annForm, body: e.target.value })} placeholder="Share the details students need to know…" />
             </Field>
-            <label className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3">
+            <label className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3">
               <input type="checkbox" className="h-4 w-4 accent-[#4A0E1B]" checked={annForm.pinned} onChange={(e) => setAnnForm({ ...annForm, pinned: e.target.checked })} />
               <span className="text-sm font-medium text-[#3A342E]">Pin to the top of the board</span>
             </label>
@@ -1246,7 +1255,7 @@ function Table({ head, children }: { head: string[]; children: React.ReactNode }
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm border-collapse">
           <thead>
-            <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726]">
+            <tr className="border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726]">
               {head.map((h, i) => (
                 <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
                   {h}

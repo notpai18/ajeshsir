@@ -431,7 +431,7 @@ function StudentDashboardContent({
               <ArrowLeft size={14} /> Back to examinations
             </button>
 
-            <div className="mb-10 rounded-[32px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-8 shadow-[0_8px_30px_rgba(74,14,27,0.15)] relative overflow-hidden">
+            <div className="mb-10 rounded-[32px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-8 shadow-[0_8px_30px_rgba(34,32,31,0.15)] relative overflow-hidden">
               {/* Decorative background shapes */}
               <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />

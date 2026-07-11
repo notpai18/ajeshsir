@@ -48,7 +48,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className="sticky top-5 z-50 mx-auto mt-5 w-[90%] max-w-7xl rounded-full border border-[#D9C2A2]/30 bg-white/80 dark:bg-[#22201F]/80 backdrop-blur-[20px] shadow-soft-md transition-all duration-300">
+    <nav className="sticky top-5 z-50 mx-auto mt-5 w-[90%] max-w-7xl rounded-full border border-[#22201F]/20 bg-white/80 dark:bg-[#22201F]/80 backdrop-blur-[20px] shadow-soft-md transition-all duration-300">
       <div className="mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex h-16 items-center justify-between">
           
@@ -114,7 +114,7 @@ export default function Navbar({
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className={`flex items-center gap-2 rounded-full border border-[#D9C2A2]/40 ${badgeBg} px-3 py-1.5 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA] transition-all ${badgeHoverBg}`}
+                className={`flex items-center gap-2 rounded-full border border-[#22201F]/20 ${badgeBg} px-3 py-1.5 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA] transition-all ${badgeHoverBg}`}
                 id="theme-toggle-btn"
               >
                 {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
@@ -124,7 +124,7 @@ export default function Navbar({
               {/* Portal Access Badge */}
               {userRole ? (
                 <div className="flex items-center space-x-2">
-                  <span className={`flex items-center space-x-1 border border-[#D9C2A2]/40 ${badgeBg} px-2.5 py-1 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA]/70 rounded-lg transition-colors duration-300`}>
+                  <span className={`flex items-center space-x-1 border border-[#22201F]/20 ${badgeBg} px-2.5 py-1 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA]/70 rounded-lg transition-colors duration-300`}>
                     <UserCheck size={14} className={`${accentText} transition-colors duration-300`} />
                     <span className="hidden xl:inline">Role: </span>
                     <span>{userRole === 'professor' ? 'Professor' : 'Student'}</span>
@@ -168,7 +168,7 @@ export default function Navbar({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-4 pt-2 pb-4 shadow-soft-lg transition-colors duration-300 lg:hidden">
+        <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-4 pt-2 pb-4 shadow-soft-lg transition-colors duration-300 lg:hidden">
           <div className="space-y-1.5">
             {navItems.map((item) => {
               const isActive = 
@@ -197,7 +197,7 @@ export default function Navbar({
 
           <div>
             {userRole ? (
-              <div className="flex items-center justify-between px-4 py-2 bg-[#F7F3EC] dark:bg-[#1A1817] rounded-xl border border-[#D9C2A2]/30">
+              <div className="flex items-center justify-between px-4 py-2 bg-[#F7F3EC] dark:bg-[#1A1817] rounded-xl border border-[#22201F]/20">
                 <span className="font-sans text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA]/70">
                   Role: {userRole === 'professor' ? 'Professor' : 'Student'}
                 </span>
@@ -223,7 +223,7 @@ export default function Navbar({
             )}
           </div>
           
-          <div className="border-t border-[#D9C2A2]/30 pt-4 mt-4">
+          <div className="border-t border-[#22201F]/20 pt-4 mt-4">
             <button
               onClick={toggleTheme}
               className="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817]"

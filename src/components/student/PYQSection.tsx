@@ -57,7 +57,7 @@ export function PYQSection({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead>
-                <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726]">
+                <tr className="border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726]">
                   <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Subject &amp; chapter</th>
                   <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Year</th>
                   <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91]">Difficulty</th>

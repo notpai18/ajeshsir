@@ -38,7 +38,7 @@ export function NotesSection({
     <div key={selectedExam} className="animate-[fadeInUp_0.4s_ease-out_forwards]">
 
       {/* 1. Premium Hero */}
-      <div className={`relative overflow-hidden rounded-[24px] bg-gradient-to-br ${currentExamInfo?.themeGradient || 'from-[#4A0E1B] to-[#7C2532]'} p-6 sm:p-8 text-white shadow-[0_12px_24px_-12px_rgba(74,14,27,0.5)] mb-8`}>
+      <div className={`relative overflow-hidden rounded-[24px] bg-gradient-to-br ${currentExamInfo?.themeGradient || 'from-[#4A0E1B] to-[#7C2532]'} p-6 sm:p-8 text-white shadow-[0_12px_24px_-12px_rgba(34,32,31,0.5)] mb-8`}>
         <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
@@ -71,14 +71,14 @@ export function NotesSection({
             )}
           </div>
           <div className="flex shrink-0 items-center gap-4">
-            <div className="rounded-[12px] bg-[#4A0E1B] p-4 text-center min-w-[160px] shadow-[0_4px_12px_rgba(74,14,27,0.3)] border border-white/5">
+            <div className="rounded-[12px] bg-[#4A0E1B] p-4 text-center min-w-[160px] shadow-[0_4px_12px_rgba(34,32,31,0.3)] border border-white/5">
               <p className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#D9C2A2]">Total Notes</p>
               <p className="dash-mono text-[32px] font-bold text-white mt-2 leading-none">{notes.filter(n => n.course === selectedExam).length}</p>
               <div className="mt-[8px] text-left w-full">
                 <div className="text-[11px] font-medium text-white/60 mb-1">Progress</div>
                 <div className="h-[6px] w-full bg-white/10 rounded-[3px] overflow-hidden">
                   <div
-                    className="h-full bg-[#C9A13B] transition-all duration-500 ease-out shadow-[0_0_8px_rgba(201,161,59,0.5)]"
+                    className="h-full bg-[#C9A13B] transition-all duration-500 ease-out shadow-[0_0_8px_rgba(34,32,31,0.5)]"
                     style={{ width: `${Math.max(5, Math.round((notes.filter(n => n.course === selectedExam && studiedNotes.has(n.id)).length / Math.max(1, notes.filter(n => n.course === selectedExam).length)) * 100))}%`, borderRadius: '3px' }}
                   />
                 </div>
@@ -92,7 +92,7 @@ export function NotesSection({
       </div>
 
       {/* 2. Unified Toolbar */}
-      <div className="my-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-[16px] bg-[#FFFFFF] dark:bg-[#22201F] rounded-[16px] py-[10px] px-[16px] shadow-[0_2px_8px_rgba(90,36,54,0.05),0_1px_2px_rgba(90,36,54,0.04)] border border-[#F0E9E2] dark:border-[#4A433E]">
+      <div className="my-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-[16px] bg-[#FFFFFF] dark:bg-[#22201F] rounded-[16px] py-[10px] px-[16px] shadow-[0_2px_8px_rgba(90,36,54,0.05),0_1px_2px_rgba(90,36,54,0.04)] border border-[#F0E9E2] dark:border-[#F6F2EA]/10">
 
         {/* LEFT — Subject tabs */}
         <div className="flex relative bg-[#F7F2EC] dark:bg-[#1A1817] rounded-[12px] p-[4px] gap-[2px] w-full sm:w-auto overflow-x-auto no-scrollbar">
@@ -155,7 +155,7 @@ export function NotesSection({
                 className={`h-[40px] w-full sm:w-auto flex items-center justify-between gap-[8px] rounded-[10px] border-[1.5px] bg-[#FAF6F1] px-[14px] text-[13px] font-medium text-[#3A2E28] transition-all duration-[250ms] ${
                   isSortDropdownOpen
                     ? 'border-[#D9A9A0] bg-white dark:bg-[#22201F] shadow-[0_0_0_4px_rgba(217,169,160,0.15)]'
-                    : 'border-[#F0E9E2] dark:border-[#4A433E] hover:border-[#D9C7B8]'
+                    : 'border-[#F0E9E2] dark:border-[#F6F2EA]/10 hover:border-[#D9C7B8]'
                 }`}
               >
                 <span className="whitespace-nowrap">

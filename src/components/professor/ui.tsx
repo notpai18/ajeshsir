@@ -9,7 +9,7 @@ import React from 'react';
 import { Search, Plus, Eye, Pencil, Trash2 } from 'lucide-react';
 import { PremiumCard } from '../PremiumCard';
 
-export const INPUT = 'w-full rounded-input border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#8A7E6F] dark:placeholder:text-[#F6F2EA]/50 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
+export const INPUT = 'w-full rounded-input border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#8A7E6F] dark:placeholder:text-[#F6F2EA]/50 outline-none transition focus:border-[#4A0E1B]/50 focus:ring-4 focus:ring-[#C9A13B]/10';
 const PRIMARY_BTN = 'inline-flex items-center justify-center gap-2 rounded-btn bg-[#4A0E1B] hover:bg-[#7C2532] px-4 py-2.5 text-xs font-bold tracking-wide text-white transition-all shadow-soft-sm hover:-translate-y-0.5 duration-200 disabled:opacity-50';
 
 export function ResourceSection({
@@ -74,7 +74,7 @@ export function Table({ head, children }: { head: string[]; children: React.Reac
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm border-collapse">
           <thead>
-            <tr className="border-b border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726]">
+            <tr className="border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726]">
               {head.map((h, i) => (
                 <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
                   {h}

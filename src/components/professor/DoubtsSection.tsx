@@ -45,7 +45,7 @@ export function DoubtsSection({
   return (
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="inline-flex rounded-xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] p-1">
+        <div className="inline-flex rounded-xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] p-1">
           {(['unanswered', 'answered', 'all'] as const).map((t) => {
             const c = t === 'unanswered' ? doubts.filter((d) => !d.isAnswered).length : t === 'answered' ? doubts.filter((d) => d.isAnswered).length : doubts.length;
             const active = doubtsTab === t;
@@ -99,14 +99,14 @@ export function DoubtsSection({
               </div>
 
               <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">{doubt.subject}</p>
-              <p className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
+              <p className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
 
               {doubt.attachmentName && (
                 <div className="mt-2">
                   {doubt.attachmentDataUrl ? (
                     doubt.attachmentDataUrl.startsWith('data:image/') ? (
                       /* Image: show thumbnail + open in new tab */
-                      <div className="rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] overflow-hidden">
+                      <div className="rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 overflow-hidden">
                         <img
                           src={doubt.attachmentDataUrl}
                           alt={doubt.attachmentName}
@@ -117,7 +117,7 @@ export function DoubtsSection({
                           }}
                           title="Click to open full size"
                         />
-                        <div className="flex items-center justify-between px-3 py-1.5 bg-[#FBF7F0] dark:bg-[#2A2726] border-t border-[#EFE7D8] dark:border-[#4A433E]">
+                        <div className="flex items-center justify-between px-3 py-1.5 bg-[#FBF7F0] dark:bg-[#2A2726] border-t border-[#EFE7D8] dark:border-[#F6F2EA]/10">
                           <span className="text-[10px] text-[#8A7E6F] dark:text-[#A89F91] truncate">📎 {doubt.attachmentName}</span>
                           <a
                             href={doubt.attachmentDataUrl}
@@ -128,7 +128,7 @@ export function DoubtsSection({
                       </div>
                     ) : (
                       /* Other file type: download button */
-                      <div className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5">
+                      <div className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                         </div>
@@ -171,7 +171,7 @@ export function DoubtsSection({
                           {reply.image_urls && reply.image_urls.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-2">
                               {reply.image_urls.map((url, i) => (
-                                <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8] dark:border-[#4A433E]" />
+                                <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8] dark:border-[#F6F2EA]/10" />
                               ))}
                             </div>
                           )}
@@ -179,7 +179,7 @@ export function DoubtsSection({
                           {reply.video_urls && reply.video_urls.length > 0 && (
                             <div className="mt-3 space-y-2">
                               {reply.video_urls.map((url, i) => (
-                                <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8] dark:border-[#4A433E]" />
+                                <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8] dark:border-[#F6F2EA]/10" />
                               ))}
                             </div>
                           )}
@@ -195,7 +195,7 @@ export function DoubtsSection({
                           {reply.attachment_urls && reply.attachment_urls.length > 0 && (
                             <div className="mt-3 space-y-2">
                               {reply.attachment_urls.map((url, i) => (
-                                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA] dark:bg-[#2A2726]">
+                                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA] dark:bg-[#2A2726]">
                                   <FileText size={14} /> Attachment {i + 1}
                                 </a>
                               ))}
@@ -205,7 +205,7 @@ export function DoubtsSection({
                       </div>
                     </div>
                   ))}
-                  <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] dark:border-[#4A433E] pt-4">
+                  <div className="mt-4 flex items-center justify-between border-t border-[#22201F]/15 dark:border-[#F6F2EA]/10 pt-4">
                     <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
                       <Plus size={13} /> Add another reply
                     </button>
@@ -223,7 +223,7 @@ export function DoubtsSection({
                       <p className="mt-1 text-sm leading-relaxed text-[#3A342E]">{doubt.answerText}</p>
                     </div>
                   </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-[#EAE1D2] dark:border-[#4A433E] pt-4">
+                  <div className="mt-4 flex items-center justify-between border-t border-[#22201F]/15 dark:border-[#F6F2EA]/10 pt-4">
                     <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
                       <Plus size={13} /> Add rich reply
                     </button>

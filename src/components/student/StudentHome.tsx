@@ -33,7 +33,7 @@ export function StudentHome({
   return (
     <div className="flex flex-col gap-6 pb-12">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(74,14,27,0.75)] sm:p-10 animate-[fadeInUp_0.8s_ease-out_forwards]">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(34,32,31,0.75)] sm:p-10 animate-[fadeInUp_0.8s_ease-out_forwards]">
         <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />
 
@@ -63,7 +63,7 @@ export function StudentHome({
               ].map((chip, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[#D9C2A2]/30 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/90 hover:border-[#D9C2A2] hover:shadow-[0_0_12px_rgba(217,194,162,0.3)] hover:-translate-y-0.5 transition-all duration-300 animate-[fadeInUp_0.8s_ease-out_forwards]"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#22201F]/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/90 hover:border-[#D9C2A2] hover:shadow-[0_0_12px_rgba(217,194,162,0.3)] hover:-translate-y-0.5 transition-all duration-300 animate-[fadeInUp_0.8s_ease-out_forwards]"
                   style={{ animationDelay: `${0.5 + i * 0.1}s`, animationFillMode: 'both' }}
                 >
                   <span className="text-[#D9C2A2]">{chip.icon}</span>
@@ -81,7 +81,7 @@ export function StudentHome({
           <button
             key={exam.id}
             onClick={() => setSelectedExam(exam.id)}
-            className="group relative flex w-full max-w-[340px] flex-col overflow-hidden rounded-[24px] border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] p-6 text-left shadow-[0_4px_12px_rgba(34,32,31,0.04)] transition-all duration-[220ms] ease-out hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(74,14,27,0.12)] sm:w-[calc(50%-12px)] lg:w-[340px] h-[230px]"
+            className="group relative flex w-full max-w-[340px] flex-col overflow-hidden rounded-[24px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] p-6 text-left shadow-[0_4px_12px_rgba(34,32,31,0.04)] transition-all duration-[220ms] ease-out hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(34,32,31,0.12)] sm:w-[calc(50%-12px)] lg:w-[340px] h-[230px]"
           >
             <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-[#C9A13B] transition-transform duration-[220ms] ease-out group-hover:scale-x-100 origin-left"></div>
             
@@ -107,13 +107,13 @@ export function StudentHome({
       {/* Global Announcements Section */}
       {sortedAnnouncements && sortedAnnouncements.length > 0 && (
         <div className="mt-12 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
-          <div className="flex items-center gap-2 mb-6 border-b border-[#EAE1D2] dark:border-[#4A433E] pb-3">
+          <div className="flex items-center gap-2 mb-6 border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 pb-3">
             <Bell size={20} className="text-[#8A6A16]" />
             <h2 className="dash-serif text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Recent Announcements</h2>
           </div>
-          <div className="flex flex-col border border-[#EAE1D2] dark:border-[#4A433E] rounded-[24px] bg-white dark:bg-[#22201F] overflow-hidden shadow-[0_4px_12px_rgba(34,32,31,0.02)]">
+          <div className="flex flex-col border border-[#22201F]/15 dark:border-[#F6F2EA]/10 rounded-[24px] bg-white dark:bg-[#22201F] overflow-hidden shadow-[0_4px_12px_rgba(34,32,31,0.02)]">
             {sortedAnnouncements.slice(0, 4).map((a, i) => (
-              <div key={a.id} className={`p-6 transition-colors duration-200 hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] ${i !== 0 ? 'border-t border-[#EAE1D2] dark:border-[#4A433E]' : ''}`}>
+              <div key={a.id} className={`p-6 transition-colors duration-200 hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] ${i !== 0 ? 'border-t border-[#22201F]/15 dark:border-[#F6F2EA]/10' : ''}`}>
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2.5">

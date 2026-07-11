@@ -60,10 +60,10 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
 
   return (
     <aside
-      className="relative flex h-full w-[168px] shrink-0 flex-col border-r border-[#D9C2A2]/30 bg-[#F7F3EC] dark:bg-[#1A1817]"
+      className="relative flex h-full w-[168px] shrink-0 flex-col border-r border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817]"
       aria-label="Page thumbnails"
     >
-      <div className="border-b border-[#D9C2A2]/30 px-3 py-2">
+      <div className="border-b border-[#22201F]/20 px-3 py-2">
         <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60">
           Pages · {numPages}
         </p>
@@ -98,7 +98,7 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
               className={`group relative mx-2 mb-2 cursor-pointer overflow-hidden rounded-xl border transition-all duration-150 ${
                 isActive
                   ? 'border-[#4A0E1B] ring-2 ring-[#4A0E1B]/15 shadow-soft-md'
-                  : 'border-[#D9C2A2]/40 hover:border-[#4A0E1B]/40 hover:shadow-soft-md'
+                  : 'border-[#22201F]/20 hover:border-[#4A0E1B]/40 hover:shadow-soft-md'
               }`}
               onClick={() => goToPage(pageNum)}
               aria-label={`Go to page ${pageNum}`}

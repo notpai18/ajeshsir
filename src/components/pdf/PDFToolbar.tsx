@@ -135,7 +135,7 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
 
   return (
     <div
-      className="sticky top-0 z-30 flex items-center gap-1 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-2 py-1.5 shadow-soft-sm print:hidden"
+      className="sticky top-0 z-30 flex items-center gap-1 border-b border-[#22201F]/20 bg-white dark:bg-[#22201F] px-2 py-1.5 shadow-soft-sm print:hidden"
       role="toolbar"
       aria-label="PDF viewer toolbar"
     >
@@ -183,7 +183,7 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
             value={pageInput}
             onChange={e => setPageInput(e.target.value)}
             onBlur={handlePageSubmit}
-            className="w-10 rounded-lg border border-[#D9C2A2]/40 bg-[#F7F3EC] dark:bg-[#1A1817]/50 px-1.5 py-1 text-center text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] outline-none transition focus:border-[#4A0E1B]/50 focus:ring-2 focus:ring-[#C9A13B]/20"
+            className="w-10 rounded-lg border border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817]/50 px-1.5 py-1 text-center text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] outline-none transition focus:border-[#4A0E1B]/50 focus:ring-2 focus:ring-[#C9A13B]/20"
             aria-label="Current page number"
           />
         </form>
@@ -216,13 +216,13 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
         <div className="relative" ref={zoomMenuRef}>
           <button
             onClick={() => setZoomMenuOpen(!zoomMenuOpen)}
-            className="flex h-8 items-center gap-1 rounded-lg border border-[#D9C2A2]/40 bg-[#F7F3EC] dark:bg-[#1A1817]/50 px-2 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:border-[#4A0E1B]/30"
+            className="flex h-8 items-center gap-1 rounded-lg border border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817]/50 px-2 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:border-[#4A0E1B]/30"
             aria-label="Zoom level"
           >
             {displayZoom}
           </button>
           {zoomMenuOpen && (
-            <div className="absolute right-0 top-full z-50 mt-1 w-36 overflow-hidden rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] p-1 shadow-soft-lg">
+            <div className="absolute right-0 top-full z-50 mt-1 w-36 overflow-hidden rounded-2xl border border-[#22201F]/20 bg-white dark:bg-[#22201F] p-1 shadow-soft-lg">
               {ZOOM_PRESETS.map(z => (
                 <button
                   key={z}
@@ -232,7 +232,7 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
                   {Math.round(z * 100)}%
                 </button>
               ))}
-              <div className="my-1 border-t border-[#D9C2A2]/20" />
+              <div className="my-1 border-t border-[#22201F]/20" />
               <button
                 onClick={() => handleZoomChange('fitWidth')}
                 className={`flex w-full items-center rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] ${zoomMode === 'fitWidth' ? 'bg-[#4A0E1B]/8 text-[#4A0E1B]' : 'text-[#22201F] dark:text-[#F6F2EA]/80'}`}
@@ -387,7 +387,7 @@ export function SearchPanel({ onClose }: SearchPanelProps) {
   useEffect(() => { inputRef.current?.focus(); }, []);
 
   return (
-    <div className="flex items-center gap-2 rounded-2xl border border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] p-2 shadow-soft-lg">
+    <div className="flex items-center gap-2 rounded-2xl border border-[#22201F]/20 bg-white dark:bg-[#22201F] p-2 shadow-soft-lg">
       <Search size={14} className="shrink-0 text-[#22201F] dark:text-[#F6F2EA]/40" />
       <input
         ref={inputRef}

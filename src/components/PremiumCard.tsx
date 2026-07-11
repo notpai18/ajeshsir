@@ -46,20 +46,20 @@ export function PremiumCard({
   
   // Dynamic styles based on states
   const borderClasses = selected
-    ? 'border-[#C9A13B]'
+    ? 'border-[#22201F] dark:border-[#F6F2EA]/20'
     : isClickable
-    ? 'border-[#D9C2A2]/45 hover:border-[#C9A13B]/40'
-    : 'border-[#D9C2A2]/45';
+    ? 'border-[#22201F]/15 dark:border-[#F6F2EA]/10 hover:border-[#22201F] dark:hover:border-[#F6F2EA]/30'
+    : 'border-[#22201F]/15 dark:border-[#F6F2EA]/10';
 
   const bgClasses = selected
-    ? 'bg-[#4A0E1B]/[0.02]'
+    ? 'bg-[#FBF7F0] dark:bg-[#1A1817]'
     : 'bg-white dark:bg-[#22201F]';
 
   const shadowClasses = selected
-    ? 'shadow-[0_12px_32px_rgba(74,14,27,0.06)]'
+    ? 'shadow-[0_12px_32px_rgba(34,32,31,0.08)] dark:shadow-[0_12px_32px_rgba(0,0,0,0.4)]'
     : isClickable
-    ? 'shadow-[0_8px_30px_rgba(74,14,27,0.03)] hover:shadow-[0_18px_40px_rgba(74,14,27,0.08)]'
-    : 'shadow-[0_8px_30px_rgba(74,14,27,0.03)]';
+    ? 'shadow-[0_8px_30px_rgba(34,32,31,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)] hover:shadow-[0_18px_40px_rgba(34,32,31,0.08)] dark:hover:shadow-[0_18px_40px_rgba(0,0,0,0.5)]'
+    : 'shadow-[0_8px_30px_rgba(34,32,31,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]';
 
   const transformClasses = isClickable
     ? 'hover:-translate-y-1 hover:transform-gpu cursor-pointer'
@@ -113,7 +113,7 @@ interface CardIconProps {
 PremiumCard.Icon = function CardIcon({ children, className = '' }: CardIconProps) {
   return (
     <div 
-      className={`w-12 h-12 flex items-center justify-center rounded-[14px] bg-[#F7F3EC] dark:bg-[#1A1817] border border-[#C9A13B]/25 text-[#4A0E1B] dark:text-[#F4E7E5] shrink-0 transition-all duration-250 group-hover:shadow-[0_0_12px_rgba(201,161,59,0.35)] group-hover:border-[#C9A13B]/50 group-hover:text-[#7C2532] ${className}`}
+      className={`w-12 h-12 flex items-center justify-center rounded-[14px] bg-[#F7F3EC] dark:bg-[#1A1817] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 text-[#22201F] dark:text-[#F6F2EA] shrink-0 transition-all duration-250 group-hover:shadow-[0_0_12px_rgba(34,32,31,0.08)] dark:group-hover:shadow-[0_0_12px_rgba(0,0,0,0.4)] group-hover:border-[#22201F] dark:group-hover:border-[#F6F2EA]/30 group-hover:text-[#4A0E1B] ${className}`}
     >
       {children}
     </div>
@@ -181,7 +181,7 @@ interface CardFooterProps {
   noDivider?: boolean;
 }
 PremiumCard.Footer = function CardFooter({ children, className = '', noDivider = false }: CardFooterProps) {
-  const dividerClass = noDivider ? '' : 'border-t border-[#D9C2A2]/25 mt-5 pt-4';
+  const dividerClass = noDivider ? '' : 'border-t border-[#22201F]/20 mt-5 pt-4';
   return (
     <div className={`${dividerClass} flex items-center justify-between gap-4 flex-wrap ${className}`}>
       {children}

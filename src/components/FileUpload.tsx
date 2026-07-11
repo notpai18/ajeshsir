@@ -39,7 +39,7 @@ export function FileUpload({ onFileSelect, accept = '.pdf', value = null, placeh
   return (
     <div className="w-full">
       {value ? (
-        <div className="flex items-center justify-between p-3 border border-[#D9C2A2]/30 rounded-xl bg-[#F7F3EC] dark:bg-[#1A1817]">
+        <div className="flex items-center justify-between p-3 border border-[#22201F]/20 rounded-xl bg-[#F7F3EC] dark:bg-[#1A1817]">
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="p-2 bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] rounded-lg shrink-0">
               <FileIcon size={20} />
@@ -65,7 +65,7 @@ export function FileUpload({ onFileSelect, accept = '.pdf', value = null, placeh
         <label 
           onDrop={onDrop}
           onDragOver={onDragOver}
-          className="relative flex flex-col items-center justify-center p-6 border border-dashed rounded-xl transition-colors border-[#D9C2A2]/50 hover:border-[#4A0E1B]/50 bg-[#F7F3EC] dark:bg-[#1A1817]/50 cursor-pointer"
+          className="relative flex flex-col items-center justify-center p-6 border border-dashed rounded-xl transition-colors border-[#22201F]/20 hover:border-[#4A0E1B]/50 bg-[#F7F3EC] dark:bg-[#1A1817]/50 cursor-pointer"
         >
           <input 
             type="file" 
@@ -75,7 +75,7 @@ export function FileUpload({ onFileSelect, accept = '.pdf', value = null, placeh
             className="hidden" 
           />
           
-          <div className="p-3 bg-white dark:bg-[#22201F] shadow-soft-sm rounded-full mb-3 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#D9C2A2]/20">
+          <div className="p-3 bg-white dark:bg-[#22201F] shadow-soft-sm rounded-full mb-3 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#22201F]/20">
             <UploadCloud size={24} />
           </div>
           <span className="text-sm font-medium text-[#22201F] dark:text-[#F6F2EA]">

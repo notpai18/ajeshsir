@@ -110,7 +110,7 @@ export function PDFViewerCore({ pdfUrl, containerWidth }: PDFViewerCoreProps) {
   const viewerBg = theme === 'dark' ? 'bg-[#1a1a1a]' : theme === 'sepia' ? 'bg-[#f4ecd8]' : 'bg-[#F7F3EC] dark:bg-[#1A1817]';
   const pageShadow = theme === 'dark'
     ? 'shadow-[0_4px_24px_rgba(0,0,0,0.6)]'
-    : 'shadow-soft-md border border-[#D9C2A2]/30';
+    : 'shadow-soft-md border border-[#22201F]/20';
 
   const pageWidth = effectiveWidth();
 
@@ -121,7 +121,7 @@ export function PDFViewerCore({ pdfUrl, containerWidth }: PDFViewerCoreProps) {
     const escaped = searchQuery.replace(/[.*+?^${}()|[]\]/g, '\\$&');
     try {
       const regex = new RegExp(escaped, flags);
-      return textItem.str.replace(regex, (match) => `<mark style="background:rgba(201,161,59,.25);color:inherit">${match}</mark>`);
+      return textItem.str.replace(regex, (match) => `<mark style="background:rgba(34,32,31,.25);color:inherit">${match}</mark>`);
     } catch {
       return textItem.str;
     }
@@ -205,7 +205,7 @@ function LoadingSkeleton() {
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#D9C2A2]/30">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#C9A13B]/10 text-[#4A0E1B] dark:text-[#F4E7E5] border border-[#22201F]/20">
         <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
         </svg>

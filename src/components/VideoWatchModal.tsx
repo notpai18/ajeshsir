@@ -164,14 +164,14 @@ export function VideoWatchModal({
 
       {/* Modal shell */}
       <div
-        className={`relative flex h-full w-full flex-col overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] transition-all duration-300 sm:rounded-card sm:shadow-[0_20px_60px_rgba(74,14,27,0.12)] border border-[#D9C2A2]/45 ${
+        className={`relative flex h-full w-full flex-col overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] transition-all duration-300 sm:rounded-card sm:shadow-[0_20px_60px_rgba(34,32,31,0.12)] border border-[#22201F]/20 ${
           theater
             ? 'sm:max-w-[98vw] sm:max-h-[96vh]'
             : 'sm:max-w-6xl sm:max-h-[92vh]'
         }`}
       >
         {/* ── Header ─────────────────────────────────────────────────────── */}
-        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-4 py-3 sm:px-5">
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[#22201F]/20 bg-white dark:bg-[#22201F] px-4 py-3 sm:px-5">
           <div className="flex-1 min-w-0">
             <PremiumBreadcrumb
               items={[
@@ -248,7 +248,7 @@ export function VideoWatchModal({
                   <div className="mt-6 flex gap-3">
                     <button
                       onClick={() => setShowUpNext(false)}
-                      className="inline-flex items-center gap-2 rounded-btn border border-[#D9C2A2]/40 bg-[#F7F3EC] dark:bg-[#1A1817]/10 px-4 py-2 text-xs font-bold text-white hover:bg-[#F7F3EC] dark:bg-[#1A1817]/20 transition-colors"
+                      className="inline-flex items-center gap-2 rounded-btn border border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817]/10 px-4 py-2 text-xs font-bold text-white hover:bg-[#F7F3EC] dark:bg-[#1A1817]/20 transition-colors"
                     >
                       Stay here
                     </button>
@@ -275,12 +275,12 @@ export function VideoWatchModal({
                     <span className={`h-1.5 w-1.5 rounded-full ${exam.dot}`} />
                     {examLabel}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA]/60 border border-[#D9C2A2]/20">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA]/60 border border-[#22201F]/20">
                     <BookOpen size={10} />
                     {video.subject}
                   </span>
                   {video.duration && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA]/60 border border-[#D9C2A2]/20">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7F3EC] dark:bg-[#1A1817] px-2.5 py-1 text-[10px] font-bold text-[#22201F] dark:text-[#F6F2EA]/60 border border-[#22201F]/20">
                       <Clock size={10} />
                       {video.duration}
                     </span>
@@ -305,11 +305,11 @@ export function VideoWatchModal({
               )}
 
               {/* Prev / Next navigation */}
-              <div className="flex items-center gap-3 border-t border-[#D9C2A2]/20 pt-4">
+              <div className="flex items-center gap-3 border-t border-[#22201F]/20 pt-4">
                 <button
                   onClick={goPrev}
                   disabled={!prevVideo}
-                  className="flex-1 inline-flex items-center gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
+                  className="flex-1 inline-flex items-center gap-2 rounded-full border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
                 >
                   <ChevronLeft size={15} />
                   <span className="min-w-0 text-left">
@@ -320,7 +320,7 @@ export function VideoWatchModal({
                 <button
                   onClick={goNext}
                   disabled={!nextVideo}
-                  className="flex-1 inline-flex items-center justify-end gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
+                  className="flex-1 inline-flex items-center justify-end gap-2 rounded-full border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-5 py-2.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] disabled:pointer-events-none disabled:opacity-40 hover:-translate-y-0.5 shadow-sm"
                 >
                   <span className="min-w-0 text-right">
                     <span className={`block ${MICRO} leading-none`}>Next</span>
@@ -334,11 +334,11 @@ export function VideoWatchModal({
 
           {/* ── Sidebar playlist ─────────────────────────────────────────── */}
           <aside
-            className={`shrink-0 overflow-y-auto border-l border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] transition-all duration-300 ${
+            className={`shrink-0 overflow-y-auto border-l border-[#22201F]/20 bg-white dark:bg-[#22201F] transition-all duration-300 ${
               sidebarOpen ? 'w-72 xl:w-80' : 'w-0 overflow-hidden border-0'
             }`}
           >
-            <div className="sticky top-0 z-10 border-b border-[#D9C2A2]/30 bg-white dark:bg-[#22201F] px-4 py-3">
+            <div className="sticky top-0 z-10 border-b border-[#22201F]/20 bg-white dark:bg-[#22201F] px-4 py-3">
               <p className={MICRO}>Playlist</p>
               <p className="mt-0.5 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">
                 {examLabel} · {video.subject}

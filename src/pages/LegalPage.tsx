@@ -7,7 +7,7 @@ interface LegalPageProps {
 }
 
 const CARD =
-  'rounded-2xl border border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#383330] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
+  'rounded-2xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 dark:border-[#383330] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
 const MICRO = 'text-[11px] font-extrabold uppercase tracking-[0.15em] text-[#8A7E6F] dark:text-[#A89F91]';
 
 export default function LegalPage({ documentType }: LegalPageProps) {

@@ -92,7 +92,7 @@ export function DoubtsSection({
             {faqs.map((faq) => {
               const isExpanded = expandedFaqId === faq.id;
               return (
-                <div key={faq.id} className="overflow-hidden rounded-xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F]">
+                <div key={faq.id} className="overflow-hidden rounded-xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F]">
                   <button
                     onClick={() => setExpandedFaqId(isExpanded ? null : faq.id)}
                     className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726]"

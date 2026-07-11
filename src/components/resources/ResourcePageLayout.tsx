@@ -38,7 +38,7 @@ export interface ResourceHeroProps {
 
 export function ResourceHero({ courseTitle, title, description, totalCount, totalLabel = 'Total' }: ResourceHeroProps) {
   return (
-    <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-6 sm:p-8 text-white shadow-[0_12px_24px_-12px_rgba(74,14,27,0.5)] mb-8">
+    <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-6 sm:p-8 text-white shadow-[0_12px_24px_-12px_rgba(34,32,31,0.5)] mb-8">
       <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
       <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -91,7 +91,7 @@ export function ResourceToolbar({
   extraFilters
 }: ResourceToolbarProps) {
   return (
-    <div className="rounded-[28px] border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)] mb-6 flex flex-col p-2 sm:flex-row sm:items-center sm:justify-between gap-2 overflow-hidden">
+    <div className="rounded-[28px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)] mb-6 flex flex-col p-2 sm:flex-row sm:items-center sm:justify-between gap-2 overflow-hidden">
       <div className="flex flex-1 items-center gap-1 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar pl-2">
         {subjects.map((subject) => (
           <button

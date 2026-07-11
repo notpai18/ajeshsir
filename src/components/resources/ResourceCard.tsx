@@ -43,7 +43,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
   image
 }) => {
   return (
-    <div className="flex flex-col p-5 group transition-all duration-[220ms] hover:-translate-y-1 hover:shadow-[0_12px_24px_-12px_rgba(34,32,31,0.15)] rounded-[28px] border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]">
+    <div className="flex flex-col p-5 group transition-all duration-[220ms] hover:-translate-y-1 hover:shadow-[0_12px_24px_-12px_rgba(34,32,31,0.15)] rounded-[28px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]">
       {image && (
         <div className="relative aspect-video w-full overflow-hidden bg-[#EFE7D8] rounded-2xl mb-4">
           <img
@@ -62,7 +62,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
         )}
         <div className="min-w-0 flex-1">
           <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-            <span className="inline-block rounded-full border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">
+            <span className="inline-block rounded-full border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">
               {chapter}
             </span>
             <SubjectBadge subject={subject} />

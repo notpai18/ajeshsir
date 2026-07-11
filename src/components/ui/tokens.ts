@@ -7,7 +7,7 @@
  */
 
 export const CARD =
-  'rounded-2xl border border-[#EAE1D2] dark:border-[#4A433E] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
+  'rounded-2xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
 
 export const INPUT =
   'w-full rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5 text-sm text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B3A996] outline-none transition focus:border-[#4A0E1B]/50 focus:bg-white dark:bg-[#22201F] focus:ring-4 focus:ring-[#4A0E1B]/10';

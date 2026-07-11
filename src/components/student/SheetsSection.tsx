@@ -52,7 +52,7 @@ export function SheetsSection({
                   <FileText size={18} />
                 </span>
                 <div className="flex flex-col items-end gap-1">
-                  <span className="rounded-full border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-2.5 py-1 text-[10px] font-bold text-[#8A7E6F] dark:text-[#A89F91]">{sheet.chapter}</span>
+                  <span className="rounded-full border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-2.5 py-1 text-[10px] font-bold text-[#8A7E6F] dark:text-[#A89F91]">{sheet.chapter}</span>
                   <SubjectBadge subject={sheet.subject} />
                 </div>
               </div>

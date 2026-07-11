@@ -8,7 +8,7 @@ export function FeaturedResource({ item, onPreview, onDownload }: { item: any, o
   if (!item) return null;
   
   return (
-    <div className="relative overflow-hidden rounded-[32px] bg-white dark:bg-[#22201F] border border-[#EAE1D2] dark:border-[#4A433E] p-8 sm:p-10 shadow-[0_12px_40px_-12px_rgba(74,14,27,0.08)] group transition-all hover:shadow-[0_20px_50px_-12px_rgba(74,14,27,0.12)]">
+    <div className="relative overflow-hidden rounded-[32px] bg-white dark:bg-[#22201F] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-8 sm:p-10 shadow-[0_12px_40px_-12px_rgba(34,32,31,0.08)] group transition-all hover:shadow-[0_20px_50px_-12px_rgba(34,32,31,0.12)]">
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C9A13B]/10 to-transparent rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
       
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -17,7 +17,7 @@ export function FeaturedResource({ item, onPreview, onDownload }: { item: any, o
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7EFD9] dark:bg-[#362A0D] px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#8A6A16]">
               🔥 Featured
             </span>
-            <span className="inline-block rounded-full border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">
+            <span className="inline-block rounded-full border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">
               {item.chapter}
             </span>
             <SubjectBadge subject={item.subject} />
@@ -49,7 +49,7 @@ export function ResourceOverview({ notesCount, videosCount, pyqsCount, sheetsCou
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
       {/* Circular Progress for Notes */}
-      <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#EAE1D2] dark:border-[#4A433E] p-6 flex flex-col items-center justify-center shadow-sm hover:-translate-y-1 transition-transform">
+      <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-6 flex flex-col items-center justify-center shadow-sm hover:-translate-y-1 transition-transform">
         <div className="relative w-24 h-24 mb-4">
           <svg className="w-full h-full transform -rotate-90">
             <circle cx="48" cy="48" r="40" stroke="#F6F2EA" strokeWidth="8" fill="none" />
@@ -77,7 +77,7 @@ export function ResourceOverview({ notesCount, videosCount, pyqsCount, sheetsCou
       </div>
 
       {/* Timeline for PYQs */}
-      <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#EAE1D2] dark:border-[#4A433E] p-6 flex flex-col shadow-sm hover:-translate-y-1 transition-transform">
+      <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-6 flex flex-col shadow-sm hover:-translate-y-1 transition-transform">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-8 h-8 rounded-full bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16] flex items-center justify-center">
             <Clock size={16} />
@@ -100,7 +100,7 @@ export function ResourceOverview({ notesCount, videosCount, pyqsCount, sheetsCou
       </div>
 
       {/* Progress Indicator for Sheets */}
-      <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#EAE1D2] dark:border-[#4A433E] p-6 flex flex-col shadow-sm hover:-translate-y-1 transition-transform">
+      <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-6 flex flex-col shadow-sm hover:-translate-y-1 transition-transform">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 rounded-full bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B] flex items-center justify-center">
             <FileText size={16} />
@@ -126,7 +126,7 @@ export function DownloadsLeaderboard({ items }: { items: any[] }) {
   const maxDownloads = Math.max(...items.map(i => i.downloadCount || 1));
   
   return (
-    <div className="bg-white dark:bg-[#22201F] rounded-[32px] border border-[#EAE1D2] dark:border-[#4A433E] p-8 shadow-sm">
+    <div className="bg-white dark:bg-[#22201F] rounded-[32px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-8 shadow-sm">
       <div className="flex items-center gap-3 mb-8">
         <Trophy className="text-[#C9A13B]" size={24} />
         <h3 className="dash-serif text-2xl font-bold text-[#22201F] dark:text-[#F6F2EA]">Top Downloads</h3>
@@ -160,7 +160,7 @@ export function DownloadsLeaderboard({ items }: { items: any[] }) {
 // Recent Updates Timeline
 export function RecentUpdates({ updates }: { updates: Announcement[] }) {
   return (
-    <div className="bg-white dark:bg-[#22201F] rounded-[32px] border border-[#EAE1D2] dark:border-[#4A433E] p-8 shadow-sm">
+    <div className="bg-white dark:bg-[#22201F] rounded-[32px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-8 shadow-sm">
       <div className="flex items-center gap-3 mb-8">
         <Star className="text-[#4A0E1B]" size={24} />
         <h3 className="dash-serif text-2xl font-bold text-[#22201F] dark:text-[#F6F2EA]">Latest Updates</h3>

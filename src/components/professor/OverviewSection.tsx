@@ -116,7 +116,7 @@ export function OverviewSection({
   return (
     <div className="space-y-6">
       {/* Hero band */}
-      <div className="relative overflow-hidden rounded-hero bg-gradient-to-r from-[#4A0E1B] to-[#7C2532] p-6 text-white shadow-soft-xl border border-[#D9C2A2]/20 sm:p-7">
+      <div className="relative overflow-hidden rounded-hero bg-gradient-to-r from-[#4A0E1B] to-[#7C2532] p-6 text-white shadow-soft-xl border border-[#22201F]/20 sm:p-7">
         <div className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-[#C9A13B]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-14 right-24 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
         <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -222,7 +222,7 @@ export function OverviewSection({
                    <button
                      key={d.id}
                      onClick={() => onNavigateToDoubt(d.id)}
-                     className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
+                     className="flex w-full items-start gap-3 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] p-3 text-left transition-colors hover:border-[#E3D1CD] hover:bg-[#F8EEEC]"
                    >
                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-[#22201F] text-[#8A7E6F] dark:text-[#A89F91] ring-1 ring-[#EAE1D2]">
                        <User size={14} />

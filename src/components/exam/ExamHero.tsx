@@ -15,7 +15,7 @@ interface ExamHeroProps {
 
 export function ExamHero({ title, description, stats }: ExamHeroProps) {
   return (
-    <div className="relative w-full h-[420px] rounded-[40px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] shadow-[0_24px_50px_-12px_rgba(74,14,27,0.5)] overflow-hidden flex flex-col md:flex-row items-center animate-[fadeInUp_0.8s_ease-out_forwards]">
+    <div className="relative w-full h-[420px] rounded-[40px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] shadow-[0_24px_50px_-12px_rgba(34,32,31,0.5)] overflow-hidden flex flex-col md:flex-row items-center animate-[fadeInUp_0.8s_ease-out_forwards]">
       <AnimatedBackground />
       
       {/* Left Content */}
@@ -54,9 +54,9 @@ export function ExamHero({ title, description, stats }: ExamHeroProps) {
       <div className="relative z-10 hidden md:flex w-2/5 h-full items-center justify-center">
         <div className="relative w-80 h-80">
           {/* Orbital rings */}
-          <div className="absolute inset-0 rounded-full border border-[#D9C2A2]/30 animate-[spin_15s_linear_infinite]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg) rotateY(20deg)' }}></div>
-          <div className="absolute inset-0 rounded-full border border-[#D9C2A2]/30 animate-[spin_20s_linear_infinite_reverse]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(20deg) rotateY(70deg)' }}></div>
-          <div className="absolute inset-0 rounded-full border border-[#D9C2A2]/30 animate-[spin_25s_linear_infinite]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(50deg) rotateY(50deg)' }}></div>
+          <div className="absolute inset-0 rounded-full border border-[#22201F]/20 animate-[spin_15s_linear_infinite]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(70deg) rotateY(20deg)' }}></div>
+          <div className="absolute inset-0 rounded-full border border-[#22201F]/20 animate-[spin_20s_linear_infinite_reverse]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(20deg) rotateY(70deg)' }}></div>
+          <div className="absolute inset-0 rounded-full border border-[#22201F]/20 animate-[spin_25s_linear_infinite]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(50deg) rotateY(50deg)' }}></div>
           
           {/* Center core */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-[#D9C2A2] to-[#C9A13B] rounded-full shadow-[0_0_40px_rgba(217,194,162,0.8)] animate-[pulse_4s_ease-in-out_infinite]"></div>

@@ -22,7 +22,7 @@ import {
 
 /* Design tokens — shared "Professor's Study" system (see DESIGN_SYSTEM.md) */
 const CARD =
-  'rounded-2xl border border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#383330] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
+  'rounded-2xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 dark:border-[#383330] bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]';
 const MICRO = 'text-[11px] font-extrabold uppercase tracking-[0.15em] text-[#8A7E6F] dark:text-[#A89F91]';
 
 type View = 'home' | 'selection' | 'student' | 'professor' | 'about' | 'contact';
@@ -54,7 +54,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 sm:py-14">
 
         {/* ================= HERO ================= */}
-        <div className="relative overflow-hidden rounded-3xl bg-[#4A0E1B] p-7 text-white shadow-[0_22px_44px_-24px_rgba(74,14,27,0.75)] sm:p-10">
+        <div className="relative overflow-hidden rounded-3xl bg-[#4A0E1B] p-7 text-white shadow-[0_22px_44px_-24px_rgba(34,32,31,0.75)] sm:p-10">
           <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />
 
@@ -168,7 +168,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
           <div className={`${CARD} p-6`}>
             <p className={MICRO}>Academic experience</p>
             <h3 className="dash-serif mt-1 text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Career timeline</h3>
-            <ul className="mt-6 space-y-6 border-l border-[#EAE1D2] dark:border-[#4A433E] dark:border-[#383330] pl-5">
+            <ul className="mt-6 space-y-6 border-l border-[#22201F]/15 dark:border-[#F6F2EA]/10 dark:border-[#383330] pl-5">
               {EXPERIENCE.map((exp, i) => (
                 <li key={i} className="relative">
                   <span className="absolute -left-[27px] top-1 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#4A0E1B] ring-1 ring-[#EAE1D2]" />

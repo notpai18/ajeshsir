@@ -11,7 +11,7 @@ import { usePDF } from './PDFContext';
 import { downloadPDF } from '../../lib/pdfUrl';
 import { PremiumCard } from '../PremiumCard';
 
-const GHOST_BTN = 'inline-flex items-center justify-center gap-2 rounded-full border border-[#D9C2A2]/40 bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] duration-200 hover:-translate-y-0.5 shadow-sm';
+const GHOST_BTN = 'inline-flex items-center justify-center gap-2 rounded-full border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] duration-200 hover:-translate-y-0.5 shadow-sm';
 const PRIMARY_BTN = 'inline-flex items-center justify-center gap-2 rounded-full bg-[#4A0E1B] px-3 py-2 text-xs font-bold tracking-wide text-white transition-all hover:bg-[#7C2532] shadow-sm hover:-translate-y-0.5 duration-200';
 const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60';
 
@@ -36,7 +36,7 @@ export function DocumentInfoPanel() {
 
   return (
     <aside
-      className="hidden w-[240px] shrink-0 flex-col gap-4 overflow-y-auto border-l border-[#D9C2A2]/30 bg-[#F7F3EC] dark:bg-[#1A1817] p-4 lg:flex"
+      className="hidden w-[240px] shrink-0 flex-col gap-4 overflow-y-auto border-l border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817] p-4 lg:flex"
       aria-label="Document information"
     >
       {/* Header */}

@@ -33,7 +33,7 @@ function DidYouKnowCard() {
   }, []);
 
   return (
-    <PremiumCard padding="large" className="relative overflow-hidden !bg-[#4A0E1B] !border-[#7C2532] shadow-[0_24px_50px_rgba(74,14,27,0.4)] dark:shadow-[0_24px_50px_rgba(0,0,0,0.7)] h-full min-h-[300px] w-full flex flex-col justify-center text-[#F7F3EC]">
+    <PremiumCard padding="large" className="relative overflow-hidden !bg-[#4A0E1B] !border-[#7C2532] shadow-[0_24px_50px_rgba(34,32,31,0.4)] dark:shadow-[0_24px_50px_rgba(0,0,0,0.7)] h-full min-h-[300px] w-full flex flex-col justify-center text-[#F7F3EC]">
       <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
       
       <div className="relative z-10 w-full h-full flex flex-col">
@@ -111,7 +111,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             <div className="pt-4 flex flex-wrap gap-4">
               <button
                 onClick={onGetStarted}
-                className="group flex items-center justify-center bg-[#4A0E1B] hover:bg-[#7C2532] text-white px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(74,14,27,0.3)] hover:shadow-[0_6px_20px_rgba(74,14,27,0.4)] hover:-translate-y-0.5 transition-all"
+                className="group flex items-center justify-center bg-[#4A0E1B] hover:bg-[#7C2532] text-white px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(34,32,31,0.3)] hover:shadow-[0_6px_20px_rgba(34,32,31,0.4)] hover:-translate-y-0.5 transition-all"
                 id="hero-get-started-btn"
               >
                 Enter the library

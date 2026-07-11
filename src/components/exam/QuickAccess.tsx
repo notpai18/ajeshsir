@@ -14,7 +14,7 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({ title, count, 
   return (
     <button
       onClick={onClick}
-      className="group relative flex flex-col justify-between h-[150px] min-w-[200px] w-full flex-1 rounded-[30px] bg-white/70 backdrop-blur-xl border border-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(74,14,27,0.12)] overflow-hidden text-left"
+      className="group relative flex flex-col justify-between h-[150px] min-w-[200px] w-full flex-1 rounded-[30px] bg-white/70 backdrop-blur-xl border border-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(34,32,31,0.12)] overflow-hidden text-left"
       style={{ animationDelay: `${delay}s`, animationFillMode: 'both' }}
     >
       {/* Animated gradient border on hover */}
@@ -28,7 +28,7 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({ title, count, 
         </span>
         
         {count !== undefined && (
-          <span className="dash-mono rounded-full border border-[#EAE1D2] dark:border-[#4A433E] bg-[#FBF7F0] dark:bg-[#2A2726] px-3 py-1.5 text-[11px] font-semibold text-[#8A7E6F] dark:text-[#A89F91] transition-colors group-hover:border-[#C9A13B]/30 group-hover:text-[#C9A13B]">
+          <span className="dash-mono rounded-full border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3 py-1.5 text-[11px] font-semibold text-[#8A7E6F] dark:text-[#A89F91] transition-colors group-hover:border-[#C9A13B]/30 group-hover:text-[#C9A13B]">
             {count} {unit}
           </span>
         )}
