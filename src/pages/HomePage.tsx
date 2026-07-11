@@ -24,12 +24,12 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             
             <div className="flex items-center space-x-2">
               <span className="font-sans text-[11px] uppercase tracking-[0.2em] font-bold text-[#C9A13B]">
-                PROF. AJESH JOE · CHEMISTRY
+                AJESH JOE SAVIO · CHEMISTRY
               </span>
             </div>
 
-            <h1 className="text-5xl font-serif font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] sm:text-6xl md:text-7xl leading-[1.05]">
-              Understand<br className="hidden sm:block"/>
+            <h1 className="text-5xl font-sans font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] sm:text-6xl md:text-7xl leading-[1.05]">
+              <span className="font-serif italic font-medium">Understand</span><br className="hidden sm:block"/>
               chemistry. Don't<br className="hidden sm:block"/>
               just <span className="relative inline-block text-[#8A7E6F] dark:text-[#A89F91]">
                 memorise
@@ -38,7 +38,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             </h1>
 
             <p className="max-w-2xl text-[17px] sm:text-[20px] leading-[1.6] text-[#5A534B] dark:text-[#C7BCAD]">
-              A free, rigorous chemistry library for JEE, NEET, CSIR-NET and M.Sc aspirants — concept-first notes, lectures and problem practice from Prof. Ajesh Joe.
+              A free, rigorous chemistry library for JEE, NEET, CSIR-NET and M.Sc aspirants — concept-first notes, lectures and problem practice from Ajesh Joe Savio.
             </p>
 
             <div className="pt-4 flex flex-wrap gap-4">
@@ -138,15 +138,16 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
         </div>
 
         {/* Blockquote Section */}
-        <div className="mt-20 md:mt-32 max-w-5xl mx-auto pl-6 md:pl-10 relative animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-          <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[#C9A13B] rounded-full opacity-80"></div>
-          <Quote className="mb-6 text-[#C9A13B] opacity-60 fill-[#C9A13B]" size={42} />
-          <p className="font-serif text-[24px] md:text-3xl lg:text-[40px] leading-[1.4] md:leading-[1.4] font-medium text-[#22201F] dark:text-[#F6F2EA]">
-            A chemistry problem is simply a mechanism waiting to be written in <span className="text-[#C9A13B]">the elegant language of electrons</span> — our role is to teach students its <span className="text-[#C9A13B]">grammar</span>, so they can write their own solutions.
-          </p>
-          <div className="mt-10 flex items-center gap-4">
-            <div className="h-[2px] w-8 bg-[#C9A13B]"></div>
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#5A534B] dark:text-[#C7BCAD]">PROF. AJESH JOE</span>
+        <div className="mt-20 md:mt-32 max-w-5xl mx-auto animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+          <div className="relative overflow-hidden rounded-2xl border border-[#EAD9C0] dark:border-[#4A433E] bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] dark:from-[#2A2624] dark:to-[#221F1E] p-8 sm:p-12 md:p-16 shadow-[0_8px_30px_rgba(74,14,27,0.04)]">
+            <Quote className="pointer-events-none absolute -right-4 -top-2 text-[#4A0E1B]/10 dark:text-[#F4E7E5]/5" size={180} strokeWidth={1.5} />
+            <p className="font-serif relative max-w-4xl text-[22px] md:text-3xl lg:text-4xl leading-[1.6] md:leading-[1.6] font-medium text-[#3A2A22] dark:text-[#EAE1D2]">
+              “Academic excellence does not rely on memorising reactions, but on developing deep physical intuition and chemical logic. A chemistry problem is simply a mechanism waiting to be written in the elegant language of electrons — our role is to teach students its grammar, so they can write their own solutions.”
+            </p>
+            <div className="relative mt-10 flex items-center gap-4">
+              <span className="h-[2px] w-10 bg-[#4A0E1B]/40 dark:bg-[#C9A13B]/40" />
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#8A6A16] dark:text-[#E8CD82]">AJESH JOE SAVIO</span>
+            </div>
           </div>
         </div>
 

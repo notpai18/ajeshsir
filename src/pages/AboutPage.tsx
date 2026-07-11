@@ -31,9 +31,9 @@ interface AboutPageProps {
 }
 
 const FACTS = [
-  { icon: <CalendarClock size={17} />, value: '20+', label: 'Years teaching' },
+  { icon: <CalendarClock size={17} />, value: '12+', label: 'Years teaching' },
   { icon: <BookOpen size={17} />, value: '5', label: 'Exam tracks covered' },
-  { icon: <GraduationCap size={17} />, value: 'IISc', label: 'Ph.D. — IISc' },
+  { icon: <GraduationCap size={17} />, value: 'Alumnus', label: 'St. Thomas College, Palai' },
   { icon: <Sparkles size={17} />, value: 'Free', label: 'Always open-access' }
 ];
 
@@ -45,9 +45,7 @@ const INTERESTS = [
 ];
 
 const EXPERIENCE = [
-  { year: '2015 — Present', title: 'Senior Professor of Chemistry', place: 'University Science Department' },
-  { year: '2008 — 2015', title: 'Associate Researcher', place: 'National Chemical Laboratory' },
-  { year: '2005 — 2008', title: 'Postdoctoral Fellow', place: 'University of Cambridge, UK' }
+  { year: '2014 — Present', title: 'Chemistry Professor', place: 'Brilliant Study Centre Pala' }
 ];
 
 export default function AboutPage({ onNavigate }: AboutPageProps) {
@@ -74,8 +72,8 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
             {/* Identity */}
             <div className="max-w-xl">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D9C2A2]">About the professor</p>
-              <h1 className="dash-serif mt-2 text-3xl font-semibold leading-tight sm:text-[2.5rem]">Prof. Ajesh Joe</h1>
-              <p className="mt-1 text-sm font-semibold text-white/80">Senior Professor of Chemistry</p>
+              <h1 className="dash-serif mt-2 text-3xl font-semibold leading-tight sm:text-[2.5rem]">Ajesh Joe Savio</h1>
+              <p className="mt-1 text-sm font-semibold text-white/80">Chemistry Professor</p>
               <p className="mt-3 text-sm leading-relaxed text-white/70">
                 Devoted to quantum chemistry, molecular dynamics, and organic synthesis — building
                 structured, non-commercial, open-access learning for university students and
@@ -84,9 +82,9 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
 
               <div className="mt-5 flex flex-wrap justify-center gap-2 md:justify-start">
                 {[
-                  { icon: <Building2 size={13} />, text: 'Dept. of Chemistry' },
-                  { icon: <MapPin size={13} />, text: 'Science Block II · Office 402-B' },
-                  { icon: <CalendarClock size={13} />, text: 'Office hours: Sun 6–8 PM' }
+                  { icon: <Building2 size={13} />, text: 'Brilliant Study Centre Pala' },
+                  { icon: <MapPin size={13} />, text: 'Kerala, India' },
+                  { icon: <CalendarClock size={13} />, text: '12+ Years Teaching Experience' }
                 ].map((chip, i) => (
                   <span
                     key={i}
@@ -121,10 +119,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
           <div className={`${CARD} mt-4 p-6 sm:p-8`}>
             <div className="space-y-4 text-sm leading-relaxed text-[#5A534B] dark:text-[#C7BCAD] dark:text-[#A89F91]">
               <p>
-                Professor Ajesh Joe completed his Ph.D. in Chemistry from the Indian Institute of Science
-                (IISc), followed by postdoctoral research at the University of Cambridge, UK. Over the last
-                two decades he has lectured in organic chemistry, physical chemistry, and advanced materials
-                science.
+                Ajesh Joe Savio studied at St. Thomas College, Palai. With over 12 years of teaching experience, he has lectured in organic chemistry, physical chemistry, and advanced materials science.
               </p>
               <p>
                 Recognising how often students struggle to bridge foundational theory with high-difficulty
@@ -149,7 +144,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
             </p>
             <div className="relative mt-6 flex items-center gap-3">
               <span className="h-px w-8 bg-[#4A0E1B]/40" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8A6A16] dark:text-[#E8CD82]">Prof. Ajesh Joe</span>
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8A6A16] dark:text-[#E8CD82]">Ajesh Joe Savio</span>
             </div>
           </div>
         </section>

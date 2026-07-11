@@ -66,7 +66,7 @@ export default function Navbar({
             </div>
             <div className="flex flex-col whitespace-nowrap">
               <span className="text-xl font-['Outfit'] font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA]">
-                Prof. Ajesh Joe
+                Ajesh Joe Savio
               </span>
               <span className="text-[11px] font-semibold tracking-wide text-[#C9A13B] transition-colors duration-300">
                 Academic Library

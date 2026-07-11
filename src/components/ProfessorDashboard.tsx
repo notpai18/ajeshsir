@@ -394,7 +394,7 @@ interface ConfirmState {
 }
 
 const DEFAULT_PROFILE = {
-  name: 'Prof. Ajesh Joe',
+  name: 'Ajesh Joe Savio',
   role: 'Repository Editor',
   designation: 'Professor of Chemistry',
   office: 'Room 402-B, Science Block II'
