@@ -35,7 +35,7 @@ export function DoubtsSection({
           <div className={`${CARD} p-6`}>
             <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Submit an academic doubt</h3>
             <p className="mt-1 text-xs text-[#8A7E6F] dark:text-[#A89F91]">
-              Explain your concept difficulty or problem blocker. Prof. Ajesh Joe will review it and provide step-by-step guidance.
+              Explain your concept difficulty or problem blocker. Ajesh Joe Savio will review it and provide step-by-step guidance.
             </p>
 
             {doubtSubmitted && (

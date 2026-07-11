@@ -24,7 +24,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             
             <div className="flex items-center space-x-2">
               <span className="font-sans text-[11px] uppercase tracking-[0.2em] font-bold text-[#C9A13B]">
-                PROF. AJESH JOE · CHEMISTRY
+                AJESH JOE SAVIO · CHEMISTRY
               </span>
             </div>
 
@@ -38,7 +38,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             </h1>
 
             <p className="max-w-2xl text-[17px] sm:text-[20px] leading-[1.6] text-[#5A534B] dark:text-[#C7BCAD]">
-              A free, rigorous chemistry library for JEE, NEET, CSIR-NET and M.Sc aspirants — concept-first notes, lectures and problem practice from Prof. Ajesh Joe.
+              A free, rigorous chemistry library for JEE, NEET, CSIR-NET and M.Sc aspirants — concept-first notes, lectures and problem practice from Ajesh Joe Savio.
             </p>
 
             <div className="pt-4 flex flex-wrap gap-4">
@@ -146,7 +146,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
           </p>
           <div className="mt-10 flex items-center gap-4">
             <div className="h-[2px] w-8 bg-[#C9A13B]"></div>
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#5A534B] dark:text-[#C7BCAD]">PROF. AJESH JOE</span>
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#5A534B] dark:text-[#C7BCAD]">AJESH JOE SAVIO</span>
           </div>
         </div>
 

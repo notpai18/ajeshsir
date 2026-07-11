@@ -43,13 +43,13 @@ export default function Footer({ onNavigate }: FooterProps) {
           {/* Left: Identity */}
           <div className="flex flex-col space-y-1">
             <h4 className="text-[18px] font-semibold tracking-tight text-white font-display">
-              Prof. Ajesh Joe
+              Ajesh Joe Savio
             </h4>
             <p className="text-[14px] font-normal text-white/80">
-              Department of Chemistry
+              Chemistry Professor
             </p>
             <p className="text-[14px] font-normal text-white/60">
-              Indian Institute of Technology (BHU), Varanasi
+              Brilliant Study Centre Pala
             </p>
           </div>
 
@@ -82,7 +82,7 @@ export default function Footer({ onNavigate }: FooterProps) {
 
         {/* Row 2: Bottom Bar */}
         <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0 text-[12px] md:text-[13px] text-white/50 font-normal">
-          <p>© {currentYear} Prof. Ajesh Joe. All rights reserved.</p>
+          <p>© {currentYear} Ajesh Joe Savio. All rights reserved.</p>
           <div className="flex items-center gap-x-3 select-none">
             <BottomLink onClick={() => onNavigate('home')}>Privacy</BottomLink>
             <span className="text-white/30">•</span>

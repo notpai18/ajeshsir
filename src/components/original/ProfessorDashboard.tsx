@@ -302,7 +302,7 @@ export default function ProfessorDashboard({
                   AS
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-white">Prof. Ajesh Joe</h3>
+                  <h3 className="text-xs font-bold text-white">Ajesh Joe Savio</h3>
                   <span className="font-mono text-[9px] uppercase text-gray-400">Repository Editor</span>
                 </div>
               </div>

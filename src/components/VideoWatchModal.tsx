@@ -299,7 +299,7 @@ export function VideoWatchModal({
                   <PremiumCard.Category className="mb-2">About this lecture</PremiumCard.Category>
                   <p className="text-sm leading-relaxed text-[#22201F] dark:text-[#F6F2EA]/80">{video.description}</p>
                   <PremiumCard.Footer noDivider className="mt-4">
-                    <PremiumCard.Metadata className="font-mono">Instructor: Prof. Ajesh Joe</PremiumCard.Metadata>
+                    <PremiumCard.Metadata className="font-mono">Instructor: Ajesh Joe Savio</PremiumCard.Metadata>
                   </PremiumCard.Footer>
                 </PremiumCard>
               )}

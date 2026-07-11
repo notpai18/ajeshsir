@@ -809,7 +809,7 @@ export default function StudentDashboard({
                     Submit Academic Doubt
                   </h3>
                   <p className="text-xs text-gray-400 mb-6">
-                    Explain your concept difficulty or problem blocker. Professor Ajesh Joe will review and provide step-by-step guidance.
+                    Explain your concept difficulty or problem blocker. Ajesh Joe Savio will review and provide step-by-step guidance.
                   </p>
 
                   {doubtSubmitted && (
@@ -1059,7 +1059,7 @@ export default function StudentDashboard({
               </p>
               <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-gray-400">
                 <span>Duration: {activeVideoModal.duration}</span>
-                <span>Instructor: Prof. Ajesh Joe</span>
+                <span>Instructor: Ajesh Joe Savio</span>
               </div>
             </div>
           </div>
