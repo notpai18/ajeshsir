@@ -176,50 +176,34 @@ export function ResourceToolbar({
   }, []);
 
   return (
-    <div className="my-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-[16px] bg-[#FFFFFF] dark:bg-[#22201F] rounded-[16px] py-[10px] px-[16px] shadow-[0_2px_8px_rgba(90,36,54,0.05),0_1px_2px_rgba(90,36,54,0.04)] border border-[#F0E9E2] dark:border-[#F6F2EA]/10">
+    <div className="my-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between flex-wrap gap-[16px] bg-white dark:bg-[#22201F] rounded-[22px] min-h-[72px] px-[24px] py-[14px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-[#F2EEE8] dark:border-[#383330]">
       {/* LEFT — Subject/Category tabs */}
-      <div className="flex relative bg-[#F7F2EC] dark:bg-[#1A1817] rounded-[12px] p-[4px] gap-[2px] w-full sm:w-auto overflow-x-auto no-scrollbar">
+      <div className="flex relative items-center gap-[4px] w-full sm:w-auto overflow-x-auto no-scrollbar">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
-          let Icon: React.ElementType = LayoutGrid;
-          if (tab === 'Physical Chemistry' || tab === 'Physical') Icon = Atom;
-          else if (tab === 'Organic Chemistry' || tab === 'Organic') Icon = Hexagon;
-          else if (tab === 'Inorganic Chemistry' || tab === 'Inorganic') Icon = FlaskConical;
-
           return (
             <button
               key={tab}
               onClick={() => onTabChange(tab)}
-              className={`relative z-10 flex items-center gap-[6px] px-[16px] py-[8px] text-[13px] font-semibold rounded-[9px] transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)] shrink-0 active:scale-95 ${
-                isActive ? 'text-[#FFFFFF] dark:text-[#F6F2EA]' : 'text-[#6B5D54] hover:bg-[#EFE6DC] dark:hover:bg-[#2A2726] hover:text-[#3A2E28] dark:text-[#A89F91]'
+              className={`relative z-10 flex items-center justify-center px-[20px] py-[10px] text-[14px] font-medium rounded-full transition-all duration-[200ms] ease-out shrink-0 ${
+                isActive 
+                  ? 'bg-[#4A0E1B] text-white shadow-md' 
+                  : 'bg-transparent text-[#6B5D54] hover:bg-[#F2EEE8] dark:hover:bg-[#2A2726] dark:text-[#A89F91]'
               }`}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="subject-pill"
-                  className="absolute inset-0 bg-[#5A2436] rounded-[9px] shadow-[0_2px_6px_rgba(90,36,54,0.35)] -z-10"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
-                />
-              )}
-              <Icon size={14} className={`transition-colors duration-[250ms] ${isActive ? 'text-[#F3D9CE]' : 'text-[#B8A99C]'}`} />
               {tab}
-              {tabCounts && tabCounts[tab] !== undefined && (
-                <span className={`ml-0.5 text-[11px] font-medium ${isActive ? 'text-white/60' : 'text-[#B8A99C]'}`}>
-                  ({tabCounts[tab]})
-                </span>
-              )}
             </button>
           );
         })}
       </div>
 
       {/* RIGHT — Filters, Search, Sort, View */}
-      <div className="flex flex-col sm:flex-row items-center gap-[10px] w-full sm:w-auto">
+      <div className="flex flex-col sm:flex-row items-center gap-[16px] w-full sm:w-auto">
         {extraFilters}
 
         {/* Search */}
-        <div className={`relative flex items-center transition-all duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${isSearchFocused ? 'w-full sm:w-[320px]' : 'w-full sm:w-[240px]'}`}>
-          <Search size={16} className={`pointer-events-none absolute left-[12px] transition-colors duration-[250ms] ${isSearchFocused ? 'text-[#5A2436]' : 'text-[#B8A99C]'}`} />
+        <div className={`relative flex items-center transition-all duration-200 ease-out ${isSearchFocused ? 'w-full sm:w-[320px]' : 'w-full sm:w-[260px]'}`}>
+          <Search size={18} className="pointer-events-none absolute left-[16px] text-[#A89F91]" />
           <input
             ref={searchInputRef}
             type="text"
@@ -228,31 +212,22 @@ export function ResourceToolbar({
             onBlur={() => setIsSearchFocused(false)}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full h-[40px] rounded-[10px] border-[1.5px] border-transparent bg-[#FAF6F1] dark:bg-[#2A2726] pl-[38px] pr-[14px] text-[13px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#B0A296] outline-none transition-all duration-[250ms] focus:border-[#D9A9A0] focus:bg-[#FFFFFF] dark:focus:bg-[#22201F] focus:shadow-[0_0_0_4px_rgba(217,169,160,0.15)]"
+            className="w-full h-[46px] rounded-full bg-[#F9F7F5] dark:bg-[#1A1817] pl-[44px] pr-[16px] text-[14px] text-[#22201F] dark:text-[#F6F2EA] placeholder:text-[#A89F91] outline-none transition-all duration-200 focus:bg-white dark:focus:bg-[#22201F] focus:shadow-[0_0_0_4px_rgba(74,14,27,0.05)] border border-transparent focus:border-[#4A0E1B]/20"
           />
-          {!searchQuery && !isSearchFocused && (
-            <div className="pointer-events-none absolute right-[12px] flex h-[20px] items-center justify-center rounded-[4px] bg-[#EBE3DC] dark:bg-[#383330] px-[6px] text-[11px] font-bold text-[#C4B6AA] dark:text-[#8A7E6F]">
-              /
-            </div>
-          )}
         </div>
 
-        <div className="flex items-center gap-[10px] w-full sm:w-auto">
+        <div className="flex items-center gap-[12px] w-full sm:w-auto">
           {/* Custom Sort Dropdown */}
           {sortOptions && activeSort && onSortChange && (
             <div className="relative w-full sm:w-auto" ref={sortDropdownRef}>
               <button
                 onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
-                className={`h-[40px] w-full sm:w-auto flex items-center justify-between gap-[8px] rounded-[10px] border-[1.5px] bg-[#FAF6F1] px-[14px] text-[13px] font-medium text-[#3A2E28] transition-all duration-[250ms] ${
-                  isSortDropdownOpen
-                    ? 'border-[#D9A9A0] bg-white dark:bg-[#22201F] shadow-[0_0_0_4px_rgba(217,169,160,0.15)]'
-                    : 'border-[#F0E9E2] dark:border-[#F6F2EA]/10 hover:border-[#D9C7B8]'
-                }`}
+                className="flex h-[46px] w-full sm:w-auto items-center justify-between gap-[8px] px-[12px] text-[14px] font-medium text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:text-[#4A0E1B] dark:hover:text-[#F6F2EA]"
               >
                 <span className="whitespace-nowrap">
                   {sortOptions.find(o => o.id === activeSort)?.label || activeSort}
                 </span>
-                <ChevronDown size={12} className={`text-[#8A7A6D] transition-transform duration-[200ms] ${isSortDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`text-[#8A7A6D] transition-transform duration-[200ms] ${isSortDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -262,16 +237,16 @@ export function ResourceToolbar({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 5, scale: 0.95 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute right-0 top-[calc(100%+8px)] z-50 w-full sm:min-w-[180px] rounded-[10px] bg-white dark:bg-[#22201F] p-[6px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] border border-[#F0E9E2]"
+                    className="absolute right-0 top-[calc(100%+8px)] z-50 w-full sm:min-w-[180px] rounded-[12px] bg-white dark:bg-[#22201F] p-[6px] shadow-[0_12px_30px_rgba(0,0,0,0.12)] border border-[#F2EEE8] dark:border-[#383330]"
                   >
                     {sortOptions.map(opt => (
                       <button
                         key={opt.id}
                         onClick={() => { onSortChange(opt.id); setIsSortDropdownOpen(false); }}
-                        className="flex w-full items-center justify-between rounded-[6px] px-[12px] py-[8px] text-left text-[13px] text-[#3A2E28] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F2EC] dark:hover:bg-[#383330]"
+                        className="flex w-full items-center justify-between rounded-[8px] px-[12px] py-[10px] text-left text-[14px] font-medium text-[#3A2E28] dark:text-[#F6F2EA] transition-colors hover:bg-[#F9F7F5] dark:hover:bg-[#383330]"
                       >
                         {opt.label}
-                        {activeSort === opt.id && <Check size={14} className="text-[#5A2436]" />}
+                        {activeSort === opt.id && <Check size={16} className="text-[#4A0E1B] dark:text-[#F6F2EA]" />}
                       </button>
                     ))}
                   </motion.div>
@@ -282,21 +257,18 @@ export function ResourceToolbar({
 
           {/* Grid/List View Toggle */}
           {viewMode && onViewModeChange && (
-            <div className="flex relative bg-[#F7F2EC] dark:bg-[#1A1817] rounded-[10px] p-[3px] h-[40px] shrink-0 ml-auto sm:ml-0">
+            <div className="flex gap-[4px] shrink-0 ml-auto sm:ml-0">
               {(['grid', 'list'] as const).map((mode) => (
                 <button
                   key={mode}
                   onClick={() => onViewModeChange(mode)}
-                  className={`relative z-10 flex h-[34px] w-[34px] items-center justify-center rounded-[7px] transition-colors duration-[200ms] active:scale-95 ${viewMode === mode ? 'text-[#5A2436]' : 'text-[#B8A99C] hover:bg-black/5'}`}
+                  className={`flex h-[40px] w-[40px] items-center justify-center rounded-[10px] transition-colors duration-200 ${
+                    viewMode === mode 
+                      ? 'bg-[#F2EEE8] text-[#4A0E1B] dark:bg-[#383330] dark:text-[#F6F2EA]' 
+                      : 'text-[#A89F91] hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726]'
+                  }`}
                 >
-                  {viewMode === mode && (
-                    <motion.div
-                      layoutId="view-pill"
-                      className="absolute inset-0 bg-white dark:bg-[#22201F] rounded-[7px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] -z-10"
-                      transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
-                    />
-                  )}
-                  {mode === 'grid' ? <LayoutGrid size={14} /> : <List size={14} />}
+                  {mode === 'grid' ? <LayoutGrid size={18} /> : <List size={18} />}
                 </button>
               ))}
             </div>

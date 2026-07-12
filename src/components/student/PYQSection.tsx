@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Download, Eye, FileText } from 'lucide-react';
+import { Download, Eye } from 'lucide-react';
 import { EmptyState } from '../ui/EmptyState';
-import { PremiumCard } from '../PremiumCard';
+import { ResourceCard } from '../resources/ResourceCard';
 import { ResourceHero, ResourceToolbar } from '../resources/ResourcePageLayout';
 import type { PYQSectionProps } from './types';
 
@@ -53,13 +53,13 @@ export function PYQSection({
         onViewModeChange={setViewMode}
         extraFilters={
           <>
-            <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className="h-[40px] rounded-[10px] border-[1.5px] border-[#F0E9E2] dark:border-[#F6F2EA]/10 bg-[#FAF6F1] dark:bg-[#2A2726] px-3 text-[13px] text-[#3A2E28] dark:text-[#F6F2EA] outline-none">
+            <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className="h-[46px] rounded-full border border-transparent bg-[#F9F7F5] dark:bg-[#1A1817] px-4 text-[14px] text-[#22201F] dark:text-[#F6F2EA] outline-none transition-all focus:bg-white dark:focus:bg-[#22201F] focus:border-[#4A0E1B]/20">
               <option value="All">All difficulties</option>
               <option value="Easy">Easy</option>
               <option value="Medium">Medium</option>
               <option value="Hard">Hard</option>
             </select>
-            <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="h-[40px] rounded-[10px] border-[1.5px] border-[#F0E9E2] dark:border-[#F6F2EA]/10 bg-[#FAF6F1] dark:bg-[#2A2726] px-3 text-[13px] text-[#3A2E28] dark:text-[#F6F2EA] outline-none">
+            <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="h-[46px] rounded-full border border-transparent bg-[#F9F7F5] dark:bg-[#1A1817] px-4 text-[14px] text-[#22201F] dark:text-[#F6F2EA] outline-none transition-all focus:bg-white dark:focus:bg-[#22201F] focus:border-[#4A0E1B]/20">
               <option value="All">All Years</option>
               {Array.from({length: 10}, (_, i) => new Date().getFullYear() - i).map(year => (
                 <option key={year} value={year}>{year}</option>
@@ -72,63 +72,28 @@ export function PYQSection({
       {sortedPyqs.length === 0 ? (
         <EmptyState label="No PYQ booklets match your search or filters." />
       ) : (
-        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
-          {sortedPyqs.map((pyq, idx) => {
-            let customStyles = { bg: '#EAF0FB', text: '#3A5FA6' }; // Default PYQ color
-
-            return (
-              <PremiumCard key={pyq.id} interactive padding="medium" className="flex flex-col h-full">
-                <div className="flex items-start gap-4">
-                  <PremiumCard.Icon className="bg-opacity-20" style={{ backgroundColor: customStyles.bg, color: customStyles.text }}>
-                    <FileText size={20} />
-                  </PremiumCard.Icon>
-                  <div className="min-w-0 flex-1 pt-0.5">
-                    <div className="mb-[12px] flex flex-wrap items-center gap-[8px] justify-end absolute top-4 right-4">
-                      <span className="inline-flex items-center rounded-full bg-[#F4F4F4] dark:bg-[#383330] px-[10px] py-[4px] text-[11px] font-bold text-[#4A4A4A] dark:text-[#C7BCAD]">
-                        {pyq.year}
-                      </span>
-                      <span className="inline-flex items-center rounded-full bg-[#F4F4F4] dark:bg-[#383330] px-[10px] py-[4px] text-[11px] font-bold text-[#4A4A4A] dark:text-[#C7BCAD]">
-                        {pyq.difficulty}
-                      </span>
-                    </div>
-                    <PremiumCard.Title className="mt-2 text-[15px] pr-20 line-clamp-2">
-                      {pyq.chapter}
-                    </PremiumCard.Title>
-                    <div className="mt-1 flex items-center gap-2">
-                      <span className="text-[12px] text-[#5A534B] dark:text-[#A89F91]">{pyq.subject}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <PremiumCard.Description className="mt-[12px] line-clamp-2 text-[13px]">
-                  Original question paper with detailed step-by-step solutions for {pyq.chapter}.
-                </PremiumCard.Description>
-
-                <PremiumCard.Footer className="mt-auto">
-                  <div className="flex items-center justify-between w-full">
-                    <label className="flex items-center gap-2 cursor-pointer group/check">
-                      <input
-                        type="checkbox"
-                        className="h-[14px] w-[14px] rounded border-[#C0A98B] text-[#5A2436] focus:ring-[#5A2436]/30 cursor-pointer"
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                      <span className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#8B8B8B] group-hover/check:text-[#4A4A4A] transition-colors">
-                        MARK SOLVED
-                      </span>
-                    </label>
-                    <div className="flex gap-[8px]">
-                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl }); }} className="flex min-h-[44px] py-1 items-center justify-center rounded-[8px] border border-[#E0D5CC] dark:border-[#383330] bg-white dark:bg-[#22201F] px-[12px] text-[12px] font-bold text-[#5A2436] dark:text-[#F6F2EA] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726]">
-                        <Eye size={14} className="mr-1.5" /> Paper
-                      </button>
-                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl }); }} className="flex min-h-[44px] py-1 items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
-                        <Eye size={14} className="mr-1.5" /> Sol.
-                      </button>
-                    </div>
-                  </div>
-                </PremiumCard.Footer>
-              </PremiumCard>
-            );
-          })}
+        <div className={`grid gap-[24px] ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
+          {sortedPyqs.map((pyq) => (
+            <ResourceCard
+              key={pyq.id}
+              title={pyq.chapter}
+              description={`Original question paper with detailed step-by-step solutions for ${pyq.chapter}.`}
+              chapter={`${pyq.year} · ${pyq.difficulty}`}
+              subject={pyq.subject}
+              actions={[
+                {
+                  icon: Eye,
+                  label: 'Paper',
+                  onClick: () => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })
+                },
+                {
+                  icon: Eye,
+                  label: 'Solution',
+                  onClick: () => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })
+                }
+              ]}
+            />
+          ))}
         </div>
       )}
     </div>

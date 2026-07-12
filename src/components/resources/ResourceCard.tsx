@@ -1,140 +1,79 @@
 import React, { ReactNode } from 'react';
-import { SUBJECT_BADGE } from '../../constants/subjects';
 
 export interface ResourceAction {
   icon: React.ElementType;
   label?: string;
   onClick: (e: React.MouseEvent) => void;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'icon-only';
 }
 
 interface ResourceCardProps {
-  icon: React.ElementType;
   title: string;
   description: string;
   chapter: string;
   subject: string;
-  badges?: ReactNode[];
-  metadata: ReactNode[];
   actions: ResourceAction[];
   image?: string; // For videos
-}
-
-export function SubjectBadge({ subject }: { subject: string }) {
-  const s = SUBJECT_BADGE[subject as keyof typeof SUBJECT_BADGE];
-  if (!s) return <span className="text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">{subject}</span>;
-  return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold ${s.bg} ${s.text}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {s.emoji} {s.label}
-    </span>
-  );
+  onClick?: () => void;
 }
 
 export const ResourceCard: React.FC<ResourceCardProps> = ({
-  icon: Icon,
   title,
   description,
   chapter,
   subject,
-  badges = [],
-  metadata = [],
   actions = [],
-  image
+  image,
+  onClick
 }) => {
   return (
-    <div className="flex flex-col p-5 group transition-all duration-[220ms] hover:-translate-y-1 hover:shadow-[0_12px_24px_-12px_rgba(34,32,31,0.15)] rounded-[28px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] shadow-[0_1px_2px_rgba(34,32,31,0.04),0_18px_36px_-26px_rgba(34,32,31,0.35)]">
+    <div 
+      onClick={onClick}
+      className={`flex flex-col group transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] rounded-[18px] border border-[#F2EEE8] dark:border-[#383330] hover:border-[#EAE4DB] dark:hover:border-[#4A4541] bg-white dark:bg-[#22201F] shadow-[0_10px_30px_rgba(0,0,0,0.05)] overflow-hidden h-full ${onClick ? 'cursor-pointer' : ''}`}
+    >
       {image && (
-        <div className="relative aspect-video w-full overflow-hidden bg-[#EFE7D8] rounded-2xl mb-4">
+        <div className="relative aspect-video w-full overflow-hidden bg-[#F9F7F5] dark:bg-[#1A1817]">
           <img
             src={image}
             alt={title}
             referrerPolicy="no-referrer"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>
       )}
-      <div className="flex items-start gap-3">
-        {!image && (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B] transition-colors group-hover:bg-[#4A0E1B] group-hover:text-white">
-            <Icon size={18} />
+      
+      <div className="flex flex-col flex-1 p-5 sm:p-6">
+        <div className="mb-[8px] flex flex-col gap-[2px]">
+          <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#C9A13B]">
+            {subject}
           </span>
-        )}
-        <div className="min-w-0 flex-1">
-          <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-            <span className="inline-block rounded-full border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91]">
+          {chapter && (
+            <span className="text-[12px] font-medium text-[#A89F91]">
               {chapter}
             </span>
-            <SubjectBadge subject={subject} />
-            {badges.map((badge, idx) => (
-              <React.Fragment key={idx}>{badge}</React.Fragment>
-            ))}
-          </div>
-          <h4 className="text-sm font-bold text-[#22201F] dark:text-[#F6F2EA] line-clamp-2 group-hover:text-[#4A0E1B] transition-colors">
-            {title}
-          </h4>
+          )}
         </div>
-      </div>
-      
-      <p className="mt-3 text-xs leading-relaxed text-[#8A7E6F] dark:text-[#A89F91] line-clamp-2 min-h-[2.5rem]">
-        {description}
-      </p>
-      
-      <div className="mt-4 flex items-center justify-between border-t border-[#F2ECDF] dark:border-[#383330] pt-4">
-        <div className="flex flex-col gap-0.5">
-          {metadata.map((meta, idx) => (
-            <span key={idx} className="dash-mono text-[10px] text-[#A79A88]">
-              {meta}
-            </span>
-          ))}
-        </div>
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        
+        <h4 className="text-[20px] font-bold text-[#22201F] dark:text-[#F6F2EA] leading-tight line-clamp-2 mb-[8px]">
+          {title}
+        </h4>
+        
+        <p className="text-[15px] leading-relaxed text-[#8A7E6F] dark:text-[#A89F91] line-clamp-2 mb-6">
+          {description}
+        </p>
+        
+        <div className="mt-auto flex items-center justify-end gap-[8px]">
           {actions.map((action, idx) => {
             const ActionIcon = action.icon;
-            
-            if (action.variant === 'primary' || (!action.variant && action.label)) {
-              return (
-                <button 
-                  key={idx} 
-                  onClick={action.onClick}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#4A0E1B] px-3 py-1.5 text-[11px] font-bold tracking-wide text-white transition-colors hover:bg-[#380A14]"
-                >
-                  <ActionIcon size={12} /> {action.label}
-                </button>
-              );
-            }
-            if (action.variant === 'secondary') {
-              return (
-                <button 
-                  key={idx} 
-                  onClick={action.onClick}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] px-3 py-1.5 text-[11px] font-bold text-[#4A0E1B] transition-colors hover:bg-[#EEDAD7]"
-                >
-                  <ActionIcon size={12} /> {action.label}
-                </button>
-              );
-            }
-            if (action.variant === 'ghost') {
-              return (
-                <button 
-                  key={idx} 
-                  onClick={action.onClick}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#E3D8C5] bg-white dark:bg-[#22201F] px-3 py-1.5 text-[11px] font-semibold text-[#6E645A] transition-colors hover:bg-[#F6F2EA] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]"
-                >
-                  <ActionIcon size={12} /> {action.label}
-                </button>
-              );
-            }
-            
-            // Icon only (default for single actions in notes)
             return (
               <button 
                 key={idx} 
-                onClick={action.onClick} 
-                title={action.label}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-[#E3D8C5] bg-white dark:bg-[#22201F] text-[#6E645A] transition-colors hover:bg-[#F6F2EA] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  action.onClick(e);
+                }}
+                className="inline-flex items-center justify-center gap-[6px] rounded-[8px] border border-[#E3D8C5] dark:border-[#4A4541] bg-transparent px-[14px] h-[34px] text-[14px] font-medium text-[#6B5D54] dark:text-[#A89F91] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726] hover:text-[#22201F] dark:hover:text-[#F6F2EA] hover:scale-[1.03]"
               >
-                <ActionIcon size={14} />
+                <ActionIcon size={14} /> {action.label}
               </button>
             );
           })}

@@ -133,62 +133,31 @@ export function DoubtsSection({
 
   return (
     <div className="max-w-[1200px] mx-auto pb-20 animate-[fadeInUp_0.4s_ease-out_forwards]">
-      {/* 1. HEADER */}
-      <div className="mb-8 mt-4 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-[36px] tracking-tight font-bold text-gray-900 mb-2">Doubts & Discussion</h1>
-          <p className="text-gray-500 max-w-lg text-[16px]">Ask academic questions and receive verified answers from the professor.</p>
-        </div>
-        <button
-          onClick={() => setIsAskModalOpen(true)}
-          className="hidden md:flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#4A0E1B] px-6 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#7C2532] shadow-[0_8px_16px_rgba(74,14,27,0.15)] hover:shadow-[0_12px_24px_rgba(74,14,27,0.25)] hover:-translate-y-[2px]"
-        >
-          <Plus size={18} />
-          Ask a Doubt
-        </button>
-      </div>
+      <ResourceHero
+        themeGradient="from-[#4A0E1B] to-[#7C2532]"
+        title="Doubts & Discussion"
+        description="Ask academic questions and receive verified answers from the professor."
+        totalLabel="Total Questions"
+        totalCount={doubts.length}
+      />
 
-      {/* 2. SEARCH BAR */}
-      <div className="mb-6 relative z-10 group">
-        <div className="absolute inset-0 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-focus-within:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-shadow pointer-events-none" />
-        <div className="relative flex flex-col sm:flex-row items-center min-h-[64px] px-2 sm:px-5 py-2 sm:py-0 gap-3">
-          <div className="flex w-full sm:w-auto flex-1 items-center gap-3 px-3 sm:px-0">
-            <Search size={22} className="text-gray-400 shrink-0" />
-            <input 
-              type="text"
-              placeholder="Search questions, chapters or topics..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-[16px] text-gray-900 placeholder:text-gray-400 focus:outline-none"
-            />
-          </div>
-          <div className="hidden sm:flex shrink-0 items-center gap-4 border-l border-gray-100 pl-5 h-8">
-            <select className="text-[14px] bg-transparent font-medium text-gray-600 focus:outline-none cursor-pointer hover:text-gray-900 transition-colors">
-              <option>All Subjects</option>
-            </select>
-            <select className="text-[14px] bg-transparent font-medium text-gray-600 focus:outline-none cursor-pointer hover:text-gray-900 transition-colors">
-              <option>All Statuses</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. FILTER CHIPS */}
-      <div className="mb-10 flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
-        {FILTER_TABS.map(tab => (
+      <ResourceToolbar
+        tabs={FILTER_TABS as string[]}
+        activeTab={activeTab}
+        onTabChange={(t) => setActiveTab(t as FilterTab)}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search questions, chapters or topics..."
+        extraFilters={
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`shrink-0 px-5 py-2 rounded-full text-[14px] font-medium transition-all duration-200 ${
-              activeTab === tab 
-                ? 'bg-gray-900 text-white shadow-md' 
-                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-            }`}
+            onClick={() => setIsAskModalOpen(true)}
+            className="hidden sm:flex shrink-0 items-center justify-center gap-[6px] h-[46px] rounded-full bg-[#4A0E1B] px-[20px] text-[14px] font-bold text-white transition-all duration-200 hover:bg-[#7C2532] shadow-[0_8px_16px_rgba(74,14,27,0.15)] hover:-translate-y-[1px]"
           >
-            {tab}
+            <Plus size={16} />
+            Ask a Doubt
           </button>
-        ))}
-      </div>
+        }
+      />
 
       {/* 4. QUESTION CARDS */}
       {filteredDoubts.length === 0 ? (
@@ -212,8 +181,8 @@ export function DoubtsSection({
           }
         />
       ) : (
-        <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredDoubts.map((doubt, index) => {
+        <div className="grid gap-[24px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredDoubts.map((doubt) => {
             const status = deriveStatus(doubt);
             const hasProfReply = hasProfessorReply(doubt);
             let parsedTitle = '';
@@ -231,45 +200,20 @@ export function DoubtsSection({
             }
 
             return (
-              <div
+              <ResourceCard
                 key={doubt.id}
-                className={`group relative bg-white rounded-[20px] p-[18px] ${hasProfReply ? 'h-[210px]' : 'h-[190px]'} shadow-sm hover:shadow-xl transition-all duration-250 hover:-translate-y-1 flex flex-col border border-gray-100 animate-[fadeInUp_0.5s_ease-out_forwards]`}
-                style={{ animationDelay: `${index * 50}ms`, opacity: 0 }}
-              >
-                {/* Top Row: Subject & Status */}
-                <div className="flex items-center justify-between gap-2 mb-3 shrink-0">
-                  <span className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">{doubt.subject}</span>
-                  <DoubtStatusBadge status={status} className="!py-0.5 !px-2 h-5 text-[10px]" />
-                </div>
-
-                {/* Middle: Merged Title & Description */}
-                <div className="mb-2 overflow-hidden">
-                  <p className="text-[15px] text-gray-900 leading-relaxed line-clamp-3 break-words">
-                    <span className="font-bold">{parsedTitle}</span>
-                    {parsedDesc && <span className="font-normal text-gray-700"> : {parsedDesc}</span>}
-                  </p>
-                </div>
-
-                {/* Bottom: Metadata & Action */}
-                <div className="mt-auto flex flex-col shrink-0 gap-0.5">
-                  <span className="text-[14px] text-gray-500">
-                    {doubt.name} &middot; {getRelativeTime(doubt.createdAt)}
-                  </span>
-                  {hasProfReply && (
-                    <span className="text-[14px] text-gray-500">
-                      Professor replied &middot; {getRelativeTime(doubt.replies?.[doubt.replies.length - 1]?.created_at || new Date().toISOString())}
-                    </span>
-                  )}
-                  <div className="flex justify-end mt-1">
-                    <button
-                      onClick={() => openThread(doubt)}
-                      className="group/btn flex items-center gap-1 text-[14px] font-semibold text-gray-600 hover:text-gray-900 transition-colors"
-                    >
-                      {hasProfReply ? 'Read Full Answer \u2192' : 'View Details \u2192'}
-                    </button>
-                  </div>
-                </div>
-              </div>
+                title={parsedTitle}
+                description={parsedDesc || 'No additional details provided.'}
+                chapter={status}
+                subject={doubt.subject}
+                actions={[
+                  {
+                    icon: Search,
+                    label: hasProfReply ? 'Read Answer' : 'View Details',
+                    onClick: () => openThread(doubt)
+                  }
+                ]}
+              />
             );
           })}
         </div>
