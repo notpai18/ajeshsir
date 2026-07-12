@@ -232,7 +232,9 @@ export function OverviewSection({
                          <span className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{d.name}</span>
                          <span className="dash-mono shrink-0 text-[10px] text-[#A79A88]">{fmtDate(d.createdAt)}</span>
                        </span>
-                       <span className="line-clamp-1 text-xs text-[#8A7E6F] dark:text-[#A89F91]">{d.question}</span>
+                       <span className="line-clamp-1 text-xs text-[#8A7E6F] dark:text-[#A89F91]">
+                         {new DOMParser().parseFromString(d.question, 'text/html').body.textContent || ''}
+                       </span>
                      </span>
                      <ArrowRight size={15} className="mt-1 shrink-0 text-[#C0A98B]" />
                    </button>
