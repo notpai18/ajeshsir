@@ -1,136 +1,334 @@
-import React, { useState } from 'react';
-import { HelpCircle, Eye, Reply, CheckCircle2, Send, MessageSquare } from 'lucide-react';
+/**
+ * DoubtsSection (Student view) — Completely redesigned premium minimal interface
+ *
+ * @license Apache-2.0
+ */
+import React, { useState, useMemo, useCallback } from 'react';
+import {
+  Plus, Search
+} from 'lucide-react';
 import { EmptyState } from '../ui/EmptyState';
-import { PremiumCard } from '../PremiumCard';
-import { ResourceHero, ResourceToolbar } from '../resources/ResourcePageLayout';
 import type { DoubtsSectionProps } from './types';
+import type { Doubt } from '../../types';
+import type { DoubtStatus } from '../../types';
+import { AskDoubtModal } from '../doubts/AskDoubtModal';
+import { DoubtStatusBadge } from '../doubts/DoubtStatusBadge';
+import { replyToDoubt } from '../../services/doubtsService';
+import { useNavigate } from 'react-router-dom';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getRelativeTime(dateString: string): string {
+  if (!dateString) return '';
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min ago`;
+  const diffHrs = Math.floor(diffMins / 60);
+  if (diffHrs < 24) return `${diffHrs}h ago`;
+  return `${Math.floor(diffHrs / 24)}d ago`;
+}
+
+function hasProfessorReply(doubt: Doubt): boolean {
+  return !!(
+    (doubt.replies && doubt.replies.some(r => r.professor_id !== 'student')) ||
+    doubt.answerText
+  );
+}
+
+function deriveStatus(doubt: Doubt): DoubtStatus {
+  if (doubt.status) return doubt.status;
+  return doubt.isAnswered ? 'answered' : 'submitted';
+}
+
+function sanitizeHtml(html: string) {
+  if (!html) return '';
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+}
+
+function stripHtml(html: string) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
+}
+
+// ─── Filter tab definitions ───────────────────────────────────────────────────
+
+type FilterTab = 'All' | 'Answered' | 'Waiting' | 'My Questions';
+
+const FILTER_TABS: FilterTab[] = ['All', 'Answered', 'Waiting', 'My Questions'];
+
+function tabMatchesDoubt(tab: FilterTab, doubt: Doubt, myEmail: string | null): boolean {
+  const status = deriveStatus(doubt);
+  switch (tab) {
+    case 'Waiting': return status === 'awaiting' || status === 'submitted' || status === 'needs-followup';
+    case 'Answered': return status === 'answered';
+    case 'My Questions': return myEmail ? doubt.email === myEmail : true;
+    default: return true;
+  }
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function DoubtsSection({
-  currentExamInfo,
   doubts,
-  faqs,
-  doubtForm, setDoubtForm,
-  doubtFile, setDoubtFile,
-  doubtSubmitted, doubtSubmitting, handleDoubtSubmit,
-  expandedFaqId, setExpandedFaqId,
+  notes,
+  onAddDoubt,
 }: DoubtsSectionProps) {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState('All');
+  // Modal state
+  const [isAskModalOpen, setIsAskModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // List state
+  const [activeTab, setActiveTab] = useState<FilterTab>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortMode, setSortMode] = useState<string>('recent');
+  const [toastMessage, setToastMessage] = useState('');
 
-  const openDoubts = doubts?.filter(d => !d.isAnswered).length || 0;
-  const resolvedDoubts = doubts?.filter(d => d.isAnswered).length || 0;
+  // My-doubts identity (keyed by last-used email in localStorage)
+  const myEmail = null; // Future: derive from auth or last submission
 
-  // Filter
-  const filteredDoubts = (doubts || []).filter(d => {
-    if (activeTab === 'Open') return !d.isAnswered;
-    if (activeTab === 'Resolved') return d.isAnswered;
-    if (activeTab === 'My Doubts') return true; // mock filter for user's doubts
-    return true;
-  }).filter(d => d.question.toLowerCase().includes(searchQuery.toLowerCase()) || d.subject.toLowerCase().includes(searchQuery.toLowerCase()));
+  // ── Filter & sort ─────────────────────────────────────────────────────────
+  const filteredDoubts = useMemo(() => {
+    // Reject placeholder/junk data
+    const valid = doubts.filter(d => {
+      const sub = d.subject.toLowerCase();
+      if (sub === 'dfv' || sub === 'cv' || sub === 'sdsdv') return false;
+      return true;
+    });
 
-  const sortedDoubts = [...filteredDoubts].sort((a, b) => {
-    if (sortMode === 'alphabetical') return a.subject.localeCompare(b.subject);
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // recent
-  });
+    const byTab = valid.filter(d => tabMatchesDoubt(activeTab, d, myEmail));
+
+    const bySearch = searchQuery
+      ? byTab.filter(d =>
+        d.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        d.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (d.topic || '').toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      : byTab;
+
+    // Sort: Waiting → oldest first (triage), others → newest first
+    const finalSorted = [...bySearch].sort((a, b) => {
+      if (activeTab === 'Waiting') {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+    
+    console.log('[DoubtsSection Debug] Total doubts received:', doubts.length);
+    console.log('[DoubtsSection Debug] After valid filter:', valid.length);
+    console.log('[DoubtsSection Debug] After tab filter:', byTab.length);
+    console.log('[DoubtsSection Debug] Final rendered doubts:', finalSorted.length);
+    if (finalSorted.length > 0) {
+      console.log('[DoubtsSection Debug] First doubt:', finalSorted[0]);
+    }
+    
+    return finalSorted;
+  }, [doubts, activeTab, searchQuery, myEmail]);
+
+  // ── Open a doubt ────────────
+  const openThread = useCallback((doubt: Doubt) => {
+    navigate(`/resources/doubts/${doubt.id}`);
+  }, [navigate]);
 
   return (
-    <div className="animate-[fadeInUp_0.4s_ease-out_forwards]">
-      <ResourceHero
-        themeGradient={currentExamInfo?.themeGradient || 'from-[#4A0E1B] to-[#7C2532]'}
-        title="Doubts & FAQ"
-        description="Ask the professor a direct question or browse common answers."
-        quickStats={[
-          { icon: 'Target', value: openDoubts, label: 'Open Doubts' },
-          { icon: 'CheckCircle2', value: resolvedDoubts, label: 'Resolved' },
-          { icon: 'Clock', value: '2-4 hrs', label: 'Avg Response' },
-          { icon: 'Library', value: '5+', label: 'Categories' }
-        ]}
-        totalLabel="Total Doubts"
-        totalCount={doubts?.length || 0}
-        progressValue={resolvedDoubts}
-        progressLabel="resolved"
-      />
+    <div className="max-w-[1200px] mx-auto pb-20 animate-[fadeInUp_0.4s_ease-out_forwards]">
+      {/* 1. HEADER */}
+      <div className="mb-8 mt-4 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 className="text-[36px] tracking-tight font-bold text-gray-900 mb-2">Doubts & Discussion</h1>
+          <p className="text-gray-500 max-w-lg text-[16px]">Ask academic questions and receive verified answers from the professor.</p>
+        </div>
+        <button
+          onClick={() => setIsAskModalOpen(true)}
+          className="hidden md:flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#4A0E1B] px-6 py-3.5 text-[15px] font-bold text-white transition-all duration-200 hover:bg-[#7C2532] shadow-[0_8px_16px_rgba(74,14,27,0.15)] hover:shadow-[0_12px_24px_rgba(74,14,27,0.25)] hover:-translate-y-[2px]"
+        >
+          <Plus size={18} />
+          Ask a Doubt
+        </button>
+      </div>
 
-      <ResourceToolbar
-        tabs={['All', 'Open', 'Resolved', 'My Doubts']}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        searchPlaceholder="Search doubts..."
-        sortOptions={[
-          { id: 'recent', label: 'Most Recent' },
-          { id: 'alphabetical', label: 'Alphabetical A-Z' },
-        ]}
-        activeSort={sortMode}
-        onSortChange={setSortMode}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-      />
+      {/* 2. SEARCH BAR */}
+      <div className="mb-6 relative z-10 group">
+        <div className="absolute inset-0 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] group-focus-within:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-shadow pointer-events-none" />
+        <div className="relative flex flex-col sm:flex-row items-center min-h-[64px] px-2 sm:px-5 py-2 sm:py-0 gap-3">
+          <div className="flex w-full sm:w-auto flex-1 items-center gap-3 px-3 sm:px-0">
+            <Search size={22} className="text-gray-400 shrink-0" />
+            <input 
+              type="text"
+              placeholder="Search questions, chapters or topics..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="flex-1 bg-transparent text-[16px] text-gray-900 placeholder:text-gray-400 focus:outline-none"
+            />
+          </div>
+          <div className="hidden sm:flex shrink-0 items-center gap-4 border-l border-gray-100 pl-5 h-8">
+            <select className="text-[14px] bg-transparent font-medium text-gray-600 focus:outline-none cursor-pointer hover:text-gray-900 transition-colors">
+              <option>All Subjects</option>
+            </select>
+            <select className="text-[14px] bg-transparent font-medium text-gray-600 focus:outline-none cursor-pointer hover:text-gray-900 transition-colors">
+              <option>All Statuses</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-      {sortedDoubts.length === 0 ? (
-        <EmptyState label="No doubts match your search." />
+      {/* 3. FILTER CHIPS */}
+      <div className="mb-10 flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+        {FILTER_TABS.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`shrink-0 px-5 py-2 rounded-full text-[14px] font-medium transition-all duration-200 ${
+              activeTab === tab 
+                ? 'bg-gray-900 text-white shadow-md' 
+                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* 4. QUESTION CARDS */}
+      {filteredDoubts.length === 0 ? (
+        <EmptyState
+          label={searchQuery
+            ? 'No doubts match your search.'
+            : activeTab === 'Answered'
+            ? 'No answered doubts yet.'
+            : 'No doubts yet — ask your first question!'
+          }
+          action={
+            !searchQuery ? (
+              <button
+                onClick={() => setIsAskModalOpen(true)}
+                className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-5 py-3 text-[14px] font-bold text-white transition-all hover:bg-gray-800"
+              >
+                <Plus size={16} />
+                Ask a Doubt
+              </button>
+            ) : undefined
+          }
+        />
       ) : (
-        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
-          {sortedDoubts.map((doubt, idx) => {
-            let customStyles = doubt.isAnswered ? { bg: '#E8F5E9', text: '#2E7D32' } : { bg: '#FDECEA', text: '#C0392B' };
+        <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredDoubts.map((doubt, index) => {
+            const status = deriveStatus(doubt);
+            const hasProfReply = hasProfessorReply(doubt);
+            const firstProfReply = doubt.replies?.find(r => r.professor_id !== 'student');
+            const firstProfReplyText = firstProfReply?.reply_text || doubt.answerText;
+            const chapterText = doubt.topic || 'General Topic';
 
             return (
-              <PremiumCard key={doubt.id} interactive padding="medium" className="flex flex-col h-full">
-                <div className="flex items-start gap-4">
-                  <PremiumCard.Icon className="bg-opacity-20" style={{ backgroundColor: customStyles.bg, color: customStyles.text }}>
-                    <HelpCircle size={20} />
-                  </PremiumCard.Icon>
-                  <div className="min-w-0 flex-1 pt-0.5">
-                    <div className="mb-[12px] flex flex-wrap items-center gap-[8px] justify-end absolute top-4 right-4">
-                      <span className="inline-flex items-center rounded-full bg-[#F4F4F4] dark:bg-[#383330] px-[10px] py-[4px] text-[11px] font-bold text-[#4A4A4A] dark:text-[#C7BCAD]">
-                        {doubt.isAnswered ? 'Resolved' : 'Open'}
-                      </span>
-                    </div>
-                    <PremiumCard.Title className="mt-2 text-[15px] pr-20 line-clamp-2">
-                      {doubt.subject}
-                    </PremiumCard.Title>
-                    <div className="mt-1 flex items-center gap-2">
-                      <span className="text-[12px] text-[#5A534B] dark:text-[#A89F91]">By {doubt.name}</span>
-                    </div>
+              <div
+                key={doubt.id}
+                className="group relative bg-white rounded-[22px] p-5 h-[280px] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-250 hover:-translate-y-[6px] border border-gray-200 hover:border-[#D9C2A2]/50 flex flex-col animate-[fadeInUp_0.5s_ease-out_forwards]"
+                style={{ animationDelay: `${index * 50}ms`, opacity: 0 }}
+              >
+                {/* Top row */}
+                <div className="flex flex-wrap items-center gap-1.5 mb-3 shrink-0">
+                  <span className="px-2.5 h-6 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 text-[10px] font-bold uppercase tracking-wider border border-gray-100">{doubt.subject}</span>
+                  <span className="px-2.5 h-6 flex items-center justify-center rounded-full bg-gray-50 text-gray-500 text-[10px] font-bold uppercase tracking-wider truncate max-w-[120px] border border-gray-100">{chapterText}</span>
+                  <div className="ml-auto">
+                    <DoubtStatusBadge status={status} className="!py-0.5 !px-2 h-6" />
                   </div>
                 </div>
 
-                <PremiumCard.Description className="mt-[12px] line-clamp-2 text-[13px]">
-                  {doubt.question}
-                </PremiumCard.Description>
+                {/* Middle */}
+                <div className="mb-2 shrink-0">
+                  <h3 className="text-[20px] font-bold text-gray-900 leading-tight line-clamp-2">
+                    {stripHtml(doubt.question) || (doubt.attachmentName ? `Attachment: ${doubt.attachmentName}` : 'Doubt with Attachment')}
+                  </h3>
+                  <p className="mt-1 text-[13px] text-gray-400 font-medium tracking-wide">
+                    {doubt.name} &middot; {getRelativeTime(doubt.createdAt)}
+                  </p>
+                </div>
 
-                <PremiumCard.Footer className="mt-auto">
-                  <div className="flex items-center justify-between w-full">
-                    <label className="flex items-center gap-2 cursor-pointer group/check">
-                      <input
-                        type="checkbox"
-                        checked={doubt.isAnswered}
-                        readOnly
-                        className="h-[14px] w-[14px] rounded border-[#C0A98B] text-[#5A2436] focus:ring-[#5A2436]/30 cursor-pointer"
-                        onClick={(e) => e.stopPropagation()}
+                {/* Content Area */}
+                <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-2">
+                  {/* Question Preview */}
+                  {doubt.question && !hasProfReply && (
+                    <div 
+                      className="text-[14px] text-gray-600 leading-relaxed line-clamp-3 [&_p]:inline [&_p]:m-0"
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(doubt.question) }}
+                    />
+                  )}
+                  {doubt.question && hasProfReply && (
+                    <div 
+                      className="text-[14px] text-gray-600 leading-relaxed line-clamp-2 [&_p]:inline [&_p]:m-0 opacity-80"
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(doubt.question) }}
+                    />
+                  )}
+
+                  {/* Professor Preview */}
+                  {hasProfReply && firstProfReplyText && (
+                    <div className="mt-auto rounded-[12px] bg-gray-50/80 p-3 border border-gray-100 shrink-0">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">Professor Answer</p>
+                      <div 
+                        className="text-[14px] text-gray-800 leading-snug line-clamp-2 [&_p]:inline [&_p]:m-0"
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(firstProfReplyText) }}
                       />
-                      <span className={`text-[11px] font-bold uppercase tracking-[0.05em] transition-colors ${doubt.isAnswered ? 'text-[#5A2436]' : 'text-[#8B8B8B] group-hover/check:text-[#4A4A4A]'}`}>
-                        MARK RESOLVED
-                      </span>
-                    </label>
-                    <div className="flex gap-[8px]">
-                      <button onClick={(e) => { e.stopPropagation(); }} className="flex h-[36px] items-center justify-center rounded-[8px] border border-[#E0D5CC] dark:border-[#383330] bg-white dark:bg-[#22201F] px-[12px] text-[12px] font-bold text-[#5A2436] dark:text-[#F6F2EA] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726]">
-                        <Eye size={14} className="mr-1.5" /> View
-                      </button>
-                      <button onClick={(e) => { e.stopPropagation(); }} className="flex h-[36px] items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
-                        <Reply size={14} className="mr-1.5" /> Reply
-                      </button>
                     </div>
-                  </div>
-                </PremiumCard.Footer>
-              </PremiumCard>
+                  )}
+                </div>
+
+                {/* Bottom Actions */}
+                <div className="mt-3 pt-3 border-t border-gray-100 flex justify-center shrink-0">
+                  {hasProfReply ? (
+                    <button
+                      onClick={() => openThread(doubt)}
+                      className="w-full text-center text-[13px] font-bold text-gray-700 hover:text-gray-900 transition-colors"
+                    >
+                      Read Full Answer
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => openThread(doubt)}
+                      className="w-full text-center text-[13px] font-bold text-[#8A6A16] hover:text-[#5c470f] transition-colors"
+                    >
+                      View Details
+                    </button>
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
       )}
+
+      {/* 7. ASK DOUBT BUTTON (Mobile) */}
+      <button
+        onClick={() => setIsAskModalOpen(true)}
+        className="md:hidden fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#4A0E1B] text-white shadow-[0_8px_24px_rgba(74,14,27,0.3)] hover:scale-105 transition-transform"
+      >
+        <Plus size={24} />
+      </button>
+
+      {/* Ask a Doubt Modal */}
+      <AskDoubtModal
+        isOpen={isAskModalOpen}
+        onClose={() => setIsAskModalOpen(false)}
+        notes={notes}
+        existingDoubts={doubts}
+        onSubmit={onAddDoubt}
+        onOpenThread={openThread}
+        onSuccess={() => {
+          setToastMessage('Doubt submitted successfully. The professor has been notified.');
+          setTimeout(() => setToastMessage(''), 5000);
+        }}
+      />
+
+      {/* Success Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[10000] bg-[#1A1817] text-white px-6 py-3.5 rounded-full shadow-2xl flex items-center gap-3 animate-[fadeInUp_0.3s_ease-out_forwards]">
+          <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <span className="text-[14px] font-medium">{toastMessage}</span>
+        </div>
+      )}
+
     </div>
   );
 }

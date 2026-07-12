@@ -87,7 +87,7 @@ interface HeroProps {
 export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
   return (
     <>
-    <section className="relative overflow-hidden py-16 md:py-24">
+    <section className="relative overflow-hidden py-16 md:py-24 bg-[#F7F3EC] dark:bg-[#1A1817]">
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center lg:items-stretch gap-12 lg:grid-cols-12 lg:gap-8">

@@ -18,7 +18,7 @@ import {
   fetchVideos, createVideo, updateVideo, deleteVideo,
   fetchPyqs, createPyq, updatePyq, deletePyq,
   fetchPracticeSheets, createPracticeSheet, updatePracticeSheet, deletePracticeSheet,
-  fetchDoubts, submitDoubt, replyToDoubt, deleteDoubt,
+  fetchDoubts, submitDoubt, replyToDoubt, deleteDoubt, updateDoubtStatus, markDoubtSeen,
   fetchAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement, togglePinAnnouncement,
 } from '../services';
 
@@ -63,6 +63,7 @@ interface PortalDataContextValue extends PortalDataState {
   handleAddDoubt: (doubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt'>) => Promise<void>;
   handleReplyDoubt: (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[] }) => Promise<void>;
   handleDeleteDoubt: (id: string) => Promise<void>;
+  handleMarkSeen: (id: string) => Promise<void>;
 
   // Announcements
   handleAddAnnouncement: (ann: Omit<Announcement, 'id' | 'createdAt'>) => Promise<void>;
@@ -238,6 +239,30 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, doubts: prev.doubts.filter(d => d.id !== id) }));
   }, []);
 
+
+  const handleMarkSeen = useCallback(async (id: string) => {
+    const doubt = state.doubts.find(d => d.id === id);
+    if (!doubt || doubt.status !== 'submitted') return;
+    // Optimistic update
+    setState(prev => ({
+      ...prev,
+      doubts: prev.doubts.map(d =>
+        d.id === id ? { ...d, status: 'awaiting' as const } : d
+      )
+    }));
+    try {
+      await markDoubtSeen(id, 'submitted');
+    } catch {
+      // Silently revert — not critical
+      setState(prev => ({
+        ...prev,
+        doubts: prev.doubts.map(d =>
+          d.id === id ? { ...d, status: 'submitted' as const } : d
+        )
+      }));
+    }
+  }, [state.doubts]);
+
   // ─── Announcements CRUD ────────────────────────────────────────────────────
   const handleAddAnnouncement = useCallback(async (newAnn: Omit<Announcement, 'id' | 'createdAt'>) => {
     const created = await createAnnouncement(newAnn);
@@ -269,7 +294,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       handleAddVideo, handleEditVideo, handleDeleteVideo,
       handleAddPyq, handleEditPyq, handleDeletePyq,
       handleAddPracticeSheet, handleEditPracticeSheet, handleDeletePracticeSheet,
-      handleAddDoubt, handleReplyDoubt, handleDeleteDoubt,
+      handleAddDoubt, handleReplyDoubt, handleDeleteDoubt, handleMarkSeen,
       handleAddAnnouncement, handleEditAnnouncement, handleDeleteAnnouncement, handleTogglePinAnnouncement,
     }}>
       {children}

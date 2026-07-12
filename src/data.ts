@@ -1192,41 +1192,134 @@ export const INITIAL_DOUBTS: Doubt[] = [
     id: 'doubt-1',
     name: 'Siddharth Sharma',
     email: 'siddharth.s@student.in',
-    subject: 'JEE Advanced — Physical Chemistry',
+    subject: 'Physical Chemistry',
+    topic: 'Chemical Kinetics',
     question: 'In chemical kinetics, how do we correctly apply the Arrhenius equation when comparing two reactions at different temperatures? Specifically, how does the frequency factor A change with temperature?',
-    attachmentName: 'kinetics-diagram.jpg',
-    answerText: 'Excellent question, Siddharth. The frequency factor A is usually treated as temperature-independent in elementary analyses, but at a deeper level it contains a pre-exponential entropic term. For two reactions: use ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂) when A is constant. I have uploaded a comprehensive derivation under the Physical Chemistry Notes section.',
     isAnswered: true,
-    createdAt: '2026-07-07T14:30:00Z'
+    status: 'answered',
+    createdAt: '2026-07-05T14:30:00Z',
+    replies: [
+      {
+        id: 'reply-1a',
+        doubt_id: 'doubt-1',
+        professor_id: 'prof-001',
+        reply_text: 'Excellent question, Siddharth. The frequency factor A is usually treated as temperature-independent in elementary analyses, but at a deeper level it contains a pre-exponential entropic term. For two reactions: use ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂) when A is constant. I have uploaded a comprehensive derivation under the Physical Chemistry Notes section.',
+        image_urls: [],
+        video_urls: [],
+        audio_urls: [],
+        attachment_urls: [],
+        created_at: '2026-07-06T10:15:00Z',
+        updated_at: '2026-07-06T10:15:00Z',
+        is_edited: false,
+        reply_order: 1
+      }
+    ]
   },
   {
     id: 'doubt-2',
     name: 'Aditi Patel',
     email: 'aditi.patel@gmail.com',
-    subject: 'JEE Main — Organic Chemistry',
-    question: "How do we predict the major product in a Diels–Alder reaction when the diene isn't symmetric? Do we use FMO or resonance arguments?",
-    isAnswered: false,
-    createdAt: '2026-07-08T09:15:00Z'
+    subject: 'Organic Chemistry',
+    topic: 'Diels–Alder Reaction',
+    question: "How do we predict the major product in a Diels–Alder reaction when the diene isn't symmetric? Do we use FMO (frontier molecular orbital) theory or resonance arguments to assign regio-selectivity?",
+    isAnswered: true,
+    status: 'needs-followup',
+    createdAt: '2026-07-08T09:15:00Z',
+    replies: [
+      {
+        id: 'reply-2a',
+        doubt_id: 'doubt-2',
+        professor_id: 'prof-001',
+        reply_text: 'Great question Aditi! For asymmetric Diels–Alder reactions, FMO theory is the most reliable framework. The "ortho" and "para" rule comes from matching the largest coefficient of the diene HOMO with the largest coefficient of the dienophile LUMO. Resonance arguments give the same answer for simple cases but FMO generalises better. The electron-withdrawing group on the dienophile determines the LUMO coefficients — I recommend working through the maleic anhydride + butadiene example first.',
+        image_urls: [],
+        video_urls: [],
+        audio_urls: [],
+        attachment_urls: [],
+        created_at: '2026-07-09T11:00:00Z',
+        updated_at: '2026-07-09T11:00:00Z',
+        is_edited: false,
+        reply_order: 1
+      },
+      {
+        id: 'reply-2b',
+        doubt_id: 'doubt-2',
+        professor_id: 'student',
+        reply_text: 'Thank you sir! I understood the FMO part. But what if both the diene AND dienophile are unsymmetrical — do we still use the same HOMO-LUMO coefficient matching approach?',
+        image_urls: [],
+        video_urls: [],
+        audio_urls: [],
+        attachment_urls: [],
+        created_at: '2026-07-10T14:30:00Z',
+        updated_at: '2026-07-10T14:30:00Z',
+        is_edited: false,
+        reply_order: 2
+      }
+    ]
   },
   {
     id: 'doubt-3',
     name: 'Rohan Deshmukh',
     email: 'rohan.d@netprep.org',
-    subject: 'CSIR NET — Inorganic Chemistry',
-    question: 'In a complex [Co(NH₃)₄Cl₂]⁺, how do we determine which geometric isomer is more stable using Crystal Field Theory?',
-    attachmentName: 'complex_geometry.pdf',
-    answerText: 'For Rohan: 1) Draw both cis and trans isomers. 2) Calculate the CFSE contribution for each — in trans, the two Cl⁻ are opposite so their weak field effect is distributed differently. 3) Compare the overall stabilisation. Generally the cis isomer gains more CFSE due to stronger net ligand field from three NH₃ around each Co axis. A full vector-based treatment is in the Inorganic Chemistry notes.',
+    subject: 'Inorganic Chemistry',
+    topic: 'Crystal Field Theory',
+    question: 'In a complex [Co(NH₃)₄Cl₂]⁺, how do we determine which geometric isomer is more stable using Crystal Field Theory? The cis and trans configurations seem to have the same ligands so I am confused about the CFSE difference.',
     isAnswered: true,
-    createdAt: '2026-07-05T11:00:00Z'
+    status: 'answered',
+    createdAt: '2026-07-09T11:00:00Z',
+    replies: [
+      {
+        id: 'reply-3a',
+        doubt_id: 'doubt-3',
+        professor_id: 'prof-001',
+        reply_text: 'For [Co(NH₃)₄Cl₂]⁺: 1) Draw both cis and trans isomers carefully. 2) In the trans isomer, both Cl⁻ are on opposite axial positions — their weak-field influence competes directly along the z-axis. 3) In the cis isomer, the two Cl⁻ are adjacent, allowing NH₃ (stronger field) to dominate both axes more effectively. 4) Compare the CFSE: cis generally has a higher net Δ_oct contribution from the four NH₃ arranged in a more symmetric environment. A full vector-based treatment with worked calculations is in the Inorganic Chemistry CFT notes.',
+        image_urls: [],
+        video_urls: [],
+        audio_urls: [],
+        attachment_urls: [],
+        created_at: '2026-07-10T09:30:00Z',
+        updated_at: '2026-07-10T09:30:00Z',
+        is_edited: false,
+        reply_order: 1
+      }
+    ]
   },
   {
     id: 'doubt-4',
     name: 'Meera Nair',
     email: 'meera.nair@neetacademy.com',
-    subject: 'NEET — Physical Chemistry',
-    question: 'Does buffer capacity change when we dilute a buffer? What happens to pH after dilution?',
+    subject: 'Physical Chemistry',
+    topic: 'Ionic Equilibrium',
+    question: 'Does buffer capacity change when we dilute a buffer? I expected the pH to remain constant after dilution but my textbook says it shifts slightly. What is the correct explanation?',
     isAnswered: false,
-    createdAt: '2026-07-08T18:45:00Z'
+    status: 'awaiting',
+    createdAt: '2026-07-10T18:45:00Z',
+    replies: []
+  },
+  {
+    id: 'doubt-5',
+    name: 'Arjun Mehta',
+    email: 'arjun.m@jeeprep.in',
+    subject: 'Physical Chemistry',
+    topic: 'Thermodynamics',
+    question: '',
+    attachmentName: 'thermo-question.jpg',
+    attachmentUrl: '',
+    isAnswered: false,
+    status: 'submitted',
+    createdAt: '2026-07-12T17:20:00Z',
+    replies: []
+  },
+  {
+    id: 'doubt-6',
+    name: 'Priya Krishnamurthy',
+    email: 'priya.k@neet2026.com',
+    subject: 'Organic Chemistry',
+    topic: 'SN1 vs SN2 Reactions',
+    question: 'When we have a secondary substrate like 2-bromobutane, how do we predict whether it will undergo SN1 or SN2? The solvent polarity, nucleophile strength, and steric factors all seem to point in different directions in different problems.',
+    isAnswered: false,
+    status: 'submitted',
+    createdAt: '2026-07-12T19:05:00Z',
+    replies: []
   }
 ];
 

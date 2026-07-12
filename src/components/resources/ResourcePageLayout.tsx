@@ -37,6 +37,7 @@ export interface ResourceHeroProps {
   totalCount: number;
   progressValue?: number; // e.g. how many completed
   progressLabel?: string; // e.g. 'reviewed'
+  primaryAction?: ReactNode; // Action button for hero
 }
 
 export function ResourceHero({
@@ -47,7 +48,8 @@ export function ResourceHero({
   totalLabel,
   totalCount,
   progressValue,
-  progressLabel = 'completed'
+  progressLabel = 'completed',
+  primaryAction
 }: ResourceHeroProps) {
   const percentage = totalCount > 0 && progressValue !== undefined
     ? Math.max(5, Math.round((progressValue / totalCount) * 100))
@@ -103,6 +105,11 @@ export function ResourceHero({
                 </div>
               </div>
             )}
+            {primaryAction && (
+              <div className="mt-4">
+                {primaryAction}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -123,6 +130,8 @@ export interface ResourceToolbarProps {
   viewMode?: 'grid' | 'list';
   onViewModeChange?: (mode: 'grid' | 'list') => void;
   extraFilters?: ReactNode;
+  /** Optional per-tab counts shown in parentheses next to each tab label */
+  tabCounts?: Record<string, number>;
 }
 
 export function ResourceToolbar({
@@ -137,7 +146,8 @@ export function ResourceToolbar({
   onSortChange,
   viewMode,
   onViewModeChange,
-  extraFilters
+  extraFilters,
+  tabCounts,
 }: ResourceToolbarProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
@@ -193,6 +203,11 @@ export function ResourceToolbar({
               )}
               <Icon size={14} className={`transition-colors duration-[250ms] ${isActive ? 'text-[#F3D9CE]' : 'text-[#B8A99C]'}`} />
               {tab}
+              {tabCounts && tabCounts[tab] !== undefined && (
+                <span className={`ml-0.5 text-[11px] font-medium ${isActive ? 'text-white/60' : 'text-[#B8A99C]'}`}>
+                  ({tabCounts[tab]})
+                </span>
+              )}
             </button>
           );
         })}

@@ -355,6 +355,7 @@ interface ProfessorDashboardProps {
   onDeletePracticeSheet: (id: string) => void;
   onReplyDoubt: (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[]; }) => void;
   onDeleteDoubt: (id: string) => void;
+  onMarkSeen?: (id: string) => Promise<void>;
   onAddAnnouncement: (a: Omit<Announcement, 'id' | 'createdAt'>) => void;
   onEditAnnouncement: (id: string, a: Partial<Announcement>) => void;
   onDeleteAnnouncement: (id: string) => void;
@@ -422,6 +423,7 @@ export default function ProfessorDashboard({
   onDeletePracticeSheet,
   onReplyDoubt,
   onDeleteDoubt,
+  onMarkSeen,
   onAddAnnouncement,
   onEditAnnouncement,
   onDeleteAnnouncement,
@@ -884,7 +886,7 @@ const resetDemoData = () => {
             {activeTab === 'doubts' && (
               <DoubtsSection 
                 doubts={doubts}
-                askDelete={askDelete} onDeleteDoubt={onDeleteDoubt} onReplyDoubt={onReplyDoubt}
+                askDelete={askDelete} onDeleteDoubt={onDeleteDoubt} onReplyDoubt={onReplyDoubt} onMarkSeen={onMarkSeen}
               />
             )}
 

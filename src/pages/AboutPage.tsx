@@ -19,6 +19,7 @@ import {
   ArrowRight,
   CheckCircle
 } from 'lucide-react';
+import { useImageViewer } from '../components/image-viewer';
 
 /* Design tokens — shared "Professor's Study" system (see DESIGN_SYSTEM.md) */
 const CARD =
@@ -49,6 +50,8 @@ const EXPERIENCE = [
 ];
 
 export default function AboutPage({ onNavigate }: AboutPageProps) {
+  const { openViewer } = useImageViewer();
+
   return (
     <div className="dash-root min-h-screen bg-[#F6F2EA] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA]">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 sm:py-14">
@@ -61,8 +64,19 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
           <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:items-center md:gap-9 md:text-left">
             {/* Monogram avatar */}
             <div className="relative shrink-0">
-              <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-[#22201F] overflow-hidden shadow-lg sm:h-32 sm:w-32">
-                <img src="/ajesh-joe.png" alt="Professor Ajesh Joe" className="w-full h-full object-cover" />
+              <div
+                className="flex h-28 w-28 items-center justify-center rounded-3xl bg-[#22201F] overflow-hidden shadow-lg sm:h-32 sm:w-32 iv-clickable"
+                onClick={() => openViewer({
+                  src: '/ajesh-joe.png',
+                  alt: 'Professor Ajesh Joe',
+                  name: 'Professor Ajesh Joe',
+                })}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openViewer({ src: '/ajesh-joe.png', alt: 'Professor Ajesh Joe' }); } }}
+                aria-label="View professor photo"
+              >
+                <img src="/ajesh-joe.png" alt="Professor Ajesh Joe" className="w-full h-full object-cover" draggable={false} />
               </div>
               <span className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-2xl border-4 border-[#4A0E1B] bg-white dark:bg-[#22201F] text-[#4A0E1B] dark:text-[#F4E7E5]">
                 <GraduationCap size={18} />

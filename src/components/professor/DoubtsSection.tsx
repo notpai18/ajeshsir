@@ -1,262 +1,375 @@
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
+ * DoubtsSection (Professor view) — triage-focused inbox.
+ *
+ * Features:
+ * - Default tab: "Unanswered" sorted oldest-first (triage priority)
+ * - Filter tabs: All / Unanswered (oldest first) / Answered Today / By Subject
+ * - WaitTimeIndicator per card — colour-shifts neutral → gold → orange → burgundy
+ * - Left border colour matches urgency for at-a-glance scanning
+ * - Auto-mark seen: opening a thread transitions submitted → awaiting
+ * - DoubtStatusBadge on every card with 5-state model
+ * - AnswerDoubtModal unchanged (existing rich reply composer)
+ * - design.md token compliance throughout
+ *
+ * @license Apache-2.0
  */
-
-import React, { useState, useMemo } from 'react';
-import { Search, Inbox, User, Check, CornerDownRight, FileText, Plus, Trash2, Send } from 'lucide-react';
+import React, { useState, useMemo, useCallback } from 'react';
+import {
+  Search, Inbox, User, FileText, Plus, Trash2, Send, Eye, Filter
+} from 'lucide-react';
 import { PremiumCard } from '../PremiumCard';
-
 import { PRIMARY_BTN, INPUT, ROW_BTN_DANGER } from '../ui/tokens';
 import { ProfEmptyState } from './ui';
 import { AnswerDoubtModal } from '../doubts/AnswerDoubtModal';
-import type { Doubt } from '../../types';
+import { DoubtStatusBadge } from '../doubts/DoubtStatusBadge';
+import { WaitTimeIndicator, waitTimeBorderColor } from '../doubts/WaitTimeIndicator';
+import type { Doubt, DoubtStatus } from '../../types';
+import { useImageViewer } from '../image-viewer';
+import { replyToDoubt } from '../../services/doubtsService';
+import { useNavigate } from 'react-router-dom';
+import { AttachmentViewer } from '../ui/AttachmentViewer';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface DoubtsSectionProps {
   doubts: Doubt[];
   askDelete: (what: string, onConfirm: () => void) => void;
   onDeleteDoubt: (id: string) => void;
-  onReplyDoubt: (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[]; }) => void;
+  onReplyDoubt: (
+    id: string,
+    replyData: {
+      reply_text?: string;
+      image_urls?: string[];
+      video_urls?: string[];
+      audio_urls?: string[];
+      attachment_urls?: string[];
+    }
+  ) => void;
+  onMarkSeen?: (id: string) => Promise<void>;
 }
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function deriveStatus(doubt: Doubt): DoubtStatus {
+  if (doubt.status) return doubt.status;
+  return doubt.isAnswered ? 'answered' : 'submitted';
+}
+
+function hasProfessorReply(doubt: Doubt): boolean {
+  return !!(
+    (doubt.replies && doubt.replies.some(r => r.professor_id !== 'student')) ||
+    doubt.answerText
+  );
+}
+
+function isAnsweredToday(doubt: Doubt): boolean {
+  if (!hasProfessorReply(doubt)) return false;
+  const lastReply = doubt.replies?.find(r => r.professor_id !== 'student');
+  const replyDate = lastReply ? new Date(lastReply.created_at) : new Date(doubt.createdAt);
+  const now = new Date();
+  return replyDate.toDateString() === now.toDateString();
+}
+
+function getRelativeTime(dateString: string): string {
+  if (!dateString) return '';
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min ago`;
+  const diffHrs = Math.floor(diffMins / 60);
+  if (diffHrs < 24) return `${diffHrs}h ago`;
+  return `${Math.floor(diffHrs / 24)}d ago`;
+}
+
+// ─── Tab config ───────────────────────────────────────────────────────────────
+
+type ProfTab = 'unanswered' | 'answered-today' | 'by-subject' | 'all';
+
+const TAB_LABELS: Record<ProfTab, string> = {
+  unanswered: 'Unanswered',
+  'answered-today': 'Answered Today',
+  'by-subject': 'By Subject',
+  all: 'All',
+};
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function DoubtsSection({
   doubts,
   askDelete,
   onDeleteDoubt,
-  onReplyDoubt
+  onReplyDoubt,
+  onMarkSeen,
 }: DoubtsSectionProps) {
-  const [doubtsTab, setDoubtsTab] = useState<'unanswered' | 'answered' | 'all'>('unanswered');
-  const [query, setQuery] = useState('');
-  const [replyingDoubtId, setReplyingDoubtId] = useState<string | null>(null);
+  const { openViewer } = useImageViewer();
 
+  // Tab / filter state — default: unanswered (oldest first)
+  const [activeTab, setActiveTab] = useState<ProfTab>('unanswered');
+  const [query, setQuery] = useState('');
+  const [subjectFilter, setSubjectFilter] = useState('All');
+  const [replyingDoubtId, setReplyingDoubtId] = useState<string | null>(null);
+  
+  const navigate = useNavigate();
+
+  // ── Subject list ─────────────────────────────────────────────────────────
+  const subjects = useMemo(() => {
+    const all = ['All', ...new Set(doubts.map(d => d.subject))];
+    return all;
+  }, [doubts]);
+
+  // ── Filter & sort ─────────────────────────────────────────────────────────
   const doubtsFiltered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return [...doubts]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .filter((d) => {
-        if (doubtsTab === 'unanswered' && d.isAnswered) return false;
-        if (doubtsTab === 'answered' && !d.isAnswered) return false;
-        return !q || [d.name, d.subject, d.question, d.email].some((f) => f.toLowerCase().includes(q));
-      });
-  }, [doubts, doubtsTab, query]);
+    let filtered = doubts.filter(d => {
+      if (activeTab === 'unanswered' && hasProfessorReply(d)) return false;
+      if (activeTab === 'answered-today' && !isAnsweredToday(d)) return false;
+      if (activeTab === 'by-subject' && subjectFilter !== 'All' && d.subject !== subjectFilter) return false;
+      if (q && !([d.name, d.subject, d.question, d.email, d.topic || ''].some(f => f.toLowerCase().includes(q)))) return false;
+      return true;
+    });
 
-  const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    // Sort: unanswered tab → oldest first (triage); others → newest first
+    return filtered.sort((a, b) => {
+      if (activeTab === 'unanswered') {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [doubts, activeTab, query, subjectFilter]);
+
+  // ── Tab counts ────────────────────────────────────────────────────────────
+  const tabCounts = useMemo(() => ({
+    unanswered: doubts.filter(d => !hasProfessorReply(d)).length,
+    'answered-today': doubts.filter(d => isAnsweredToday(d)).length,
+    'by-subject': doubts.length,
+    all: doubts.length,
+  }), [doubts]);
+
+  // ── Open thread → auto-mark seen ─────────────────────────────────────────
+  const openThread = useCallback(async (doubt: Doubt) => {
+    navigate(`/resources/doubts/${doubt.id}`);
+    if (onMarkSeen && deriveStatus(doubt) === 'submitted') {
+      await onMarkSeen(doubt.id);
+    }
+  }, [onMarkSeen, navigate]);
+
+  const fmtDate = (iso: string) =>
+    new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
   return (
     <div className="space-y-5">
+      {/* Tabs + search row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="inline-flex rounded-xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] p-1">
-          {(['unanswered', 'answered', 'all'] as const).map((t) => {
-            const c = t === 'unanswered' ? doubts.filter((d) => !d.isAnswered).length : t === 'answered' ? doubts.filter((d) => d.isAnswered).length : doubts.length;
-            const active = doubtsTab === t;
+        <div className="flex gap-1 flex-wrap">
+          {(Object.keys(TAB_LABELS) as ProfTab[]).map(tab => {
+            const active = activeTab === tab;
             return (
               <button
-                key={t}
-                onClick={() => setDoubtsTab(t)}
-                className={`rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors ${active ? 'bg-[#4A0E1B] text-white' : 'text-[#6E645A] hover:text-[#22201F] dark:text-[#F6F2EA]'}`}
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4A0E1B]/20 ${
+                  active
+                    ? 'bg-[#4A0E1B] text-white'
+                    : 'border border-[#22201F]/12 bg-white dark:bg-[#22201F] text-[#6E645A] hover:text-[#22201F]'
+                }`}
               >
-                {t} <span className={active ? 'text-white/70' : 'text-[#A79A88]'}>({c})</span>
+                {TAB_LABELS[tab]}
+                <span className={`ml-1.5 ${active ? 'text-white/70' : 'text-[#A79A88]'}`}>
+                  ({tabCounts[tab]})
+                </span>
               </button>
             );
           })}
         </div>
-        <div className="relative sm:w-72">
-          <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-          <input className={`${INPUT} pl-10`} placeholder="Search doubts…" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <div className="flex items-center gap-2">
+          {/* Subject filter (By Subject tab only) */}
+          {activeTab === 'by-subject' && (
+            <select
+              value={subjectFilter}
+              onChange={e => setSubjectFilter(e.target.value)}
+              className="rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] px-3 py-2 text-xs text-[#22201F] focus:outline-none focus:border-[#4A0E1B]/40 transition"
+              aria-label="Filter by subject"
+            >
+              {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          )}
+          <div className="relative sm:w-64">
+            <Search
+              size={14}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]"
+              aria-hidden="true"
+            />
+            <input
+              className={`${INPUT} pl-10 text-xs`}
+              placeholder="Search doubts…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              aria-label="Search doubts"
+            />
+          </div>
         </div>
       </div>
 
+      {/* Inbox zero */}
       {doubtsFiltered.length === 0 ? (
         <ProfEmptyState
           icon={<Inbox size={22} />}
-          title={doubtsTab === 'unanswered' ? 'Inbox zero' : 'Nothing to show'}
-          message={doubtsTab === 'unanswered' ? 'There are no unanswered doubts right now. Beautifully done.' : 'No doubts match this view.'}
+          title={activeTab === 'unanswered' ? 'Inbox zero' : 'Nothing to show'}
+          message={
+            activeTab === 'unanswered'
+              ? 'All doubts have been answered. Beautifully done.'
+              : 'No doubts match this view.'
+          }
         />
       ) : (
-        <div className="space-y-4">
-          {doubtsFiltered.map((doubt) => (
-            <PremiumCard key={doubt.id} padding="medium" className={!doubt.isAnswered ? 'ring-1 ring-[#4A0E1B]/12' : ''}>
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
-                    <User size={16} />
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{doubt.name}</h4>
-                    <span className="dash-mono text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{doubt.email}</span>
+        <div className="space-y-3">
+          {doubtsFiltered.map((doubt) => {
+            const status = deriveStatus(doubt);
+            const profReplied = hasProfessorReply(doubt);
+            const borderColor = !profReplied ? waitTimeBorderColor(doubt.createdAt) : '#D9C2A2';
+
+            return (
+              <PremiumCard
+                key={doubt.id}
+                padding="medium"
+                className="transition-all duration-200"
+              >
+                {/* Card top: student info + status + wait time */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F4E7E5] text-[#4A0E1B]">
+                      <User size={16} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <h4 className="text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{doubt.name}</h4>
+                      <span className="text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">{doubt.email}</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5">
+                    <div className="flex items-center gap-2">
+                      {!profReplied && (
+                        <WaitTimeIndicator createdAt={doubt.createdAt} />
+                      )}
+                      <DoubtStatusBadge status={status} />
+                    </div>
+                    <span className="text-[10px] text-[#A79A88]">{fmtDate(doubt.createdAt)}</span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1.5">
-                  <span className="dash-mono text-[11px] text-[#A79A88]">{fmtDate(doubt.createdAt)}</span>
-                  {!doubt.isAnswered ? (
-                    <span className="rounded-full bg-[#F4E4E4] px-2 py-0.5 text-[10px] font-bold text-[#4A0E1B]">Awaiting reply</span>
+
+                {/* Subject + question */}
+                <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">
+                  {doubt.subject}{doubt.topic && ` · ${doubt.topic}`}
+                </p>
+                <div className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5">
+                  {doubt.question ? (
+                    <p className="text-sm leading-relaxed text-[#3A342E] line-clamp-3">{doubt.question}</p>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[#F7EFD9] dark:bg-[#362A0D] px-2 py-0.5 text-[10px] font-bold text-[#8A6A16]">
-                      <Check size={11} /> Answered
-                    </span>
+                    <p className="text-sm italic text-[#3A342E]/60">[Image-only doubt — open thread to view]</p>
                   )}
                 </div>
-              </div>
 
-              <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">{doubt.subject}</p>
-              <p className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5 text-sm leading-relaxed text-[#3A342E]">{doubt.question}</p>
+                {/* Attachment */}
+                {(doubt.attachmentUrl || doubt.attachmentDataUrl) && (
+                  <div className="mt-2">
+                    <AttachmentViewer
+                      attachments={[
+                        {
+                          url: doubt.attachmentDataUrl || doubt.attachmentUrl || '',
+                          name: doubt.attachmentName || 'Attachment',
+                        }
+                      ]}
+                      containerClassName="mt-0 gap-2"
+                    />
+                  </div>
+                )}
 
-              {doubt.attachmentName && (
-                <div className="mt-2">
-                  {doubt.attachmentDataUrl ? (
-                    doubt.attachmentDataUrl.startsWith('data:image/') ? (
-                      /* Image: show thumbnail + open in new tab */
-                      <div className="rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 overflow-hidden">
-                        <img
-                          src={doubt.attachmentDataUrl}
-                          alt={doubt.attachmentName}
-                          className="w-full max-h-48 object-contain bg-[#FBF7F0] dark:bg-[#2A2726] cursor-pointer"
-                          onClick={() => {
-                            const win = window.open();
-                            if (win) { win.document.write(`<img src="${doubt.attachmentDataUrl}" style="max-width:100%">`); }
-                          }}
-                          title="Click to open full size"
-                        />
-                        <div className="flex items-center justify-between px-3 py-1.5 bg-[#FBF7F0] dark:bg-[#2A2726] border-t border-[#EFE7D8] dark:border-[#F6F2EA]/10">
-                          <span className="text-[10px] text-[#8A7E6F] dark:text-[#A89F91] truncate">📎 {doubt.attachmentName}</span>
-                          <a
-                            href={doubt.attachmentDataUrl}
-                            download={doubt.attachmentName}
-                            className="text-[10px] font-semibold text-[#8A6A16] hover:text-[#4A0E1B] shrink-0 ml-2"
-                          >Download</a>
-                        </div>
-                      </div>
-                    ) : (
-                      /* Other file type: download button */
-                      <div className="flex items-center gap-2.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-2.5">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-[#3A342E] truncate">📎 {doubt.attachmentName}</p>
-                        </div>
-                        <a
-                          href={doubt.attachmentDataUrl}
-                          download={doubt.attachmentName}
-                          className="shrink-0 rounded-lg bg-[#8A6A16] px-2.5 py-1 text-[10px] font-bold text-white hover:bg-[#4A0E1B] transition-colors"
-                        >Open / Download</a>
-                      </div>
-                    )
-                  ) : (
-                    /* Legacy: no data URL stored */
-                    <span className="inline-flex items-center gap-1.5 text-xs text-[#8A7E6F] dark:text-[#A89F91]">
-                      📎 <span className="italic">{doubt.attachmentName}</span>
-                      <span className="text-[10px] text-[#C7C7CC]">(file not available)</span>
-                    </span>
-                  )}
-                </div>
-              )}
-
-              {/* Answer / reply zone */}
-              {doubt.replies && doubt.replies.length > 0 ? (
-                <div className="mt-4 space-y-4">
-                  {doubt.replies.map(reply => (
-                    <div key={reply.id} className="rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-4">
-                      <div className="flex items-start gap-2.5">
-                        <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response</p>
+                {/* Answer zone */}
+                {(() => {
+                  const firstProfReply = doubt.replies?.find(r => r.professor_id !== 'student');
+                  if (!firstProfReply) return null;
+                  return (
+                    <div className="mt-3 space-y-2">
+                      <div className="rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] px-3.5 py-3">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">
+                          Your response
+                        </p>
+                        <p className="mt-1 text-sm leading-relaxed text-[#3A342E] line-clamp-2">
+                          {firstProfReply.reply_text}
+                        </p>
+                        {(firstProfReply.image_urls?.length > 0 || firstProfReply.video_urls?.length > 0 || firstProfReply.audio_urls?.length > 0 || firstProfReply.attachment_urls?.length > 0) && (
+                          <div className="mt-2">
+                            <AttachmentViewer
+                              attachments={[
+                                ...(firstProfReply.image_urls || []).map(url => ({ url, type: 'image' as const })),
+                                ...(firstProfReply.video_urls || []).map(url => ({ url, type: 'video' as const })),
+                                ...(firstProfReply.audio_urls || []).map(url => ({ url, type: 'audio' as const })),
+                                ...(firstProfReply.attachment_urls || []).map(url => ({ url }))
+                              ]}
+                              containerClassName="mt-0 gap-2"
+                            />
                           </div>
-                          <div 
-                            className="mt-2 text-sm leading-relaxed text-[#3A342E] prose prose-sm max-w-none"
-                            dangerouslySetInnerHTML={{ __html: reply.reply_text || '' }} 
-                          />
-                          {/* Images */}
-                          {reply.image_urls && reply.image_urls.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-2">
-                              {reply.image_urls.map((url, i) => (
-                                <img key={i} src={url} alt="reply attachment" className="h-24 w-auto rounded-lg object-cover shadow-sm border border-[#EFE7D8] dark:border-[#F6F2EA]/10" />
-                              ))}
-                            </div>
-                          )}
-                          {/* Videos */}
-                          {reply.video_urls && reply.video_urls.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              {reply.video_urls.map((url, i) => (
-                                <video key={i} src={url} controls className="h-40 w-auto rounded-lg shadow-sm border border-[#EFE7D8] dark:border-[#F6F2EA]/10" />
-                              ))}
-                            </div>
-                          )}
-                          {/* Audio */}
-                          {reply.audio_urls && reply.audio_urls.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              {reply.audio_urls.map((url, i) => (
-                                <audio key={i} src={url} controls className="w-full max-w-xs" />
-                              ))}
-                            </div>
-                          )}
-                          {/* Docs */}
-                          {reply.attachment_urls && reply.attachment_urls.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              {reply.attachment_urls.map((url, i) => (
-                                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#8A6A16] hover:bg-[#FBF6EA] dark:bg-[#2A2726]">
-                                  <FileText size={14} /> Attachment {i + 1}
-                                </a>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </div>
-                  ))}
-                  <div className="mt-4 flex items-center justify-between border-t border-[#22201F]/15 dark:border-[#F6F2EA]/10 pt-4">
-                    <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
-                      <Plus size={13} /> Add another reply
-                    </button>
-                    <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                      <Trash2 size={13} /> Delete Ticket
-                    </button>
+                  );
+                })()}
+                {doubt.answerText && !doubt.replies?.length && (
+                  <div className="mt-3 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] px-3.5 py-3">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response (Legacy)</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#3A342E] line-clamp-2">{doubt.answerText}</p>
                   </div>
-                </div>
-              ) : doubt.answerText ? (
-                <div className="mt-4 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] dark:bg-[#2A2726] p-4">
-                  <div className="flex items-start gap-2.5">
-                    <CornerDownRight size={15} className="mt-0.5 shrink-0 text-[#8A6A16]" />
-                    <div className="flex-1">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response (Legacy)</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#3A342E]">{doubt.answerText}</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-[#22201F]/15 dark:border-[#F6F2EA]/10 pt-4">
-                    <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
-                      <Plus size={13} /> Add rich reply
-                    </button>
-                    <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                      <Trash2 size={13} /> Delete Ticket
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-4 flex items-center justify-between">
-                  <button className={PRIMARY_BTN} onClick={() => setReplyingDoubtId(doubt.id)}>
-                    <Send size={13} /> Answer query
-                  </button>
-                  <button className={ROW_BTN_DANGER} onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}>
-                    <Trash2 size={13} /> Delete
-                  </button>
-                </div>
-              )}
+                )}
 
-              {replyingDoubtId === doubt.id && (
-                <AnswerDoubtModal
-                  doubt={doubt}
-                  onClose={() => setReplyingDoubtId(null)}
-                  onPublish={async (data) => {
-                    await onReplyDoubt(doubt.id, data);
-                    setReplyingDoubtId(null);
-                  }}
-                />
-              )}
-            </PremiumCard>
-          ))}
+                {/* Action row */}
+                <div className="mt-4 flex items-center justify-between border-t border-[#22201F]/10 dark:border-[#F6F2EA]/10 pt-3">
+                  <div className="flex items-center gap-2">
+                    {/* View Details */}
+                    <button
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#D9C2A2] bg-white px-3 py-1.5 text-[11px] font-bold text-[#4A0E1B] hover:bg-[#F7F3EC] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4A0E1B]/20"
+                      onClick={() => openThread(doubt)}
+                      aria-label={`View details for: ${doubt.name}`}
+                    >
+                      <Eye size={12} aria-hidden="true" />
+                      View Details
+                    </button>
+                    {/* Answer */}
+                    {!profReplied && (
+                      <button
+                        className={PRIMARY_BTN}
+                        onClick={() => setReplyingDoubtId(doubt.id)}
+                        aria-label={`Reply to doubt from ${doubt.name}`}
+                      >
+                        <Send size={12} /> Answer
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    className={ROW_BTN_DANGER}
+                    onClick={() => askDelete('this ticket', () => onDeleteDoubt(doubt.id))}
+                    aria-label={`Delete doubt from ${doubt.name}`}
+                  >
+                    <Trash2 size={12} aria-hidden="true" />
+                    Delete
+                  </button>
+                </div>
+
+                {/* Answer modal inline */}
+                {replyingDoubtId === doubt.id && (
+                  <AnswerDoubtModal
+                    doubt={doubt}
+                    onClose={() => setReplyingDoubtId(null)}
+                    onPublish={async (data) => {
+                      await onReplyDoubt(doubt.id, data);
+                      setReplyingDoubtId(null);
+                    }}
+                  />
+                )}
+              </PremiumCard>
+            );
+          })}
         </div>
       )}
+
     </div>
   );
 }

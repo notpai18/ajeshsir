@@ -66,15 +66,8 @@ export interface DoubtsSectionProps {
   currentExamInfo: ExamInfo | undefined;
   faqs: FAQ[];
   doubts: Doubt[];
-  doubtForm: { name: string; email: string; subject: string; question: string };
-  setDoubtForm: (form: { name: string; email: string; subject: string; question: string }) => void;
-  doubtFile: File | null;
-  setDoubtFile: (f: File | null) => void;
-  doubtSubmitted: boolean;
-  doubtSubmitting: boolean;
-  handleDoubtSubmit: (e: React.FormEvent) => void;
-  expandedFaqId: string | null;
-  setExpandedFaqId: (id: string | null) => void;
+  notes: Note[];
+  onAddDoubt: (doubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt'>) => Promise<void>;
 }
 
 export interface ResourcesSectionProps {

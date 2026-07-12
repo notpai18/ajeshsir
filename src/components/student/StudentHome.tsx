@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { Atom, Compass, FileText, VideoIcon, BookOpen, FileSpreadsheet, ArrowRight, Bell } from 'lucide-react';
+import { PremiumCard } from '../PremiumCard';
 import type { ExamType, Announcement } from '../../types';
 
 interface StudentHomeProps {
@@ -76,32 +77,51 @@ export function StudentHome({
       </div>
 
       {/* Examination Grid */}
-      <div className="flex flex-wrap justify-center gap-6 mt-4">
-        {exams.map((exam) => (
-          <button
-            key={exam.id}
-            onClick={() => setSelectedExam(exam.id)}
-            className="group relative flex w-full max-w-[340px] flex-col overflow-hidden rounded-[24px] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-white dark:bg-[#22201F] p-6 text-left shadow-[0_4px_12px_rgba(34,32,31,0.04)] transition-all duration-[220ms] ease-out hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(34,32,31,0.12)] sm:w-[calc(50%-12px)] lg:w-[340px] h-[230px]"
-          >
-            <div className="absolute bottom-0 left-0 h-1 w-full scale-x-0 bg-[#C9A13B] transition-transform duration-[220ms] ease-out group-hover:scale-x-100 origin-left"></div>
-            
-            <div className="flex items-start justify-between w-full">
-              <span className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#22201F] dark:bg-[#1A1817] text-[#F6F2EA] transition-colors duration-[220ms] ease-out group-hover:bg-[#1A1817] dark:group-hover:bg-[#000000] group-hover:text-[#D9C2A2]">
-                {renderExamIcon(exam.icon)}
-              </span>
-              <span className="dash-mono rounded-full border border-[#7C2532] bg-[#4A0E1B] px-2.5 py-1 text-[10px] font-medium text-[#F7F3EC] shadow-sm">
-                {notes.filter(n => n.course === exam.id).length + videos.filter(v => v.course === exam.id).length + practiceSheets.filter(s => s.course === exam.id).length + pyqs.filter(p => p.course === exam.id).length} Resources
-              </span>
-            </div>
-            
-            <h3 className="dash-serif mt-5 text-xl font-bold text-[#22201F] dark:text-[#F6F2EA]">{exam.title}</h3>
-            <p className="mt-2 text-sm text-[#8A7E6F] dark:text-[#A89F91] line-clamp-1">{exam.description}</p>
-            
-            <div className="mt-auto pt-4 flex items-center text-[#4A0E1B] font-bold text-xs uppercase tracking-widest">
-              Explore <ArrowRight size={14} className="ml-1.5 transition-transform duration-[220ms] ease-out group-hover:translate-x-2" />
-            </div>
-          </button>
-        ))}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-4 items-stretch">
+        {exams.map((exam) => {
+          const resourceCount = notes.filter(n => n.course === exam.id).length + 
+                                videos.filter(v => v.course === exam.id).length + 
+                                practiceSheets.filter(s => s.course === exam.id).length + 
+                                pyqs.filter(p => p.course === exam.id).length;
+          
+          let tintClasses = { bg: 'bg-[#4A0E1B]/10 dark:bg-[#4A0E1B]/20', icon: 'text-[#4A0E1B] dark:text-[#E8D3D8]' };
+          if (exam.id === 'jee-main') tintClasses = { bg: 'bg-[#4A0E1B]/10 dark:bg-[#4A0E1B]/20', icon: 'text-[#4A0E1B] dark:text-[#E8D3D8]' };
+          if (exam.id === 'jee-advanced') tintClasses = { bg: 'bg-[#C0713D]/10 dark:bg-[#C0713D]/20', icon: 'text-[#C0713D] dark:text-[#F3D7C5]' };
+          if (exam.id === 'neet') tintClasses = { bg: 'bg-[#6B7D5A]/10 dark:bg-[#6B7D5A]/20', icon: 'text-[#6B7D5A] dark:text-[#D8E0D2]' };
+          if (exam.id === 'net') tintClasses = { bg: 'bg-[#A87B2E]/10 dark:bg-[#A87B2E]/20', icon: 'text-[#A87B2E] dark:text-[#EBE1CD]' };
+          if (exam.id === 'msc-entrance') tintClasses = { bg: 'bg-[#C9A13B]/10 dark:bg-[#C9A13B]/20', icon: 'text-[#C9A13B] dark:text-[#F7EFD9]' };
+
+          return (
+            <PremiumCard
+              key={exam.id}
+              interactive
+              onClick={() => setSelectedExam(exam.id)}
+              className="flex flex-col h-full !border-[#D9C2A2]/40 hover:!border-[#C9A13B]/60 dark:!border-[#362A0D]/50 dark:hover:!border-[#C9A13B]/40 group"
+              padding="large"
+            >
+              <div className="flex items-start justify-between w-full mb-5">
+                <PremiumCard.Icon className={`border-0 ${tintClasses.bg} ${tintClasses.icon} !transition-colors !duration-300 group-hover:bg-[#4A0E1B] group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-[#4A0E1B]`}>
+                  {renderExamIcon(exam.icon)}
+                </PremiumCard.Icon>
+                <span className="dash-mono rounded-full border border-[#7C2532] bg-[#4A0E1B] px-3 py-1.5 text-[11px] font-semibold text-[#F7F3EC] shadow-sm">
+                  {resourceCount} Resources
+                </span>
+              </div>
+              
+              <div className="flex-1 flex flex-col">
+                <PremiumCard.Title className="!font-bold !text-[22px] mb-2">{exam.title}</PremiumCard.Title>
+                <PremiumCard.Description className="line-clamp-2 !text-[#8A7E6F] dark:!text-[#A89F91]">
+                  {exam.description}
+                </PremiumCard.Description>
+              </div>
+              
+              <div className="mt-6 flex items-center w-max rounded-xl bg-[#F7F3EC] dark:bg-[#38151A]/40 px-4 py-2.5 text-[13px] font-bold text-[#4A0E1B] dark:text-[#E8D3D8] transition-colors duration-200 group-hover:bg-[#E8D3D8] dark:group-hover:bg-[#4A0E1B]/60">
+                Explore
+                <ArrowRight size={16} className="ml-2 transition-transform duration-250 ease-out group-hover:translate-x-1" />
+              </div>
+            </PremiumCard>
+          );
+        })}
       </div>
 
       {/* Global Announcements Section */}

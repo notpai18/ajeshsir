@@ -78,10 +78,17 @@ export interface PracticeSheet {
   fileSize: string;
 }
 
+/** 4-state explicit status model for doubts */
+export type DoubtStatus =
+  | 'submitted'       // just sent, not yet seen by professor
+  | 'awaiting'        // seen by prof, no reply yet
+  | 'answered'        // professor replied, student hasn't confirmed
+  | 'needs-followup'; // student replied again after an answer
+
 export interface DoubtReply {
   id: string;
   doubt_id: string;
-  professor_id: string;
+  professor_id: string;  // 'student' when the student replies
   reply_text?: string;
   image_urls: string[];
   video_urls: string[];
@@ -98,12 +105,16 @@ export interface Doubt {
   name: string;
   email: string;
   subject: string;
+  topic?: string;        // optional chapter/topic tag
   question: string;
   attachmentName?: string;
   attachmentUrl?: string;
   attachmentDataUrl?: string;
   answerText?: string;
+  /** Legacy binary field — kept for backward compat, derive status from it */
   isAnswered: boolean;
+  /** Explicit status — takes precedence over isAnswered when present */
+  status?: DoubtStatus;
   createdAt: string;
   replies?: DoubtReply[];
 }

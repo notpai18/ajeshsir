@@ -6,16 +6,24 @@ import { supabase } from '../lib/supabase';
 import type { Doubt, DoubtReply } from '../types';
 
 function rowToDoubt(row: any): Doubt {
+  // Derive status: prefer explicit DB status column; fall back to isAnswered boolean
+  const deriveStatus = (row: any): import('../types').DoubtStatus => {
+    if (row.status) return row.status;
+    return row.is_answered ? 'answered' : 'submitted';
+  };
+
   return {
     id: row.id,
     name: row.name,
     email: row.email,
     subject: row.subject,
+    topic: row.topic ?? undefined,
     question: row.question,
     attachmentName: row.attachment_name ?? undefined,
     attachmentUrl: row.attachment_url ?? undefined,
     answerText: row.answer_text ?? undefined,
     isAnswered: row.is_answered,
+    status: deriveStatus(row),
     createdAt: row.created_at,
     replies: row.doubt_replies ? row.doubt_replies.map((reply: any) => ({
       id: reply.id,
@@ -33,6 +41,7 @@ function rowToDoubt(row: any): Doubt {
     })).sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()) : []
   };
 }
+
 
 export async function fetchDoubts(): Promise<Doubt[]> {
   try {
@@ -64,19 +73,42 @@ export async function fetchDoubts(): Promise<Doubt[]> {
 export async function submitDoubt(
   doubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt' | 'replies'>
 ): Promise<Doubt> {
-  const { data, error } = await supabase
+  const payload: any = {
+    name: doubt.name,
+    email: doubt.email,
+    subject: doubt.subject,
+    topic: doubt.topic ?? null,
+    question: doubt.question,
+    attachment_name: doubt.attachmentName ?? null,
+    attachment_url: doubt.attachmentUrl ?? null,
+    is_answered: false,
+    status: doubt.status ?? 'submitted',
+  };
+
+  let { data, error } = await supabase
     .from('doubts')
-    .insert({
-      name: doubt.name,
-      email: doubt.email,
-      subject: doubt.subject,
-      question: doubt.question,
-      attachment_name: doubt.attachmentName ?? null,
-      attachment_url: doubt.attachmentUrl ?? null,
-      is_answered: false,
-    })
+    .insert(payload)
     .select()
     .single();
+
+  let retries = 0;
+  while (error && error.message.includes("Could not find the") && retries < 5) {
+    const match = error.message.match(/'([^']+)' column/);
+    if (match && match[1]) {
+      const missingColumn = match[1];
+      delete payload[missingColumn];
+      const retry = await supabase
+        .from('doubts')
+        .insert(payload)
+        .select()
+        .single();
+      data = retry.data;
+      error = retry.error;
+      retries++;
+    } else {
+      break;
+    }
+  }
 
   if (error) throw new Error(`submitDoubt: ${error.message}`);
   return rowToDoubt(data);
@@ -132,6 +164,35 @@ export async function replyToDoubt(
 export async function deleteDoubt(id: string): Promise<void> {
   const { error } = await supabase.from('doubts').delete().eq('id', id);
   if (error) throw new Error(`deleteDoubt: ${error.message}`);
+}
+
+/**
+ * Update the explicit status on a doubt (and keep isAnswered in sync).
+ */
+export async function updateDoubtStatus(
+  id: string,
+  status: import('../types').DoubtStatus,
+  hasReplies: boolean
+): Promise<void> {
+  const isAnswered = status === 'answered' || status === 'needs-followup';
+  const { error } = await supabase
+    .from('doubts')
+    .update({ status, is_answered: isAnswered } as any)
+    .eq('id', id);
+  if (error) throw new Error(`updateDoubtStatus: ${error.message}`);
+}
+
+/**
+ * Mark a doubt as seen by a professor — transitions 'submitted' → 'awaiting'.
+ * Safe to call even if already past 'submitted' (no-op in that case).
+ */
+export async function markDoubtSeen(id: string, currentStatus: import('../types').DoubtStatus): Promise<void> {
+  if (currentStatus !== 'submitted') return; // already progressed
+  const { error } = await supabase
+    .from('doubts')
+    .update({ status: 'awaiting' } as any)
+    .eq('id', id);
+  if (error) throw new Error(`markDoubtSeen: ${error.message}`);
 }
 
 /**

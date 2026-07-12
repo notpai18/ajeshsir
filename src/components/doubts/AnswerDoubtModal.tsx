@@ -4,6 +4,7 @@ import { X, Send, Save, AlertCircle, FileText } from 'lucide-react';
 import type { Doubt } from '../../types';
 import { RichTextEditor } from './RichTextEditor';
 import { MultimediaUploader, UploadedFile } from './MultimediaUploader';
+import { AttachmentViewer } from '../ui/AttachmentViewer';
 
 interface AnswerDoubtModalProps {
   doubt: Doubt;
@@ -34,14 +35,14 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
 
   const handleSaveDraft = () => {
     // In a real app, this might save to local storage or backend draft table
-    localStorage.setItem(`draft-reply-${doubt.id}`, JSON.stringify({ content, files }));
+    localStorage.setItem(`draft-answer-${doubt.id}`, JSON.stringify({ content, files }));
     setDraftSaved(true);
     setTimeout(() => setDraftSaved(false), 3000);
   };
 
   const handlePublish = async () => {
     if (!content.trim() && files.length === 0) {
-      setError('Please provide a reply or attach a file before publishing.');
+      setError('Please provide an answer or attach a file before publishing.');
       return;
     }
 
@@ -63,10 +64,10 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
       });
       
       // Clean up draft if exists
-      localStorage.removeItem(`draft-reply-${doubt.id}`);
+      localStorage.removeItem(`draft-answer-${doubt.id}`);
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to publish reply');
+      setError(err.message || 'Failed to publish answer');
       setIsPublishing(false);
     }
   };
@@ -94,7 +95,7 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
               {doubt.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dash-serif">Reply to Doubt</h3>
+              <h3 className="text-lg font-bold text-gray-900 dash-serif">Answer Doubt</h3>
               <p className="text-sm text-gray-500">{doubt.subject}</p>
             </div>
           </div>
@@ -114,21 +115,22 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
             <p className="text-gray-800 whitespace-pre-wrap">{doubt.question}</p>
             
             {doubt.attachmentUrl && (
-              <a 
-                href={doubt.attachmentUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 px-3 py-2 rounded-lg bg-[#F7F3EC] dark:bg-[#1A1817] text-[#4A0E1B] text-sm font-medium hover:bg-[#D9C2A2]/30 transition-colors"
-              >
-                <FileText className="w-4 h-4" />
-                {doubt.attachmentName || 'View Attachment'}
-              </a>
+              <div className="mt-4">
+                <AttachmentViewer
+                  attachments={[
+                    {
+                      url: doubt.attachmentDataUrl || doubt.attachmentUrl,
+                      name: doubt.attachmentName || 'Attachment',
+                    }
+                  ]}
+                />
+              </div>
             )}
           </div>
 
           {/* Editor Area */}
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Your Reply</label>
+            <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Your Answer</label>
             <RichTextEditor content={content} onChange={setContent} />
           </div>
 
@@ -180,7 +182,7 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
             ) : (
               <Send className="w-4 h-4" />
             )}
-            {isPublishing ? 'Publishing...' : 'Publish Reply'}
+            {isPublishing ? 'Publishing...' : 'Publish Answer'}
           </button>
         </div>
       </motion.div>

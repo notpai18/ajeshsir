@@ -21,7 +21,7 @@ export default function ContactPage() {
     }, 5000);
   };
   return (
-    <section className="relative bg-transparent pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden transition-colors duration-300">
+    <section className="relative bg-[#F7F3EC] dark:bg-[#1A1817] pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden transition-colors duration-300">
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#4A0E1B]/5 dark:bg-[#4A0E1B]/20 blur-[120px] rounded-full pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#C9A13B]/5 blur-[150px] rounded-full pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
 

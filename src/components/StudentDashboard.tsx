@@ -48,8 +48,6 @@ import {
 import { ExamType, ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt, FAQ, Announcement, AnnouncementCategory } from '../types';
 import { VideoWatchModal } from './VideoWatchModal';
 import { PDFViewer } from './pdf/PDFViewer';
-import { FileUpload } from './FileUpload';
-import { uploadDoubtAttachment } from '../services/doubtsService';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
 import type { PDFDocumentInfo } from './pdf/PDFContext';
 import { PremiumCard } from './PremiumCard';
@@ -84,7 +82,7 @@ interface StudentDashboardProps {
   doubts: Doubt[];
   faqs: FAQ[];
   announcements: Announcement[];
-  onAddDoubt: (doubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt'>) => void;
+  onAddDoubt: (doubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt'>) => Promise<void>;
   onIncrementNoteDownload: (id: string) => void;
 }
 
@@ -177,16 +175,8 @@ function StudentDashboardContent({
     });
   };
 
-  // Doubt Form State
-  const [doubtForm, setDoubtForm] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    question: ''
-  });
-  const [doubtFile, setDoubtFile] = useState<File | null>(null);
-  const [doubtSubmitted, setDoubtSubmitted] = useState(false);
-  const [doubtSubmitting, setDoubtSubmitting] = useState(false);
+  // Doubt Form State — REMOVED (DoubtsSection is now self-contained)
+  // onAddDoubt is passed directly as prop
 
   // Dynamic Lucide helper mapping for Exam Icons
   const renderExamIcon = (iconName?: string) => {
@@ -300,41 +290,7 @@ function StudentDashboardContent({
     });
   }, [practiceSheets, selectedExam, searchQuery, selectedSubject]);
 
-  // Handle Doubt Submission — uploads attachment to Supabase (main's flow), then submits
-  const handleDoubtSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!doubtForm.name || !doubtForm.email || !doubtForm.question || doubtSubmitting) return;
 
-    setDoubtSubmitting(true);
-    try {
-      let attachmentUrl: string | undefined;
-      let attachmentName: string | undefined;
-      if (doubtFile) {
-        const uploaded = await uploadDoubtAttachment(doubtFile);
-        attachmentUrl = uploaded.url;
-        attachmentName = uploaded.name;
-      }
-
-      onAddDoubt({
-        name: doubtForm.name,
-        email: doubtForm.email,
-        subject: doubtForm.subject || `${currentExamInfo?.title || ''} - General Query`,
-        question: doubtForm.question,
-        attachmentName,
-        attachmentUrl
-      });
-
-      setDoubtSubmitted(true);
-      setDoubtForm({ name: '', email: '', subject: '', question: '' });
-      setDoubtFile(null);
-      setTimeout(() => setDoubtSubmitted(false), 6000);
-    } catch (err) {
-      console.error('[StudentDashboard] doubt submit failed:', err);
-      alert('Could not submit your doubt right now. Please try again.');
-    } finally {
-      setDoubtSubmitting(false);
-    }
-  };
 
   const handleDownloadFile = (noteId: string, fileName: string) => {
     onIncrementNoteDownload(noteId);
@@ -548,17 +504,11 @@ function StudentDashboardContent({
             currentExamInfo={currentExamInfo}
             doubts={doubts}
             faqs={faqs}
-            doubtForm={doubtForm}
-            setDoubtForm={setDoubtForm}
-            doubtFile={doubtFile}
-            setDoubtFile={setDoubtFile}
-            doubtSubmitted={doubtSubmitted}
-            doubtSubmitting={doubtSubmitting}
-            handleDoubtSubmit={handleDoubtSubmit}
-            expandedFaqId={expandedFaqId}
-            setExpandedFaqId={setExpandedFaqId}
+            notes={notes}
+            onAddDoubt={onAddDoubt}
           />
         )}
+
 
         {/* ================= RESOURCES SECTION ================= */}
         {selectedExam && activeCategory === 'resources' && (

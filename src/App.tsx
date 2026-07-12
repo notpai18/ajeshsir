@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { AppNew } from './AppNew';
 import { PortalDataProvider } from './context/PortalDataContext';
+import { ImageViewerProvider } from './components/image-viewer';
 
 export default function App() {
   const [theme, setTheme] = useState<'current' | 'dark'>('current');
@@ -21,9 +22,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <PortalDataProvider>
-        <AppNew theme={theme} toggleTheme={toggleTheme} />
+        <ImageViewerProvider>
+          <AppNew theme={theme} toggleTheme={toggleTheme} />
+        </ImageViewerProvider>
       </PortalDataProvider>
     </BrowserRouter>
   );
 }
-
