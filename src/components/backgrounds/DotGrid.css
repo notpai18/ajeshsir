@@ -1,9 +1,10 @@
 .dot-grid-wrapper {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
-  overflow: hidden;
-  pointer-events: auto; /* Catch events on wrapper */
+  pointer-events: none; /* Let all clicks pass through to content underneath, track mouse via window */
 }
 
 .dot-grid-canvas {

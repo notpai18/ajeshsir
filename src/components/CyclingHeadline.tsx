@@ -38,8 +38,8 @@ export function CyclingHeadline() {
   const currentColor = COLORS[index % COLORS.length];
 
   return (
-    <section className="w-full bg-[#F7F3EC] dark:bg-[#1A1817] py-12 md:py-16 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+    <section className="w-full py-12 md:py-16 overflow-hidden">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center bg-[#F7F3EC] dark:bg-[#1A1817] p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
         <h2 className="dash-serif text-3xl md:text-5xl font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] flex flex-col items-center gap-2">
           <span>Built for Every</span>
           <div className="relative flex items-center justify-center min-h-[48px] md:min-h-[72px] min-w-[320px] md:min-w-[500px]">

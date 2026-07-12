@@ -226,7 +226,8 @@ export const DotGrid: React.FC<DotProps> = ({
     if (!wrapper || reducedMotion) return;
 
     const handlePointerMove = (e: MouseEvent | TouchEvent) => {
-      const rect = wrapper.getBoundingClientRect();
+      if (!canvasRef.current) return;
+      const rect = canvasRef.current.getBoundingClientRect();
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
       
@@ -242,7 +243,8 @@ export const DotGrid: React.FC<DotProps> = ({
     };
 
     const handleClick = (e: MouseEvent) => {
-      const rect = wrapper.getBoundingClientRect();
+      if (!canvasRef.current) return;
+      const rect = canvasRef.current.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
 
@@ -274,18 +276,18 @@ export const DotGrid: React.FC<DotProps> = ({
       });
     };
 
-    wrapper.addEventListener('mousemove', handlePointerMove);
-    wrapper.addEventListener('mouseleave', handlePointerLeave);
-    wrapper.addEventListener('touchmove', handlePointerMove);
-    wrapper.addEventListener('touchend', handlePointerLeave);
-    wrapper.addEventListener('click', handleClick);
+    window.addEventListener('mousemove', handlePointerMove);
+    document.addEventListener('mouseleave', handlePointerLeave);
+    window.addEventListener('touchmove', handlePointerMove);
+    window.addEventListener('touchend', handlePointerLeave);
+    window.addEventListener('click', handleClick);
 
     return () => {
-      wrapper.removeEventListener('mousemove', handlePointerMove);
-      wrapper.removeEventListener('mouseleave', handlePointerLeave);
-      wrapper.removeEventListener('touchmove', handlePointerMove);
-      wrapper.removeEventListener('touchend', handlePointerLeave);
-      wrapper.removeEventListener('click', handleClick);
+      window.removeEventListener('mousemove', handlePointerMove);
+      document.removeEventListener('mouseleave', handlePointerLeave);
+      window.removeEventListener('touchmove', handlePointerMove);
+      window.removeEventListener('touchend', handlePointerLeave);
+      window.removeEventListener('click', handleClick);
     };
   }, [shockRadius, shockStrength, returnDuration, reducedMotion]);
 
