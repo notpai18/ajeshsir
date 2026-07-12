@@ -795,9 +795,17 @@ const resetDemoData = () => {
               <PremiumCard padding="small">
                 {/* Profile */}
                 <div className="mb-3 flex items-center gap-3 rounded-xl bg-gradient-to-br from-[#4A0E1B]/8 to-[#C9A13B]/8 border border-[#22201F]/20 p-3">
-                  <div className="dash-serif flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#4A0E1B] text-base font-semibold text-[#D9C2A2]">
-                    {initials(profile.name)}
-                  </div>
+                  {profile.name === 'Ajesh Joe' ? (
+                    <img 
+                      src="/ajesh-joe.png" 
+                      alt="Ajesh Joe" 
+                      className="h-11 w-11 shrink-0 rounded-xl object-cover object-top border border-[#4A0E1B]/20 dark:border-[#F6F2EA]/10 shadow-sm"
+                    />
+                  ) : (
+                    <div className="dash-serif flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#4A0E1B] text-base font-semibold text-[#D9C2A2]">
+                      {initials(profile.name)}
+                    </div>
+                  )}
                   <div className="min-w-0">
                     <h3 className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{profile.name}</h3>
                     <span className="text-[11px] font-medium text-[#22201F] dark:text-[#F6F2EA]/60">{profile.role}</span>
