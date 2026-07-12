@@ -791,8 +791,8 @@ const resetDemoData = () => {
 
         <div className="grid gap-7 md:grid-cols-12">
           {/* ============ SIDEBAR ============ */}
-          <aside className="lg:col-span-3">
-            <div className="lg:sticky lg:top-24">
+          <aside className="md:col-span-4 lg:col-span-3">
+            <div className="md:sticky md:top-24 lg:top-28">
               <PremiumCard padding="small">
                 {/* Profile */}
                 <div className="mb-3 flex items-center gap-3 rounded-xl bg-gradient-to-br from-[#4A0E1B]/8 to-[#C9A13B]/8 border border-[#22201F]/20 p-3">
@@ -846,7 +846,7 @@ const resetDemoData = () => {
           </aside>
 
           {/* ============ MAIN ============ */}
-          <main className="lg:col-span-9">
+          <main className="md:col-span-8 lg:col-span-9">
             
             {/* ---------- OVERVIEW ---------- */}
             {activeTab === 'overview' && (

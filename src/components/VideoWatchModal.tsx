@@ -24,7 +24,6 @@ import type { Video } from '../types';
 import { VideoPlayer } from './VideoPlayer';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
 import { PremiumCard } from './PremiumCard';
-import { PremiumBreadcrumb } from './PremiumBreadcrumb';
 // ─── Design constants (from design.md) ───────────────────────────────────────
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
 const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60';
@@ -173,17 +172,7 @@ export function VideoWatchModal({
         {/* ── Header ─────────────────────────────────────────────────────── */}
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[#22201F]/20 bg-white dark:bg-[#22201F] px-4 py-3 sm:px-5">
           <div className="flex-1 min-w-0">
-            <PremiumBreadcrumb
-              items={[
-                { id: 'lib', label: 'Library', onClick: onClose },
-                { id: 'exam', label: examLabel },
-                { id: 'cat', label: 'Video Lectures' },
-                { id: 'vid', label: video.title }
-              ]}
-              backLabel="Back"
-              onBack={onClose}
-              className="m-0"
-            />
+
           </div>
           {/* Controls */}
           <div className="flex shrink-0 items-center gap-1">
