@@ -416,9 +416,6 @@ function StudentDashboardContent({
         {/* ================= STEP 2: CATEGORY DASHBOARD ================= */}
         {selectedExam && !activeCategory && (
           <div>
-            <button onClick={handleBackToExams} className={`${BACK_BTN} mb-4`} id="back-to-exams-btn">
-              <ArrowLeft size={14} /> Back to examinations
-            </button>
 
             <div className="mb-10 rounded-[32px] bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-8 shadow-[0_8px_30px_rgba(34,32,31,0.15)] relative overflow-hidden">
               {/* Decorative background shapes */}
