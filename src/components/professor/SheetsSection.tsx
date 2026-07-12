@@ -38,7 +38,6 @@ interface SheetsSectionProps {
   askDelete: (what: string, onConfirm: () => void) => void;
   onDeletePracticeSheet: (id: string) => void;
   openPDF: (info: PDFDocumentInfo) => void;
-  setPdfDoc: (info: PDFDocumentInfo | null) => void;
 }
 
 export function SheetsSection({
@@ -48,8 +47,7 @@ export function SheetsSection({
   openEditSheet,
   askDelete,
   onDeletePracticeSheet,
-  openPDF,
-  setPdfDoc
+  openPDF
 }: SheetsSectionProps) {
   const [query, setQuery] = useState('');
   const [examFilter, setExamFilter] = useState('all');
@@ -109,7 +107,7 @@ export function SheetsSection({
               <td className="px-5 py-3.5 text-sm text-[#8A7E6F] dark:text-[#A89F91]">{s.chapter}</td>
               <td className="px-5 py-3.5">
                 <RowActions
-                  onView={s.fileUrl ? () => openPDF({ title: s.title, fileUrl: s.fileUrl, fileSize: s.fileSize, entityType: 'sheet', entityId: s.id, isProfessor: true, onDelete: () => { askDelete('this sheet', () => onDeletePracticeSheet(s.id)); setPdfDoc(null); } }) : undefined}
+                  onView={s.fileUrl ? () => openPDF({ title: s.title, fileUrl: s.fileUrl, fileSize: s.fileSize, entityType: 'sheet', entityId: s.id, isProfessor: true, onDelete: () => { askDelete('this sheet', () => onDeletePracticeSheet(s.id)); } }) : undefined}
                   onEdit={() => openEditSheet(s)}
                   onDelete={() => askDelete('this sheet', () => onDeletePracticeSheet(s.id))}
                 />

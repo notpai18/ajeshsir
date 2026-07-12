@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useImageViewer } from '../image-viewer';
 import { PDFViewer } from '../pdf/PDFViewer';
 import { FileText, Download, Play, Music } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface Attachment {
   url: string;
@@ -25,7 +26,7 @@ function guessAttachmentType(url: string, name?: string): Attachment['type'] {
 
 export function AttachmentViewer({ attachments, containerClassName = "mt-4" }: { attachments: Attachment[], containerClassName?: string }) {
   const { openViewer } = useImageViewer();
-  const [activePdfUrl, setActivePdfUrl] = useState<{ url: string, name: string } | null>(null);
+  const navigate = useNavigate();
 
   if (!attachments || attachments.length === 0) return null;
 
@@ -76,7 +77,7 @@ export function AttachmentViewer({ attachments, containerClassName = "mt-4" }: {
                 <p className="text-[13px] text-gray-500">PDF Document</p>
               </div>
               <button
-                onClick={() => setActivePdfUrl({ url: att.url, name: att.name || 'Document.pdf' })}
+                onClick={() => navigate(`/viewer/${encodeURIComponent(att.name || 'document')}`, { state: { url: att.url, name: att.name || 'Document.pdf' } })}
                 className="px-4 py-2 bg-[#4A0E1B] text-white text-sm font-bold rounded-xl hover:bg-[#7C2532] transition-colors shrink-0"
               >
                 Preview
@@ -130,16 +131,6 @@ export function AttachmentViewer({ attachments, containerClassName = "mt-4" }: {
         );
       })}
 
-      {activePdfUrl && (
-        <PDFViewer
-          docInfo={{
-            title: activePdfUrl.name,
-            fileUrl: activePdfUrl.url,
-            entityType: 'note'
-          }}
-          onClose={() => setActivePdfUrl(null)}
-        />
-      )}
     </div>
   );
 }

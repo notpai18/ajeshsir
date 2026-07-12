@@ -67,6 +67,18 @@ export function AppNew({ theme, toggleTheme }: { theme: string; toggleTheme: () 
   };
 
   // ─── Main Render ──────────────────────────────────────────────────────────
+  if (location.pathname.startsWith('/viewer')) {
+    return (
+      <Routes>
+        <Route path="/viewer/:documentId" element={
+          <React.Suspense fallback={<div />}>
+            {React.createElement(React.lazy(() => import('./pages/PDFViewerPage')))}
+          </React.Suspense>
+        } />
+      </Routes>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F3EC] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA] transition-colors duration-300 relative">
       

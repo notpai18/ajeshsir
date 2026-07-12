@@ -93,19 +93,59 @@ export function PDFViewer({ docInfo, onClose }: PDFViewerProps) {
 function ModalShell({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
     <div
-      className="fixed inset-0 z-[100] flex flex-col bg-[#22201F]/80 backdrop-blur-[2px]"
+      className="fixed inset-0 z-[9999]"
       role="dialog"
       aria-modal="true"
       aria-label="PDF Viewer"
     >
-      {/* Backdrop click to close */}
+      <style>{`
+        @keyframes pdfBackdropFade {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes pdfViewerEnter {
+          from { transform: translateY(20px) scale(0.98); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .pdf-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.75);
+          backdrop-filter: blur(18px);
+          animation: pdfBackdropFade 250ms ease-out forwards;
+          margin: 0;
+          padding: 0;
+        }
+        .pdf-viewer-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100vw;
+          height: 100vh;
+          max-width: none;
+          max-height: none;
+          margin: 0;
+          border-radius: 0;
+          padding: 0;
+          animation: pdfViewerEnter 250ms ease-out forwards;
+          display: flex;
+          flex-direction: column;
+          background: transparent;
+        }
+      `}</style>
+      
+      {/* Backdrop */}
       <button
-        className="absolute inset-0 z-0 cursor-default"
+        className="pdf-backdrop cursor-default border-none"
         aria-hidden="true"
         onClick={onClose}
         tabIndex={-1}
       />
-      <div className="relative z-10 flex h-full flex-col overflow-hidden rounded-none bg-white dark:bg-[#22201F] sm:m-4 sm:rounded-card border border-[#22201F]/20 shadow-soft-xl">
+
+      {/* Modal Container */}
+      <div className="pdf-viewer-modal bg-white dark:bg-[#22201F] overflow-hidden pointer-events-auto">
         {children}
       </div>
     </div>

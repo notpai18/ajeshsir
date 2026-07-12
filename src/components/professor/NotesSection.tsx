@@ -41,7 +41,6 @@ interface NotesSectionProps {
   askDelete: (what: string, onConfirm: () => void) => void;
   onDeleteNote: (id: string) => void;
   openPDF: (info: PDFDocumentInfo) => void;
-  setPdfDoc: (info: PDFDocumentInfo | null) => void;
 }
 
 export function NotesSection({
@@ -51,8 +50,7 @@ export function NotesSection({
   openEditNote,
   askDelete,
   onDeleteNote,
-  openPDF,
-  setPdfDoc
+  openPDF
 }: NotesSectionProps) {
   const [query, setQuery] = useState('');
   const [examFilter, setExamFilter] = useState('all');
@@ -120,7 +118,7 @@ export function NotesSection({
               </td>
               <td className="px-5 py-3.5">
                 <RowActions
-                  onView={n.fileUrl ? () => openPDF({ title: n.title, fileUrl: n.fileUrl, fileSize: n.fileSize, entityType: 'note', entityId: n.id, isProfessor: true, downloadCount: n.downloadCount, onDelete: () => { askDelete('this note', () => onDeleteNote(n.id)); setPdfDoc(null); } }) : undefined}
+                  onView={n.fileUrl ? () => openPDF({ title: n.title, fileUrl: n.fileUrl, fileSize: n.fileSize, entityType: 'note', entityId: n.id, isProfessor: true, downloadCount: n.downloadCount, onDelete: () => { askDelete('this note', () => onDeleteNote(n.id)); } }) : undefined}
                   onEdit={() => openEditNote(n)}
                   onDelete={() => askDelete('this note', () => onDeleteNote(n.id))}
                 />

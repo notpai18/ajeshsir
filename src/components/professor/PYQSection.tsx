@@ -47,7 +47,6 @@ interface PYQSectionProps {
   askDelete: (what: string, onConfirm: () => void) => void;
   onDeletePyq: (id: string) => void;
   openPDF: (info: PDFDocumentInfo) => void;
-  setPdfDoc: (info: PDFDocumentInfo | null) => void;
 }
 
 export function PYQSection({
@@ -57,8 +56,7 @@ export function PYQSection({
   openEditPyq,
   askDelete,
   onDeletePyq,
-  openPDF,
-  setPdfDoc
+  openPDF
 }: PYQSectionProps) {
   const [query, setQuery] = useState('');
   const [examFilter, setExamFilter] = useState('all');
@@ -133,7 +131,8 @@ export function PYQSection({
               </td>
               <td className="px-5 py-3.5">
                 <RowActions
-                  onView={p.questionUrl ? () => openPDF({ title: `${p.chapter} · ${p.year} (Question)`, fileUrl: p.questionUrl, fileSize: p.questionSize, entityType: 'pyq', entityId: p.id, isProfessor: true, onDelete: () => { askDelete('this PYQ', () => onDeletePyq(p.id)); setPdfDoc(null); } }) : undefined}
+                  onView={p.questionUrl ? () => openPDF({ title: `${p.chapter} · ${p.year} (Question)`, fileUrl: p.questionUrl, fileSize: p.questionSize, entityType: 'pyq', entityId: p.id, isProfessor: true, onDelete: () => { askDelete('this PYQ', () => onDeletePyq(p.id)); } }) : undefined}
+                  onViewSecondary={p.solutionUrl ? () => openPDF({ title: `${p.chapter} · ${p.year} (Solution)`, fileUrl: p.solutionUrl, fileSize: p.solutionSize, entityType: 'pyq', entityId: p.id, isProfessor: true, onDelete: () => { askDelete('this PYQ', () => onDeletePyq(p.id)); } }) : undefined}
                   onEdit={() => openEditPyq(p)}
                   onDelete={() => askDelete('this PYQ', () => onDeletePyq(p.id))}
                 />

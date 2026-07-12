@@ -81,6 +81,11 @@ function getRelativeTime(dateString: string): string {
   return `${Math.floor(diffHrs / 24)}d ago`;
 }
 
+function stripHtml(html: string) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
+}
+
 // ─── Tab config ───────────────────────────────────────────────────────────────
 
 type ProfTab = 'unanswered' | 'answered-today' | 'by-subject' | 'all';
@@ -228,6 +233,20 @@ export function DoubtsSection({
             const profReplied = hasProfessorReply(doubt);
             const borderColor = !profReplied ? waitTimeBorderColor(doubt.createdAt) : '#D9C2A2';
 
+            let parsedTitle = '';
+            let parsedDesc = '';
+            const rawQ = doubt.question || '';
+            const strongMatch = rawQ.match(/<strong>(.*?)<\/strong>(?:<br\s*\/?>)?(.*)/is);
+            if (strongMatch) {
+              parsedTitle = stripHtml(strongMatch[1]).trim();
+              parsedDesc = stripHtml(strongMatch[2]).trim();
+            } else {
+              parsedTitle = stripHtml(rawQ).trim();
+            }
+            if (doubt.attachmentName && !parsedTitle) {
+              parsedTitle = `Attachment: ${doubt.attachmentName}`;
+            }
+
             return (
               <PremiumCard
                 key={doubt.id}
@@ -258,11 +277,14 @@ export function DoubtsSection({
 
                 {/* Subject + question */}
                 <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#8A6A16]">
-                  {doubt.subject}{doubt.topic && ` · ${doubt.topic}`}
+                  {doubt.subject}
                 </p>
                 <div className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5">
-                  {doubt.question ? (
-                    <p className="text-sm leading-relaxed text-[#3A342E] line-clamp-3">{doubt.question}</p>
+                  {parsedTitle ? (
+                    <p className="text-sm leading-relaxed text-[#3A342E] line-clamp-3">
+                      <span className="font-bold">{parsedTitle}</span>
+                      {parsedDesc && <span className="font-normal text-[#3A342E]/80"> : {parsedDesc}</span>}
+                    </p>
                   ) : (
                     <p className="text-sm italic text-[#3A342E]/60">[Image-only doubt — open thread to view]</p>
                   )}
