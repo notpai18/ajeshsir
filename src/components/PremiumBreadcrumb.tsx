@@ -35,11 +35,11 @@ export function PremiumBreadcrumb({
             <>
               <button
               onClick={onBack}
-              className="group flex items-center gap-1 h-[24px] px-2.5 rounded-full bg-white/80 backdrop-blur-sm border border-[#E5E0D8] shadow-sm transition-all duration-250 ease-out hover:-translate-x-[2px] hover:border-[#D4AF37] hover:shadow-md cursor-pointer mr-2"
+              className="group flex items-center gap-1 h-[24px] px-2.5 rounded-full bg-[#22201F] border border-[#22201F] shadow-[0_2px_8px_rgba(34,32,31,0.25)] transition-all duration-250 ease-out hover:-translate-x-[2px] hover:bg-[#3A342E] hover:border-[#3A342E] hover:shadow-md cursor-pointer mr-2"
               style={{ transform: 'translateZ(0)' }} // GPU acceleration
             >
-              <ArrowLeft size={12} strokeWidth={2} className="text-[#333333] transition-transform group-hover:-translate-x-1" />
-              <span className="text-[11px] font-semibold tracking-wide text-[#555555] group-hover:text-[#333333]">
+              <ArrowLeft size={12} strokeWidth={2} className="text-white transition-transform group-hover:-translate-x-1" />
+              <span className="text-[11px] font-semibold tracking-wide text-white">
                 {backLabel}
               </span>
             </button>
