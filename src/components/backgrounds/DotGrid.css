@@ -1,0 +1,14 @@
+.dot-grid-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: auto; /* Catch events on wrapper */
+}
+
+.dot-grid-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through canvas itself if needed, though wrapper catches them */
+}

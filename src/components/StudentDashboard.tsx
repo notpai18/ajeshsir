@@ -401,26 +401,15 @@ function StudentDashboardContent({
 
         {/* ================= BREADCRUMBS ================= */}
         {(selectedExam || activeCategory) && (
-          <nav className="mb-6 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#8A7E6F] dark:text-[#A89F91]">
-            <button onClick={handleBackToExams} className="transition-colors hover:text-[#4A0E1B]">Library</button>
-            {selectedExam && (
-              <>
-                <ChevronRight size={13} className="text-[#C0A98B]" />
-                <button
-                  onClick={handleBackToCategories}
-                  className={`transition-colors hover:text-[#4A0E1B] ${!activeCategory ? 'text-[#4A0E1B]' : ''}`}
-                >
-                  {currentExamInfo?.title}
-                </button>
-              </>
-            )}
-            {activeCategory && (
-              <>
-                <ChevronRight size={13} className="text-[#C0A98B]" />
-                <span className="capitalize text-[#4A0E1B]">{activeCategory}</span>
-              </>
-            )}
-          </nav>
+          <PremiumBreadcrumb
+            backLabel={activeCategory ? 'Back to categories' : 'Back to library'}
+            onBack={activeCategory ? handleBackToCategories : handleBackToExams}
+            items={[
+              { id: 'lib', label: 'Library', onClick: handleBackToExams },
+              ...(selectedExam ? [{ id: 'exam', label: currentExamInfo?.title || selectedExam, onClick: handleBackToCategories }] : []),
+              ...(activeCategory ? [{ id: 'cat', label: activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1) }] : [])
+            ]}
+          />
         )}
 
 
@@ -557,6 +546,7 @@ function StudentDashboardContent({
         {selectedExam && activeCategory === 'doubts' && (
           <DoubtsSection
             currentExamInfo={currentExamInfo}
+            doubts={doubts}
             faqs={faqs}
             doubtForm={doubtForm}
             setDoubtForm={setDoubtForm}

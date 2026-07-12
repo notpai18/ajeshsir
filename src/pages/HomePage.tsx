@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, BookOpen, Quote, Lightbulb } from 'lucide-react';
 import { PremiumCard } from '../components/PremiumCard';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CyclingHeadline } from '../components/CyclingHeadline';
+import DotGrid from '../components/backgrounds/DotGrid';
 
 const facts = [
   "Francium is the rarest naturally occurring element; there is only about 20-30 grams of it in the entire Earth's crust at any time.",
@@ -85,7 +87,19 @@ interface HeroProps {
 
 export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
   return (
+    <>
     <section className="relative overflow-hidden bg-[#F7F3EC] dark:bg-[#1A1817] py-16 md:py-24">
+      <DotGrid
+        dotSize={4}
+        gap={24}
+        baseColor="#D9C2A2"
+        activeColor="#4A0E1B"
+        proximity={100}
+        shockRadius={200}
+        shockStrength={3}
+        resistance={750}
+        returnDuration={1.2}
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center lg:items-stretch gap-12 lg:grid-cols-12 lg:gap-8">
@@ -157,5 +171,8 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
 
       </div>
     </section>
+    
+    <CyclingHeadline />
+    </>
   );
 }

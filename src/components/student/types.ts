@@ -65,6 +65,7 @@ export interface SheetsSectionProps extends SectionBaseProps {
 export interface DoubtsSectionProps {
   currentExamInfo: ExamInfo | undefined;
   faqs: FAQ[];
+  doubts: Doubt[];
   doubtForm: { name: string; email: string; subject: string; question: string };
   setDoubtForm: (form: { name: string; email: string; subject: string; question: string }) => void;
   doubtFile: File | null;

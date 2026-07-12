@@ -1,20 +1,13 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- *
- * SheetsSection — Practice sheet cards with search/filter.
- * Extracted from StudentDashboardContent (StudentDashboard.tsx).
- */
-
-import React from 'react';
-import { Search, FileText, Eye, Download } from 'lucide-react';
+import React, { useState } from 'react';
+import { Download, Eye, FileText } from 'lucide-react';
 import { EmptyState } from '../ui/EmptyState';
-import { SubjectBadge } from '../ui/SubjectBadge';
-import { CARD, INPUT, MICRO, PILL_SOFT, PILL_GHOST } from '../ui/tokens';
+import { PremiumCard } from '../PremiumCard';
+import { ResourceHero, ResourceToolbar } from '../resources/ResourcePageLayout';
 import type { SheetsSectionProps } from './types';
 
 export function SheetsSection({
   currentExamInfo,
+  selectedExam,
   availableSubjects,
   filteredSheets,
   searchQuery, setSearchQuery,
@@ -22,55 +15,98 @@ export function SheetsSection({
   setActivePdfViewer,
   triggerDownload,
 }: SheetsSectionProps) {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortMode, setSortMode] = useState<string>('recent');
+
+  const sortedSheets = [...filteredSheets].sort((a, b) => {
+    if (sortMode === 'alphabetical') return a.title.localeCompare(b.title);
+    return 0; // fallback to default order for 'recent'
+  });
+
   return (
-    <div>
-      <div className="mt-4 mb-6">
-        <p className={MICRO}>{currentExamInfo?.title} · Practice sheets</p>
-        <h2 className="dash-serif mt-1 text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Practice sheets</h2>
-      </div>
+    <div key={selectedExam} className="animate-[fadeInUp_0.4s_ease-out_forwards]">
+      <ResourceHero
+        themeGradient={currentExamInfo?.themeGradient || 'from-[#4A0E1B] to-[#7C2532]'}
+        title="Practice Sheets"
+        description="Chapter drills graded by complexity to build proficiency."
+        totalLabel="Total Sheets"
+        totalCount={filteredSheets.length}
+      />
 
-      <div className="mb-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]" />
-          <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by title or chapter…" className={`${INPUT} pl-10`} />
-        </div>
-        <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} className={`${INPUT} sm:w-52`}>
-          {availableSubjects.map((subject) => (
-            <option key={subject} value={subject}>{subject === 'All' ? 'All' : subject}</option>
-          ))}
-        </select>
-      </div>
+      <ResourceToolbar
+        tabs={currentExamInfo?.filters || availableSubjects}
+        activeTab={selectedSubject}
+        onTabChange={setSelectedSubject}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search sheets..."
+        sortOptions={[
+          { id: 'recent', label: 'Most Recent' },
+          { id: 'alphabetical', label: 'Alphabetical A-Z' },
+        ]}
+        activeSort={sortMode}
+        onSortChange={setSortMode}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
 
-      {filteredSheets.length === 0 ? (
+      {sortedSheets.length === 0 ? (
         <EmptyState label="No practice drills match your search or subject filter." />
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2">
-          {filteredSheets.map((sheet) => (
-            <div key={sheet.id} className={`${CARD} flex flex-col p-5`}>
-              <div className="flex items-start justify-between gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
-                  <FileText size={18} />
-                </span>
-                <div className="flex flex-col items-end gap-1">
-                  <span className="rounded-full border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-2.5 py-1 text-[10px] font-bold text-[#8A7E6F] dark:text-[#A89F91]">{sheet.chapter}</span>
-                  <SubjectBadge subject={sheet.subject} />
+        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+          {sortedSheets.map((sheet, idx) => {
+            let customStyles = { bg: '#FDECEA', text: '#C0392B' };
+
+            return (
+              <PremiumCard key={sheet.id} interactive padding="medium" className="flex flex-col h-full">
+                <div className="flex items-start gap-4">
+                  <PremiumCard.Icon className="bg-opacity-20" style={{ backgroundColor: customStyles.bg, color: customStyles.text }}>
+                    <FileText size={20} />
+                  </PremiumCard.Icon>
+                  <div className="min-w-0 flex-1 pt-0.5">
+                    <div className="mb-[12px] flex flex-wrap items-center gap-[8px] justify-end absolute top-4 right-4">
+                      <span className="inline-flex items-center rounded-full bg-[#F4F4F4] dark:bg-[#383330] px-[10px] py-[4px] text-[11px] font-bold text-[#4A4A4A] dark:text-[#C7BCAD]">
+                        {sheet.chapter}
+                      </span>
+                      <span className="inline-flex items-center rounded-full bg-[#F4F4F4] dark:bg-[#383330] px-[10px] py-[4px] text-[11px] font-bold text-[#4A4A4A] dark:text-[#C7BCAD]">
+                        {sheet.subject}
+                      </span>
+                    </div>
+                    <PremiumCard.Title className="mt-2 text-[15px] pr-20 line-clamp-2">
+                      {sheet.title}
+                    </PremiumCard.Title>
+                  </div>
                 </div>
-              </div>
-              <h4 className="mt-4 text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{sheet.title}</h4>
-              <p className="mt-1 text-xs leading-relaxed text-[#8A7E6F] dark:text-[#A89F91]">{sheet.description}</p>
-              <div className="mt-4 flex items-center justify-between border-t border-[#F2ECDF] dark:border-[#383330] pt-4">
-                <span className="dash-mono text-[11px] text-[#A79A88]">File size · {sheet.fileSize}</span>
-                <div className="flex gap-1.5">
-                  <button onClick={() => setActivePdfViewer({ title: sheet.title, fileUrl: sheet.fileUrl })} className={PILL_GHOST}>
-                    <Eye size={12} /> View
-                  </button>
-                  <button onClick={() => triggerDownload(sheet.fileUrl)} className={PILL_SOFT}>
-                    <Download size={12} /> Download
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+
+                <PremiumCard.Description className="mt-[12px] line-clamp-2 text-[13px]">
+                  {sheet.description}
+                </PremiumCard.Description>
+
+                <PremiumCard.Footer className="mt-auto">
+                  <div className="flex items-center justify-between w-full">
+                    <label className="flex items-center gap-2 cursor-pointer group/check">
+                      <input
+                        type="checkbox"
+                        className="h-[14px] w-[14px] rounded border-[#C0A98B] text-[#5A2436] focus:ring-[#5A2436]/30 cursor-pointer"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <span className="text-[11px] font-bold uppercase tracking-[0.05em] text-[#8B8B8B] group-hover/check:text-[#4A4A4A] transition-colors">
+                        MARK SOLVED
+                      </span>
+                    </label>
+                    <div className="flex gap-[8px]">
+                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: sheet.title, fileUrl: sheet.fileUrl }); }} className="flex h-[36px] items-center justify-center rounded-[8px] border border-[#E0D5CC] dark:border-[#383330] bg-white dark:bg-[#22201F] px-[12px] text-[12px] font-bold text-[#5A2436] dark:text-[#F6F2EA] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726]">
+                        <Eye size={14} className="mr-1.5" /> View
+                      </button>
+                      <button onClick={(e) => { e.stopPropagation(); triggerDownload(sheet.fileUrl); }} className="flex h-[36px] items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
+                        <Download size={14} className="mr-1.5" /> DL
+                      </button>
+                    </div>
+                  </div>
+                </PremiumCard.Footer>
+              </PremiumCard>
+            );
+          })}
         </div>
       )}
     </div>

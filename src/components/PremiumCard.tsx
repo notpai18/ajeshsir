@@ -109,10 +109,12 @@ export function PremiumCard({
 interface CardIconProps {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
-PremiumCard.Icon = function CardIcon({ children, className = '' }: CardIconProps) {
+PremiumCard.Icon = function CardIcon({ children, className = '', style }: CardIconProps) {
   return (
     <div 
+      style={style}
       className={`w-12 h-12 flex items-center justify-center rounded-[14px] bg-[#F7F3EC] dark:bg-[#1A1817] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 text-[#22201F] dark:text-[#F6F2EA] shrink-0 transition-all duration-250 group-hover:shadow-[0_0_12px_rgba(34,32,31,0.08)] dark:group-hover:shadow-[0_0_12px_rgba(0,0,0,0.4)] group-hover:border-[#22201F] dark:group-hover:border-[#F6F2EA]/30 group-hover:text-[#4A0E1B] ${className}`}
     >
       {children}
