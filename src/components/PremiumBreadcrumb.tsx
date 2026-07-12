@@ -35,11 +35,11 @@ export function PremiumBreadcrumb({
             <>
               <button
               onClick={onBack}
-              className="group flex items-center gap-1.5 h-[28px] px-3 rounded-full bg-white/80 backdrop-blur-sm border border-[#E5E0D8] shadow-sm transition-all duration-250 ease-out hover:-translate-x-[2px] hover:border-[#D4AF37] hover:shadow-md cursor-pointer mr-2"
+              className="group flex items-center gap-1 h-[24px] px-2.5 rounded-full bg-white/80 backdrop-blur-sm border border-[#E5E0D8] shadow-sm transition-all duration-250 ease-out hover:-translate-x-[2px] hover:border-[#D4AF37] hover:shadow-md cursor-pointer mr-2"
               style={{ transform: 'translateZ(0)' }} // GPU acceleration
             >
-              <ArrowLeft size={14} strokeWidth={1.75} className="text-[#333333] transition-transform group-hover:-translate-x-1" />
-              <span className="text-xs font-medium tracking-wide text-[#555555] group-hover:text-[#333333]">
+              <ArrowLeft size={12} strokeWidth={2} className="text-[#333333] transition-transform group-hover:-translate-x-1" />
+              <span className="text-[11px] font-semibold tracking-wide text-[#555555] group-hover:text-[#333333]">
                 {backLabel}
               </span>
             </button>
@@ -62,7 +62,7 @@ export function PremiumBreadcrumb({
                     <button
                       onClick={item.onClick}
                       disabled={isLast || !item.onClick}
-                      className={`group relative flex items-center gap-1.5 h-[28px] px-3 rounded-full text-xs font-medium transition-all duration-250 ease-out shadow-sm
+                      className={`group relative flex items-center gap-1 h-[24px] px-2.5 rounded-full text-[11px] font-semibold transition-all duration-250 ease-out shadow-sm
                         ${
                           isLast
                             ? 'bg-[#701023] border border-[#701023] text-white cursor-default shadow-[0_0_10px_rgba(112,16,35,0.25)]'
@@ -86,7 +86,7 @@ export function PremiumBreadcrumb({
                     {/* Separator */}
                     {!isLast && (
                       <span className="text-[#C1B8A8] flex items-center justify-center">
-                        <ChevronRight size={14} strokeWidth={1.75} />
+                        <ChevronRight size={12} strokeWidth={2} />
                       </span>
                     )}
                   </React.Fragment>
