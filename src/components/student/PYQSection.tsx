@@ -72,7 +72,7 @@ export function PYQSection({
       {sortedPyqs.length === 0 ? (
         <EmptyState label="No PYQ booklets match your search or filters." />
       ) : (
-        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
           {sortedPyqs.map((pyq, idx) => {
             let customStyles = { bg: '#EAF0FB', text: '#3A5FA6' }; // Default PYQ color
 
@@ -117,10 +117,10 @@ export function PYQSection({
                       </span>
                     </label>
                     <div className="flex gap-[8px]">
-                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl }); }} className="flex h-[36px] items-center justify-center rounded-[8px] border border-[#E0D5CC] dark:border-[#383330] bg-white dark:bg-[#22201F] px-[12px] text-[12px] font-bold text-[#5A2436] dark:text-[#F6F2EA] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726]">
+                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl }); }} className="flex min-h-[44px] py-1 items-center justify-center rounded-[8px] border border-[#E0D5CC] dark:border-[#383330] bg-white dark:bg-[#22201F] px-[12px] text-[12px] font-bold text-[#5A2436] dark:text-[#F6F2EA] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726]">
                         <Eye size={14} className="mr-1.5" /> Paper
                       </button>
-                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl }); }} className="flex h-[36px] items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
+                      <button onClick={(e) => { e.stopPropagation(); setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl }); }} className="flex min-h-[44px] py-1 items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
                         <Eye size={14} className="mr-1.5" /> Sol.
                       </button>
                     </div>

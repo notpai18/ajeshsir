@@ -66,7 +66,7 @@ export function QuickAccessGrid({ categories, onSelectCategory }: QuickAccessGri
   return (
     <div className="mt-12 mb-16 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s' }}>
       <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8A7E6F] dark:text-[#A89F91] mb-6 px-2">Quick Access</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
         {categories.map((cat, index) => (
           <QuickAccessCard
             key={cat.id}

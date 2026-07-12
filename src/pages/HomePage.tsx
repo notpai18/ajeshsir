@@ -90,7 +90,7 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
     <section className="relative overflow-hidden py-16 md:py-24 bg-[#F7F3EC] dark:bg-[#1A1817]">
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center lg:items-stretch gap-12 lg:grid-cols-12 lg:gap-8">
+        <div className="grid items-center md:items-stretch gap-12 md:grid-cols-12 md:gap-8">
           
           {/* Text Content Block */}
           <div className="flex flex-col space-y-6 lg:col-span-7 animate-[fadeInUp_0.8s_ease-out_forwards] bg-[#F7F3EC] dark:bg-[#1A1817] p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
@@ -98,8 +98,8 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
 
 
             <h1 className="text-5xl font-sans font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] sm:text-6xl md:text-7xl leading-[1.05]">
-              <span className="italic font-semibold text-[#4A0E1B] dark:text-[#E8CD82] tracking-normal" style={{ fontFamily: '"Caveat", cursive', fontSize: '1.2em', lineHeight: '0.8' }}>Understand</span><br className="hidden sm:block"/>
-              chemistry. Don't<br className="hidden sm:block"/>
+              <span className="italic font-semibold text-[#4A0E1B] dark:text-[#E8CD82] tracking-normal" style={{ fontFamily: '"Caveat", cursive', fontSize: '1.2em', lineHeight: '0.8' }}>Understand</span> <br className="hidden sm:block"/>
+              chemistry. Don't <br className="hidden sm:block"/>
               just <span className="relative inline-block text-[#8A7E6F] dark:text-[#A89F91]">
                 memorise
                 <span className="absolute left-[-5%] right-[-5%] top-[55%] h-[4px] md:h-[6px] bg-[#C9A13B] -translate-y-1/2 opacity-90 rounded-full"></span>
@@ -113,14 +113,14 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
             <div className="pt-4 flex flex-wrap gap-4">
               <button
                 onClick={onGetStarted}
-                className="group flex items-center justify-center bg-[#4A0E1B] hover:bg-[#7C2532] text-white px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(34,32,31,0.3)] hover:shadow-[0_6px_20px_rgba(34,32,31,0.4)] hover:-translate-y-0.5 transition-all"
+                className="group flex items-center justify-center bg-[#4A0E1B] hover:bg-[#7C2532] focus-visible:bg-[#7C2532] active:bg-[#7C2532] text-white px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(34,32,31,0.3)] hover:shadow-[0_6px_20px_rgba(34,32,31,0.4)] focus-visible:shadow-[0_6px_20px_rgba(34,32,31,0.4)] active:shadow-[0_6px_20px_rgba(34,32,31,0.4)] hover:-translate-y-0.5 focus-visible:-translate-y-0.5 active:-translate-y-0.5 transition-all min-h-[44px]"
                 id="hero-get-started-btn"
               >
                 Enter the library
               </button>
               <button
                 onClick={() => onNavigate('about')}
-                className="group flex items-center justify-center bg-[#22201F] hover:bg-[#3A342E] dark:bg-[#3A342E] dark:hover:bg-[#4A433E] text-[#F7F3EC] px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(34,32,31,0.2)] hover:shadow-[0_6px_20px_rgba(34,32,31,0.3)] hover:-translate-y-0.5 transition-all"
+                className="group flex items-center justify-center bg-[#22201F] hover:bg-[#3A342E] focus-visible:bg-[#3A342E] active:bg-[#3A342E] dark:bg-[#3A342E] dark:hover:bg-[#4A433E] dark:focus-visible:bg-[#4A433E] dark:active:bg-[#4A433E] text-[#F7F3EC] px-8 py-4 text-[15px] font-bold rounded-xl shadow-[0_4px_14px_rgba(34,32,31,0.2)] hover:shadow-[0_6px_20px_rgba(34,32,31,0.3)] focus-visible:shadow-[0_6px_20px_rgba(34,32,31,0.3)] active:shadow-[0_6px_20px_rgba(34,32,31,0.3)] hover:-translate-y-0.5 focus-visible:-translate-y-0.5 active:-translate-y-0.5 transition-all min-h-[44px]"
               >
                 About the professor
               </button>

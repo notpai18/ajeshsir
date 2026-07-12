@@ -47,7 +47,7 @@ export function FeaturedResource({ item, onPreview, onDownload }: { item: any, o
 // Resource Overview Component
 export function ResourceOverview({ notesCount, videosCount, pyqsCount, sheetsCount }: any) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
       {/* Circular Progress for Notes */}
       <div className="relative rounded-[28px] bg-white dark:bg-[#22201F] border border-[#22201F]/15 dark:border-[#F6F2EA]/10 p-6 flex flex-col items-center justify-center shadow-sm hover:-translate-y-1 transition-transform">
         <div className="relative w-24 h-24 mb-4">

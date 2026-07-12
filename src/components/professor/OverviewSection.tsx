@@ -141,7 +141,7 @@ export function OverviewSection({
       </div>
 
       {/* KPI cards */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard icon={<FileText size={17} />} label="Study Notes" value={notes.length} sub={`${totalDownloads.toLocaleString()} total downloads`} />
         <StatCard icon={<VideoIcon size={17} />} label="Lectures" value={videos.length} sub="Video walkthroughs" />
         <StatCard icon={<FileSpreadsheet size={17} />} label="PYQ Sets" value={pyqs.length} sub="With worked solutions" />
@@ -149,7 +149,7 @@ export function OverviewSection({
       </div>
 
       {/* Analytics */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <PremiumCard padding="large" accentLine>
           <div className="mb-5 flex items-center justify-between">
             <div>
@@ -197,7 +197,7 @@ export function OverviewSection({
       </div>
 
       {/* Attention + recent */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <PremiumCard padding="large" accentLine>
           <div className="mb-4 flex items-center justify-between">
             <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Needs your attention</h3>

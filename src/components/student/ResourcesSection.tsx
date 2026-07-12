@@ -63,7 +63,7 @@ export function ResourcesSection({ currentExamInfo, triggerDownload }: Resources
       {filtered.length === 0 ? (
         <EmptyState label="No resources match your search." />
       ) : (
-        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
           {filtered.map((res, idx) => {
             let customStyles = { bg: '#F7EFD9', text: '#8A6A16' };
             if (res.icon === 'FileSpreadsheet') customStyles = { bg: '#F4E7E5', text: '#4A0E1B' };
@@ -103,7 +103,7 @@ export function ResourcesSection({ currentExamInfo, triggerDownload }: Resources
                       </span>
                     </label>
                     <div className="flex gap-[8px]">
-                      <button onClick={(e) => { e.stopPropagation(); triggerDownload(res.fileUrl); }} className="flex h-[36px] items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
+                      <button onClick={(e) => { e.stopPropagation(); triggerDownload(res.fileUrl); }} className="flex min-h-[44px] py-1 items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
                         <Download size={14} className="mr-1.5" /> Download
                       </button>
                     </div>

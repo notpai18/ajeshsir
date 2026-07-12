@@ -130,7 +130,7 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
     return () => window.removeEventListener('keydown', handler);
   }, [zoom, currentPage, numPages, searchOpen, isFullscreen, goToPage, setZoom, setZoomMode, toggleFullscreen]);
 
-  const ICON_BTN = 'flex h-8 w-8 items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#4A0E1B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4A0E1B]/20';
+  const ICON_BTN = 'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#4A0E1B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4A0E1B]/20';
   const DIVIDER = 'h-5 w-px bg-[#D9C2A2]/30 mx-0.5';
 
   return (

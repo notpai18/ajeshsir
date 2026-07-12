@@ -788,7 +788,7 @@ const resetDemoData = () => {
           </div>
         </header>
 
-        <div className="grid gap-7 lg:grid-cols-12">
+        <div className="grid gap-7 md:grid-cols-12">
           {/* ============ SIDEBAR ============ */}
           <aside className="lg:col-span-3">
             <div className="lg:sticky lg:top-24">

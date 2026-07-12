@@ -56,12 +56,13 @@ export function VideosSection({
       {sortedVideos.length === 0 ? (
         <EmptyState label="No lecture recordings match your search or subject filter." />
       ) : (
-        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+        <div className={`grid gap-[20px] ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1'}`}>
           {sortedVideos.map((video, idx) => {
             let customStyles = { bg: '#F4E7E5', text: '#4A0E1B' };
             if (video.subject === 'Physical Chemistry' || video.subject === 'Physical') customStyles = { bg: '#FDECEA', text: '#C0392B' };
             else if (video.subject === 'Organic Chemistry' || video.subject === 'Organic') customStyles = { bg: '#EAF4EC', text: '#3C8C5B' };
             else if (video.subject === 'Inorganic Chemistry' || video.subject === 'Inorganic') customStyles = { bg: '#EAF0FB', text: '#3A5FA6' };
+
 
             return (
               <PremiumCard key={video.id} interactive padding="none" className="flex flex-col h-full" onClick={() => setActiveVideoModal(video)}>
@@ -118,7 +119,7 @@ export function VideosSection({
                         </span>
                       </label>
                       <div className="flex gap-[8px]">
-                        <button onClick={(e) => { e.stopPropagation(); setActiveVideoModal(video); }} className="flex h-[36px] items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
+                        <button onClick={(e) => { e.stopPropagation(); setActiveVideoModal(video); }} className="flex min-h-[44px] py-1 items-center justify-center rounded-[8px] bg-[#F3D9CE] dark:bg-[#4A0E1B] px-[12px] text-[12px] font-bold text-[#8A3D2C] dark:text-[#F6F2EA] transition-all hover:bg-[#EBD2C7] dark:hover:bg-[#5A1424]">
                           <Play size={14} className="mr-1.5" /> Watch
                         </button>
                       </div>

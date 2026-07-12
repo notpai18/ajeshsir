@@ -29,7 +29,7 @@ export default function ContactPage() {
         
 
 
-        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12 items-stretch">
+        <div className="grid gap-8 md:grid-cols-12 lg:gap-12 items-stretch">
           
           {/* Left Column - Purpose (Maroon) */}
           <div className="lg:col-span-5 h-full">
@@ -96,7 +96,7 @@ export default function ContactPage() {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2.5">
                     <label htmlFor="name" className="block text-[11px] font-extrabold text-[#8A7E6F] dark:text-[#A89F91] uppercase tracking-[0.15em] ml-1">Full Name</label>
                     <input

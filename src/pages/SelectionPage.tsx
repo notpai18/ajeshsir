@@ -25,7 +25,7 @@ export default function SelectionPage({ onSelectRole }: SelectionPageProps) {
         </div>
 
         {/* Dual Card Layout */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        <div className="mt-12 grid gap-6 grid-cols-1 sm:grid-cols-2">
           
           {/* Student Card */}
           <PremiumCard
@@ -48,9 +48,9 @@ export default function SelectionPage({ onSelectRole }: SelectionPageProps) {
             </PremiumCard.Description>
 
             {/* Bottom Action Hint */}
-            <div className="mt-8 flex items-center space-x-2 text-[9px] uppercase tracking-[0.2em] font-bold text-[#4A0E1B] dark:text-[#F4E7E5] opacity-0 transition-all duration-250 group-hover:opacity-100 group-hover:translate-x-1">
+            <div className="mt-8 flex items-center space-x-2 text-[9px] uppercase tracking-[0.2em] font-bold text-[#4A0E1B] dark:text-[#F4E7E5] opacity-0 transition-all duration-250 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100 group-hover:translate-x-1 group-focus-visible:translate-x-1 group-active:translate-x-1">
               <span>Enter Repository</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1 group-focus-visible:translate-x-1 group-active:translate-x-1" />
             </div>
           </PremiumCard>
 
@@ -75,9 +75,9 @@ export default function SelectionPage({ onSelectRole }: SelectionPageProps) {
             </PremiumCard.Description>
 
             {/* Bottom Action Hint */}
-            <div className="mt-8 flex items-center space-x-2 text-[9px] uppercase tracking-[0.2em] font-bold text-[#4A0E1B] dark:text-[#F4E7E5] opacity-0 transition-all duration-250 group-hover:opacity-100 group-hover:translate-x-1">
+            <div className="mt-8 flex items-center space-x-2 text-[9px] uppercase tracking-[0.2em] font-bold text-[#4A0E1B] dark:text-[#F4E7E5] opacity-0 transition-all duration-250 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100 group-hover:translate-x-1 group-focus-visible:translate-x-1 group-active:translate-x-1">
               <span>Access Dashboard</span>
-              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1 group-focus-visible:translate-x-1 group-active:translate-x-1" />
             </div>
           </PremiumCard>
 

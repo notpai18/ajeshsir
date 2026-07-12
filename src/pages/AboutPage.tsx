@@ -114,7 +114,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
         </div>
 
         {/* ================= QUICK FACTS (overlapping hero) ================= */}
-        <div className="relative z-10 -mt-6 grid grid-cols-2 gap-4 sm:-mt-8 lg:grid-cols-4">
+        <div className="relative z-10 -mt-6 grid grid-cols-2 gap-4 sm:-mt-8 md:grid-cols-4">
           {FACTS.map((f, i) => (
             <div key={i} className={`${CARD} p-5`}>
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#380A14] text-[#4A0E1B] dark:text-[#F4E7E5]">
@@ -161,7 +161,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
         </section>
 
         {/* ================= INTERESTS + EXPERIENCE ================= */}
-        <section className="mt-10 grid gap-6 md:grid-cols-2">
+        <section className="mt-10 grid gap-6 sm:grid-cols-2">
           {/* Educational Approach */}
           <div className={`${CARD} p-6`}>
             <p className={MICRO}>Educational approach</p>

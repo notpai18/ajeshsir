@@ -38,7 +38,7 @@ export default function Footer({ onNavigate }: FooterProps) {
       <div className="mx-auto w-[92%] max-w-7xl rounded-[24px] bg-[#4A0E1B] dark:bg-[#22201F] px-6 py-7 md:px-10 md:py-8 shadow-[0_8px_30px_rgba(34,32,31,0.15)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.15)] border border-[#7C2532]/30 dark:border-[#C9A13B]/8 relative transition-all duration-300">
         
         {/* Row 1: Asymmetrical Top Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
           
           {/* Left: Identity */}
           <div className="flex flex-col space-y-1">

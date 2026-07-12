@@ -132,7 +132,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
                 key={idx} 
                 onClick={action.onClick} 
                 title={action.label}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E3D8C5] bg-white dark:bg-[#22201F] text-[#6E645A] transition-colors hover:bg-[#F6F2EA] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]"
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-[#E3D8C5] bg-white dark:bg-[#22201F] text-[#6E645A] transition-colors hover:bg-[#F6F2EA] dark:bg-[#1A1817] hover:text-[#22201F] dark:text-[#F6F2EA]"
               >
                 <ActionIcon size={14} />
               </button>

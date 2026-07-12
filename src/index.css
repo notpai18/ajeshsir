@@ -7,6 +7,12 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 921px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
   --color-primary-burgundy: #4A0E1B;
   --color-secondary-burgundy: #7C2532;
   --color-academic-gold: #C9A13B;

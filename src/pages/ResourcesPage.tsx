@@ -49,7 +49,7 @@ export default function ResourcesPage({ userRole }: ResourcesPageProps) {
           <p className="text-sm text-[#22201F] dark:text-[#F6F2EA]/80">{error}</p>
           <button
             onClick={reload}
-            className="px-6 py-3 bg-[#4A0E1B] text-white text-xs font-black uppercase tracking-[0.2em] rounded-lg hover:bg-[#7C2532] transition-colors"
+            className="px-6 py-3 bg-[#4A0E1B] text-white text-xs font-black uppercase tracking-[0.2em] rounded-lg hover:bg-[#7C2532] focus-visible:bg-[#7C2532] active:bg-[#7C2532] transition-colors min-h-[44px]"
           >
             Retry
           </button>
