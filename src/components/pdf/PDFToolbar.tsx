@@ -7,10 +7,9 @@ import {
   ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut,
   RotateCcw, RotateCw, Search, Download, Printer, Maximize,
   Minimize, Sun, Moon, Coffee, X, PanelLeft, BookOpen,
-  PanelRight, Bookmark, BookmarkCheck, Info
+  PanelRight, Bookmark, BookmarkCheck, Info, ExternalLink
 } from 'lucide-react';
 import { usePDF } from './PDFContext';
-import { PremiumBreadcrumb } from '../PremiumBreadcrumb';
 import { downloadPDF } from '../../lib/pdfUrl';
 
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0, 4.0];
@@ -139,16 +138,10 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
       role="toolbar"
       aria-label="PDF viewer toolbar"
     >
-      <div className="flex-1 flex items-center overflow-hidden">
-        <PremiumBreadcrumb
-          className="m-0"
-          backLabel="Back"
-          onBack={onClose}
-          items={[
-            { id: 'lib', label: 'Library', onClick: onClose },
-            { id: 'doc', label: docInfo?.title ?? 'Document' }
-          ]}
-        />
+      <div className="flex-1 flex items-center overflow-hidden px-3">
+        <span className="truncate text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">
+          {docInfo?.title ?? 'Document'}
+        </span>
       </div>
 
       <div className={DIVIDER} />
@@ -321,6 +314,16 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
         title="Download"
       >
         <Download size={15} />
+      </button>
+
+      {/* Open in New Tab */}
+      <button
+        onClick={() => { if (docInfo?.fileUrl) window.open(docInfo.fileUrl, '_blank'); }}
+        className={ICON_BTN}
+        aria-label="Open in new tab"
+        title="Open in New Tab"
+      >
+        <ExternalLink size={15} />
       </button>
 
       {/* Print */}

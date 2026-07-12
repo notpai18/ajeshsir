@@ -38,7 +38,7 @@ export function PDFViewerCore({ pdfUrl, containerWidth }: PDFViewerCoreProps) {
 
   // Compute effective page width from zoom mode and container width
   const effectiveWidth = useCallback(() => {
-    const usable = Math.max(containerWidth - 48, 300); // subtract padding
+    const usable = Math.max(containerWidth, 300); // 0 padding
     if (zoomMode === 'fitWidth') return usable;
     if (zoomMode === 'fitPage') return Math.min(usable, 794); // A4 width in px at 96dpi
     return Math.round(794 * zoom); // 794px = A4 at 100%
@@ -133,7 +133,7 @@ export function PDFViewerCore({ pdfUrl, containerWidth }: PDFViewerCoreProps) {
 
   return (
     <div className={`flex-1 overflow-y-auto overflow-x-auto ${viewerBg} transition-colors duration-300 print:overflow-visible`} ref={scrollContainerRef as React.RefObject<HTMLDivElement>}>
-      <div className="mx-auto py-6" style={{ width: pageWidth + 48 }}>
+      <div className="mx-auto" style={{ width: '100%', maxWidth: pageWidth }}>
         <Document
           file={pdfUrl}
           onLoadSuccess={onDocumentLoadSuccess}

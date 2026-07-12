@@ -123,7 +123,11 @@ function StudentDashboardContent({
 
   // Interactive Overlays
   const [activeVideoModal, setActiveVideoModal] = useState<Video | null>(null);
-  const [activePdfViewer, setActivePdfViewer] = useState<{ title: string; fileUrl: string } | null>(null);
+  const setActivePdfViewer = (doc: { title: string; fileUrl: string } | null) => {
+    if (doc) {
+      navigate(`/viewer/${encodeURIComponent(doc.title)}`, { state: { url: doc.fileUrl, name: doc.title } });
+    }
+  };
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
 
   // Notes View & Sort States
@@ -524,14 +528,6 @@ function StudentDashboardContent({
           playlist={filteredVideos}
           onClose={() => setActiveVideoModal(null)}
           onSelectVideo={(v) => setActiveVideoModal(v)}
-        />
-      )}
-
-      {/* ================= PDF VIEWER (real, from main) ================= */}
-      {activePdfViewer && (
-        <PDFViewer
-          docInfo={{ title: activePdfViewer.title, fileUrl: activePdfViewer.fileUrl, isProfessor: false }}
-          onClose={() => setActivePdfViewer(null)}
         />
       )}
 

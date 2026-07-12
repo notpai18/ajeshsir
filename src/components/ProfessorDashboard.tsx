@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   FileText,
@@ -436,8 +437,10 @@ export default function ProfessorDashboard({
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
 
   // ─── PDF Viewer ─────────────────────────────────────────────────────────────
-  const [pdfDoc, setPdfDoc] = useState<PDFDocumentInfo | null>(null);
-  const openPDF = useCallback((info: PDFDocumentInfo) => setPdfDoc(info), []);
+  const navigate = useNavigate();
+  const openPDF = useCallback((info: PDFDocumentInfo) => {
+    navigate(`/viewer/${encodeURIComponent(info.title)}`, { state: { url: info.fileUrl, name: info.title } });
+  }, [navigate]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [noteFile, setNoteFile] = useState<File | null>(null);
@@ -747,8 +750,6 @@ const resetDemoData = () => {
 
   return (
     <div className="dash-root min-h-[85vh] bg-[#F7F3EC] dark:bg-[#1A1817] text-[#22201F] dark:text-[#F6F2EA]">
-      {/* ─── In-app PDF Viewer overlay ─── */}
-      {pdfDoc && <PDFViewer docInfo={pdfDoc} onClose={() => setPdfDoc(null)} />}
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* ============ TOP HEADER ============ */}
         <header className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -860,7 +861,7 @@ const resetDemoData = () => {
               <NotesSection 
                 exams={exams} notes={notes}
                 openAddNote={openAddNote} openEditNote={openEditNote} askDelete={askDelete} onDeleteNote={onDeleteNote}
-                openPDF={openPDF} setPdfDoc={setPdfDoc}
+                openPDF={openPDF}
               />
             )}
 
@@ -877,7 +878,7 @@ const resetDemoData = () => {
               <PYQSection 
                 exams={exams} pyqs={pyqs}
                 openAddPyq={openAddPyq} openEditPyq={openEditPyq} askDelete={askDelete} onDeletePyq={onDeletePyq}
-                openPDF={openPDF} setPdfDoc={setPdfDoc}
+                openPDF={openPDF}
               />
             )}
 
@@ -886,7 +887,7 @@ const resetDemoData = () => {
               <SheetsSection 
                 exams={exams} practiceSheets={practiceSheets}
                 openAddSheet={openAddSheet} openEditSheet={openEditSheet} askDelete={askDelete} onDeletePracticeSheet={onDeletePracticeSheet}
-                openPDF={openPDF} setPdfDoc={setPdfDoc}
+                openPDF={openPDF}
               />
             )}
 

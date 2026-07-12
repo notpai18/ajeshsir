@@ -216,80 +216,58 @@ export function DoubtsSection({
           {filteredDoubts.map((doubt, index) => {
             const status = deriveStatus(doubt);
             const hasProfReply = hasProfessorReply(doubt);
-            const firstProfReply = doubt.replies?.find(r => r.professor_id !== 'student');
-            const firstProfReplyText = firstProfReply?.reply_text || doubt.answerText;
-            const chapterText = doubt.topic || 'General Topic';
+            let parsedTitle = '';
+            let parsedDesc = '';
+            const rawQ = doubt.question || '';
+            const strongMatch = rawQ.match(/<strong>(.*?)<\/strong>(?:<br\s*\/?>)?(.*)/is);
+            if (strongMatch) {
+              parsedTitle = stripHtml(strongMatch[1]).trim();
+              parsedDesc = stripHtml(strongMatch[2]).trim();
+            } else {
+              parsedTitle = stripHtml(rawQ).trim();
+            }
+            if (doubt.attachmentName && !parsedTitle) {
+              parsedTitle = `Attachment: ${doubt.attachmentName}`;
+            }
 
             return (
               <div
                 key={doubt.id}
-                className="group relative bg-white rounded-[22px] p-5 h-[280px] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-250 hover:-translate-y-[6px] border border-gray-200 hover:border-[#D9C2A2]/50 flex flex-col animate-[fadeInUp_0.5s_ease-out_forwards]"
+                className={`group relative bg-white rounded-[20px] p-[18px] ${hasProfReply ? 'h-[210px]' : 'h-[190px]'} shadow-sm hover:shadow-xl transition-all duration-250 hover:-translate-y-1 flex flex-col border border-gray-100 animate-[fadeInUp_0.5s_ease-out_forwards]`}
                 style={{ animationDelay: `${index * 50}ms`, opacity: 0 }}
               >
-                {/* Top row */}
-                <div className="flex flex-wrap items-center gap-1.5 mb-3 shrink-0">
-                  <span className="px-2.5 h-6 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 text-[10px] font-bold uppercase tracking-wider border border-gray-100">{doubt.subject}</span>
-                  <span className="px-2.5 h-6 flex items-center justify-center rounded-full bg-gray-50 text-gray-500 text-[10px] font-bold uppercase tracking-wider truncate max-w-[120px] border border-gray-100">{chapterText}</span>
-                  <div className="ml-auto">
-                    <DoubtStatusBadge status={status} className="!py-0.5 !px-2 h-6" />
-                  </div>
+                {/* Top Row: Subject & Status */}
+                <div className="flex items-center justify-between gap-2 mb-3 shrink-0">
+                  <span className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">{doubt.subject}</span>
+                  <DoubtStatusBadge status={status} className="!py-0.5 !px-2 h-5 text-[10px]" />
                 </div>
 
-                {/* Middle */}
-                <div className="mb-2 shrink-0">
-                  <h3 className="text-[20px] font-bold text-gray-900 leading-tight line-clamp-2">
-                    {stripHtml(doubt.question) || (doubt.attachmentName ? `Attachment: ${doubt.attachmentName}` : 'Doubt with Attachment')}
-                  </h3>
-                  <p className="mt-1 text-[13px] text-gray-400 font-medium tracking-wide">
-                    {doubt.name} &middot; {getRelativeTime(doubt.createdAt)}
+                {/* Middle: Merged Title & Description */}
+                <div className="mb-2 overflow-hidden">
+                  <p className="text-[15px] text-gray-900 leading-relaxed line-clamp-3 break-words">
+                    <span className="font-bold">{parsedTitle}</span>
+                    {parsedDesc && <span className="font-normal text-gray-700"> : {parsedDesc}</span>}
                   </p>
                 </div>
 
-                {/* Content Area */}
-                <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-2">
-                  {/* Question Preview */}
-                  {doubt.question && !hasProfReply && (
-                    <div 
-                      className="text-[14px] text-gray-600 leading-relaxed line-clamp-3 [&_p]:inline [&_p]:m-0"
-                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(doubt.question) }}
-                    />
+                {/* Bottom: Metadata & Action */}
+                <div className="mt-auto flex flex-col shrink-0 gap-0.5">
+                  <span className="text-[14px] text-gray-500">
+                    {doubt.name} &middot; {getRelativeTime(doubt.createdAt)}
+                  </span>
+                  {hasProfReply && (
+                    <span className="text-[14px] text-gray-500">
+                      Professor replied &middot; {getRelativeTime(doubt.replies?.[doubt.replies.length - 1]?.created_at || new Date().toISOString())}
+                    </span>
                   )}
-                  {doubt.question && hasProfReply && (
-                    <div 
-                      className="text-[14px] text-gray-600 leading-relaxed line-clamp-2 [&_p]:inline [&_p]:m-0 opacity-80"
-                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(doubt.question) }}
-                    />
-                  )}
-
-                  {/* Professor Preview */}
-                  {hasProfReply && firstProfReplyText && (
-                    <div className="mt-auto rounded-[12px] bg-gray-50/80 p-3 border border-gray-100 shrink-0">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">Professor Answer</p>
-                      <div 
-                        className="text-[14px] text-gray-800 leading-snug line-clamp-2 [&_p]:inline [&_p]:m-0"
-                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(firstProfReplyText) }}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Bottom Actions */}
-                <div className="mt-3 pt-3 border-t border-gray-100 flex justify-center shrink-0">
-                  {hasProfReply ? (
+                  <div className="flex justify-end mt-1">
                     <button
                       onClick={() => openThread(doubt)}
-                      className="w-full text-center text-[13px] font-bold text-gray-700 hover:text-gray-900 transition-colors"
+                      className="group/btn flex items-center gap-1 text-[14px] font-semibold text-gray-600 hover:text-gray-900 transition-colors"
                     >
-                      Read Full Answer
+                      {hasProfReply ? 'Read Full Answer \u2192' : 'View Details \u2192'}
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => openThread(doubt)}
-                      className="w-full text-center text-[13px] font-bold text-[#8A6A16] hover:text-[#5c470f] transition-colors"
-                    >
-                      View Details
-                    </button>
-                  )}
+                  </div>
                 </div>
               </div>
             );
