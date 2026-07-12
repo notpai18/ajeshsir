@@ -68,20 +68,33 @@ export function AttachmentViewer({ attachments, containerClassName = "mt-4" }: {
 
         if (att.type === 'pdf') {
           return (
-            <div key={index} className="flex items-center gap-4 p-4 bg-white dark:bg-[#2A2726] border border-gray-200 dark:border-gray-700 rounded-2xl hover:shadow-md transition-all w-fit">
+            <div key={index} className="flex items-center gap-4 p-4 bg-white dark:bg-[#2A2726] border border-gray-200 dark:border-gray-700 rounded-2xl hover:shadow-md transition-all w-fit max-w-full">
               <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-xl flex items-center justify-center shrink-0">
                 <FileText size={24} />
               </div>
-              <div className="flex-1 pr-4">
-                <p className="text-[15px] font-bold text-gray-900 dark:text-gray-100 max-w-[200px] truncate">{att.name || 'Document.pdf'}</p>
+              <div className="flex-1 pr-4 overflow-hidden">
+                <p className="text-[15px] font-bold text-gray-900 dark:text-gray-100 truncate">{att.name || 'Document.pdf'}</p>
                 <p className="text-[13px] text-gray-500">PDF Document</p>
               </div>
-              <button
-                onClick={() => navigate(`/viewer/${encodeURIComponent(att.name || 'document')}`, { state: { url: att.url, name: att.name || 'Document.pdf' } })}
-                className="px-4 py-2 bg-[#4A0E1B] text-white text-sm font-bold rounded-xl hover:bg-[#7C2532] transition-colors shrink-0"
-              >
-                Preview
-              </button>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => navigate(`/viewer/${encodeURIComponent(att.name || 'document')}`, { state: { url: att.url, name: att.name || 'Document.pdf' } })}
+                  className="px-4 py-2 bg-[#4A0E1B] text-white text-sm font-bold rounded-xl hover:bg-[#7C2532] transition-colors"
+                >
+                  Preview
+                </button>
+                <a
+                  href={att.url}
+                  download
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition-colors flex items-center justify-center"
+                  title="Download PDF"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Download size={20} />
+                </a>
+              </div>
             </div>
           );
         }

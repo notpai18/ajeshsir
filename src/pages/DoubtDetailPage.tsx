@@ -156,28 +156,27 @@ export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
             <span>&middot;</span>
             <span>{formatRelativeTime(doubt.createdAt)}</span>
           </div>
+
+          {/* Question Body and Attachments */}
+          {(!hideQuestionBody || attachmentUrl) && (
+            <div className="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800">
+              {!hideQuestionBody && (
+                <div 
+                  className={`text-[18px] text-gray-800 dark:text-gray-300 leading-[1.8] font-serif [&_p]:mb-4 last:[&_p]:mb-0 ${attachmentUrl ? 'mb-8' : ''}`}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescriptionHtml) }}
+                />
+              )}
+              
+              {/* Attachments */}
+              {attachmentUrl && (
+                <AttachmentViewer
+                  attachments={[{ url: attachmentUrl, name: doubt.attachmentName || 'Attachment' }]}
+                  containerClassName="mt-0"
+                />
+              )}
+            </div>
+          )}
         </div>
-
-        {/* Question Body */}
-        {!hideQuestionBody && (
-          <div className="mb-10 px-2 sm:px-10 animate-[fadeInUp_0.6s_ease-out_forwards]">
-            <h3 className="text-[14px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">Question</h3>
-            <div 
-              className="text-[20px] text-gray-800 dark:text-gray-300 leading-[1.8] font-serif [&_p]:mb-4 last:[&_p]:mb-0"
-              dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescriptionHtml) }}
-            />
-          </div>
-        )}
-
-        {/* Attachments */}
-        {attachmentUrl && (
-          <div className="mb-12 px-2 sm:px-10 animate-[fadeInUp_0.6s_ease-out_forwards]">
-            <AttachmentViewer
-              attachments={[{ url: attachmentUrl, name: doubt.attachmentName || 'Attachment' }]}
-              containerClassName="mt-0"
-            />
-          </div>
-        )}
 
         {/* Professor Answer */}
         {mainAnswer && (
