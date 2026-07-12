@@ -34,13 +34,13 @@ export function StudentHome({
   return (
     <div className="flex flex-col gap-6 pb-12">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(34,32,31,0.75)] sm:p-10 animate-[fadeInUp_0.8s_ease-out_forwards]">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4A0E1B] to-[#7C2532] p-7 text-white shadow-[0_22px_44px_-24px_rgba(34,32,31,0.75)] sm:p-10 animate-[fadeInUp_0.4s_ease-out_forwards]">
         <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-[#D9C2A2]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-20 h-52 w-52 rounded-full bg-[#D9C2A2]/10 blur-3xl" />
 
         <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:items-center md:gap-9 md:text-left">
           {/* Academic Icon */}
-          <div className="relative shrink-0 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
+          <div className="relative shrink-0 animate-[fadeInUp_0.4s_ease-out_forwards]" style={{ animationDelay: '0s', animationFillMode: 'both' }}>
             <div className="flex h-28 w-28 items-center justify-center rounded-[28px] bg-[#22201F] sm:h-32 sm:w-32 border border-white/5">
               <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/2697.svg" alt="Chemistry Icon" className="h-14 w-14 sm:h-16 sm:w-16" />
             </div>
@@ -48,9 +48,9 @@ export function StudentHome({
 
           {/* Identity / Text */}
           <div className="max-w-xl">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D9C2A2] animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>COURSE REPOSITORIES</p>
-            <h1 className="dash-serif mt-2 text-3xl font-semibold leading-tight sm:text-[2.5rem] animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>Choose Your Examination</h1>
-            <p className="mt-3 text-sm leading-relaxed text-white/70 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D9C2A2] animate-[fadeInUp_0.4s_ease-out_forwards]" style={{ animationDelay: '0.05s', animationFillMode: 'both' }}>COURSE REPOSITORIES</p>
+            <h1 className="dash-serif mt-2 text-3xl font-semibold leading-tight sm:text-[2.5rem] animate-[fadeInUp_0.4s_ease-out_forwards]" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>Choose Your Examination</h1>
+            <p className="mt-3 text-sm leading-relaxed text-white/70 animate-[fadeInUp_0.4s_ease-out_forwards]" style={{ animationDelay: '0.15s', animationFillMode: 'both' }}>
               Organize your chemistry resources by examination and access carefully curated notes, lectures, PYQs, and practice material.
             </p>
 
@@ -64,8 +64,8 @@ export function StudentHome({
               ].map((chip, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[#22201F]/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/90 hover:border-[#D9C2A2] hover:shadow-[0_0_12px_rgba(217,194,162,0.3)] hover:-translate-y-0.5 transition-all duration-300 animate-[fadeInUp_0.8s_ease-out_forwards]"
-                  style={{ animationDelay: `${0.5 + i * 0.1}s`, animationFillMode: 'both' }}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#22201F]/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/90 hover:border-[#D9C2A2] hover:shadow-[0_0_12px_rgba(217,194,162,0.3)] hover:-translate-y-0.5 transition-all duration-300 animate-[fadeInUp_0.4s_ease-out_forwards]"
+                  style={{ animationDelay: `${0.2 + i * 0.05}s`, animationFillMode: 'both' }}
                 >
                   <span className="text-[#D9C2A2]">{chip.icon}</span>
                   {chip.text}
@@ -126,7 +126,7 @@ export function StudentHome({
 
       {/* Global Announcements Section */}
       {sortedAnnouncements && sortedAnnouncements.length > 0 && (
-        <div className="mt-12 animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
+        <div className="mt-12 animate-[fadeInUp_0.4s_ease-out_forwards]" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
           <div className="flex items-center gap-2 mb-6 border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 pb-3">
             <Bell size={20} className="text-[#8A6A16]" />
             <h2 className="dash-serif text-2xl font-semibold text-[#22201F] dark:text-[#F6F2EA]">Recent Announcements</h2>

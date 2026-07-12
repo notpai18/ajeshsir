@@ -86,14 +86,13 @@ interface HeroProps {
 
 export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
   return (
-    <>
     <section className="relative overflow-hidden py-16 md:py-24 bg-[#F7F3EC] dark:bg-[#1A1817]">
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center md:items-stretch gap-12 md:grid-cols-12 md:gap-8">
           
           {/* Text Content Block */}
-          <div className="flex flex-col space-y-6 lg:col-span-7 animate-[fadeInUp_0.8s_ease-out_forwards] bg-[#F7F3EC] dark:bg-[#1A1817] p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+          <div className="flex flex-col space-y-6 lg:col-span-7 animate-[fadeInUp_0.8s_ease-out_forwards]">
             
 
 
@@ -102,7 +101,13 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
               chemistry. Don't <br className="hidden sm:block"/>
               just <span className="relative inline-block text-[#8A7E6F] dark:text-[#A89F91]">
                 memorise
-                <span className="absolute left-[-5%] right-[-5%] top-[55%] h-[4px] md:h-[6px] bg-[#C9A13B] -translate-y-1/2 opacity-90 rounded-full"></span>
+                <motion.span 
+                  initial={{ scaleX: 0, y: "-50%" }}
+                  animate={{ scaleX: 1, y: "-50%" }}
+                  transition={{ duration: 0.6, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ transformOrigin: "left" }}
+                  className="absolute left-[-5%] right-[-5%] top-[55%] h-[4px] md:h-[6px] bg-[#C9A13B] opacity-90 rounded-full"
+                ></motion.span>
               </span> it.
             </h1>
 
@@ -143,8 +148,13 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
 
         </div>
 
+        {/* Cycling Headline */}
+        <div className="-mx-4 sm:-mx-6 lg:-mx-8">
+          <CyclingHeadline />
+        </div>
+
         {/* Blockquote Section */}
-        <div className="mt-20 md:mt-32 max-w-5xl mx-auto animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+        <div className="mt-8 md:mt-12 max-w-5xl mx-auto animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
           <div className="relative overflow-hidden rounded-2xl border border-[#EAD9C0] bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] p-7 sm:p-10">
             <Quote className="pointer-events-none absolute -right-2 top-3 text-[#4A0E1B] dark:text-[#F4E7E5]/10" size={110} strokeWidth={1.5} />
             <p className="dash-serif relative max-w-2xl text-xl leading-relaxed text-[#3A2A22] sm:text-2xl">
@@ -159,8 +169,5 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
 
       </div>
     </section>
-    
-    <CyclingHeadline />
-    </>
   );
 }

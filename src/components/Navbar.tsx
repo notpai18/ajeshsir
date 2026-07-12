@@ -114,11 +114,17 @@ export default function Navbar({
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className={`flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-full border border-[#22201F]/20 ${badgeBg} px-3 py-1.5 text-xs font-medium text-[#22201F] dark:text-[#F6F2EA] transition-all ${badgeHoverBg}`}
+                className={`relative flex h-[38px] w-[38px] items-center justify-center rounded-full border border-[#22201F]/20 ${badgeBg} text-[#22201F] dark:text-[#F6F2EA] transition-all ${badgeHoverBg} overflow-hidden`}
                 id="theme-toggle-btn"
+                aria-label="Toggle theme"
+                title="Toggle Theme"
               >
-                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                <span className="hidden xl:inline">{theme === 'dark' ? 'Light Theme' : 'Original Dark'}</span>
+                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 transform ${theme === 'dark' ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}`}>
+                  <Moon size={18} />
+                </div>
+                <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 transform ${theme === 'dark' ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'}`}>
+                  <Sun size={18} />
+                </div>
               </button>
 
               {/* Portal Access Badge */}
