@@ -15,7 +15,8 @@ import { AskDoubtModal } from '../doubts/AskDoubtModal';
 import { DoubtStatusBadge } from '../doubts/DoubtStatusBadge';
 import { replyToDoubt } from '../../services/doubtsService';
 import { useNavigate } from 'react-router-dom';
-
+import { ResourceCard } from '../resources/ResourceCard';
+import { ResourceHero, ResourceToolbar } from '../resources/ResourcePageLayout';
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getRelativeTime(dateString: string): string {
