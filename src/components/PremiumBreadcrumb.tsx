@@ -25,9 +25,9 @@ export function PremiumBreadcrumb({
 }: PremiumBreadcrumbProps) {
   return (
     <div
-      className={`relative w-full flex flex-col md:flex-row items-center justify-between mt-[-30px] mb-[20px] px-2 py-1.5 rounded-full bg-white/40 dark:bg-[#22201F]/40 backdrop-blur-md border border-[#E5E0D8]/60 dark:border-[#383330]/60 shadow-[0_8px_30px_rgba(34,32,31,0.25)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)] ${className}`}
+      className={`relative w-full flex flex-col md:flex-row items-center justify-between mt-[-30px] mb-[20px] px-2 py-1 rounded-full bg-white/40 dark:bg-[#22201F]/40 backdrop-blur-md border border-[#E5E0D8]/60 dark:border-[#383330]/60 shadow-[0_8px_30px_rgba(34,32,31,0.25)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)] ${className}`}
     >
-      <div className="flex-1 w-full overflow-x-auto scrollbar-hide py-1">
+      <div className="flex-1 w-full overflow-x-auto scrollbar-hide">
         <div className="flex items-center gap-[10px] min-w-max px-1">
           
           {/* Premium Back Button */}
@@ -35,11 +35,11 @@ export function PremiumBreadcrumb({
             <>
               <button
               onClick={onBack}
-              className="group flex items-center gap-2 h-[30px] px-[16px] rounded-full bg-white/80 backdrop-blur-sm border border-[#E5E0D8] shadow-sm transition-all duration-250 ease-out hover:-translate-x-[2px] hover:border-[#D4AF37] hover:shadow-md cursor-pointer mr-2"
+              className="group flex items-center gap-1.5 h-[28px] px-3 rounded-full bg-white/80 backdrop-blur-sm border border-[#E5E0D8] shadow-sm transition-all duration-250 ease-out hover:-translate-x-[2px] hover:border-[#D4AF37] hover:shadow-md cursor-pointer mr-2"
               style={{ transform: 'translateZ(0)' }} // GPU acceleration
             >
-              <ArrowLeft size={16} strokeWidth={1.75} className="text-[#333333] transition-transform group-hover:-translate-x-1" />
-              <span className="text-[13px] font-medium tracking-wide text-[#555555] group-hover:text-[#333333]">
+              <ArrowLeft size={14} strokeWidth={1.75} className="text-[#333333] transition-transform group-hover:-translate-x-1" />
+              <span className="text-xs font-medium tracking-wide text-[#555555] group-hover:text-[#333333]">
                 {backLabel}
               </span>
             </button>
@@ -62,7 +62,7 @@ export function PremiumBreadcrumb({
                     <button
                       onClick={item.onClick}
                       disabled={isLast || !item.onClick}
-                      className={`group relative flex items-center gap-2 min-h-[30px] py-1 px-[14px] rounded-full text-[13px] font-medium transition-all duration-250 ease-out shadow-sm
+                      className={`group relative flex items-center gap-1.5 h-[28px] px-3 rounded-full text-xs font-medium transition-all duration-250 ease-out shadow-sm
                         ${
                           isLast
                             ? 'bg-[#701023] border border-[#701023] text-white cursor-default shadow-[0_0_10px_rgba(112,16,35,0.25)]'
