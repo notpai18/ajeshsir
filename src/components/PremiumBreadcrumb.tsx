@@ -25,7 +25,7 @@ export function PremiumBreadcrumb({
 }: PremiumBreadcrumbProps) {
   return (
     <div
-      className={`relative w-full flex flex-col md:flex-row items-center justify-between mt-[-30px] mb-[20px] px-2 py-1 rounded-full bg-white/40 dark:bg-[#22201F]/40 backdrop-blur-md border border-[#E5E0D8]/60 dark:border-[#383330]/60 shadow-[0_8px_30px_rgba(34,32,31,0.25)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)] ${className}`}
+      className={`relative w-full flex flex-col md:flex-row items-center justify-between mt-[-30px] mb-[20px] px-2 py-1 rounded-full ${className}`}
     >
       <div className="flex-1 w-full overflow-x-auto scrollbar-hide">
         <div className="flex items-center gap-[10px] min-w-max px-1">
