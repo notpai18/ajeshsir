@@ -66,7 +66,7 @@ export function StatisticsSection() {
             {weeklyData.map((d, i) => {
               const heightPct = (d.hours / maxHours) * 100;
               return (
-                <div key={i} className="group relative flex w-full flex-col items-center justify-end">
+                <div key={i} className="group relative flex h-full w-full flex-col items-center justify-end">
                   {/* Tooltip */}
                   <div className="absolute -top-10 scale-0 rounded-lg bg-[#22201F] px-2.5 py-1 text-xs font-bold text-white opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100 dark:bg-white dark:text-[#22201F]">
                     {d.hours}h

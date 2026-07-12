@@ -63,6 +63,7 @@ export function VideosSection({
             else if (video.subject === 'Organic Chemistry' || video.subject === 'Organic') customStyles = { bg: '#EAF4EC', text: '#3C8C5B' };
             else if (video.subject === 'Inorganic Chemistry' || video.subject === 'Inorganic') customStyles = { bg: '#EAF0FB', text: '#3A5FA6' };
 
+
             return (
               <PremiumCard key={video.id} interactive padding="none" className="flex flex-col h-full" onClick={() => setActiveVideoModal(video)}>
                 <div className="relative aspect-video w-full overflow-hidden bg-[#EFE7D8]">
