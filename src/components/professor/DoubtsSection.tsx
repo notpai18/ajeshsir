@@ -281,12 +281,12 @@ export function DoubtsSection({
                 </p>
                 <div className="mt-1.5 rounded-xl border border-[#EFE7D8] dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] p-3.5">
                   {parsedTitle ? (
-                    <p className="text-sm leading-relaxed text-[#3A342E] line-clamp-3">
+                    <p className="text-sm leading-relaxed text-[#3A342E] dark:text-[#C7BCAD] line-clamp-3">
                       <span className="font-bold">{parsedTitle}</span>
-                      {parsedDesc && <span className="font-normal text-[#3A342E]/80"> : {parsedDesc}</span>}
+                      {parsedDesc && <span className="font-normal text-[#3A342E]/80 dark:text-[#C7BCAD]/80"> : {parsedDesc}</span>}
                     </p>
                   ) : (
-                    <p className="text-sm italic text-[#3A342E]/60">[Image-only doubt — open thread to view]</p>
+                    <p className="text-sm italic text-[#3A342E]/60 dark:text-[#C7BCAD]/60">[Image-only doubt — open thread to view]</p>
                   )}
                 </div>
 
@@ -315,7 +315,7 @@ export function DoubtsSection({
                         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">
                           Your response
                         </p>
-                        <p className="mt-1 text-sm leading-relaxed text-[#3A342E] line-clamp-2">
+                        <p className="mt-1 text-sm leading-relaxed text-[#3A342E] dark:text-[#C7BCAD] line-clamp-2">
                           {firstProfReply.reply_text}
                         </p>
                         {(firstProfReply.image_urls?.length > 0 || firstProfReply.video_urls?.length > 0 || firstProfReply.audio_urls?.length > 0 || firstProfReply.attachment_urls?.length > 0) && (
@@ -338,7 +338,7 @@ export function DoubtsSection({
                 {doubt.answerText && !doubt.replies?.length && (
                   <div className="mt-3 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] px-3.5 py-3">
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response (Legacy)</p>
-                    <p className="mt-1 text-sm leading-relaxed text-[#3A342E] line-clamp-2">{doubt.answerText}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#3A342E] dark:text-[#C7BCAD] line-clamp-2">{doubt.answerText}</p>
                   </div>
                 )}
 

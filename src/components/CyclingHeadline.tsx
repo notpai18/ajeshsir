@@ -40,7 +40,7 @@ export function CyclingHeadline() {
   return (
     <section className="w-full pt-12 pb-4 md:pt-16 md:pb-6 overflow-hidden">
       <div className="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-        <h2 className="dash-serif text-[22px] sm:text-3xl md:text-5xl font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] flex flex-nowrap justify-center items-center gap-x-2 whitespace-nowrap overflow-hidden w-full">
+        <h2 className="font-sans text-[22px] sm:text-3xl md:text-5xl font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] flex flex-nowrap justify-center items-center gap-x-2 whitespace-nowrap overflow-hidden w-full">
           <span>Built for Every</span>
           <div className="relative flex items-center justify-start text-[#4A0E1B] dark:text-[#E8CD82] min-w-[180px] sm:min-w-[280px] md:min-w-[480px] h-[48px] md:h-[72px]">
             {shouldReduceMotion ? (

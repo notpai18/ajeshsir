@@ -24,25 +24,12 @@ import type { Video } from '../types';
 import { VideoPlayer } from './VideoPlayer';
 import { extractYouTubeId, getYoutubeThumbnail } from '../lib/youtube';
 import { PremiumCard } from './PremiumCard';
+import { EXAM_STYLES, ExamChip, EXAM_LABELS } from './exam/ExamStyles';
 // ─── Design constants (from design.md) ───────────────────────────────────────
 // CARD constant deprecated. We use PremiumCard component for visual consistency.
 const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60';
 
-const EXAM_LABELS: Record<string, string> = {
-  'jee-main': 'JEE Main',
-  'jee-advanced': 'JEE Advanced',
-  neet: 'NEET',
-  net: 'CSIR NET',
-  'msc-entrance': 'M.Sc Entrance',
-};
 
-const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#4A0E1B]/8', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
-  'jee-advanced': { bg: 'bg-[#7C2532]/8', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#C9A13B]/10', text: 'text-[#4A0E1B]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#E5EDF2]', text: 'text-[#2B5B7A]', dot: 'bg-[#2B5B7A]' },
-  'msc-entrance': { bg: 'bg-[#F5ECD8]', text: 'text-[#8A5E1E]', dot: 'bg-[#C9A13B]' },
-};
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 interface VideoWatchModalProps {

@@ -145,16 +145,16 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
         {/* ================= TEACHING PHILOSOPHY ================= */}
         <section className="mt-10">
           <p className={MICRO}>Teaching philosophy</p>
-          <div className="relative mt-4 overflow-hidden rounded-2xl border border-[#EAD9C0] bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] p-7 sm:p-10">
+          <div className="relative mt-4 overflow-hidden rounded-2xl border border-[#EAD9C0] dark:border-[#383330] bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] dark:from-[#2A1F1C] dark:to-[#26201A] p-7 sm:p-10">
             <Quote className="pointer-events-none absolute -right-2 top-3 text-[#4A0E1B] dark:text-[#F4E7E5]/10" size={110} strokeWidth={1.5} />
-            <p className="dash-serif relative max-w-2xl text-xl leading-relaxed text-[#3A2A22] sm:text-2xl">
+            <p className="dash-serif relative max-w-2xl text-xl leading-relaxed text-[#3A2A22] dark:text-[#F6F2EA] sm:text-2xl">
               “Academic excellence does not rely on memorising reactions, but on developing deep physical
               intuition and chemical logic. A chemistry problem is simply a mechanism waiting to be written in
               the elegant language of electrons — our role is to teach students its grammar, so they can write
               their own solutions.”
             </p>
             <div className="relative mt-6 flex items-center gap-3">
-              <span className="h-px w-8 bg-[#4A0E1B]/40" />
+              <span className="h-px w-8 bg-[#4A0E1B]/40 dark:bg-[#F6F2EA]/20" />
               <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8A6A16] dark:text-[#E8CD82]">Ajesh Joe</span>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
                   <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] dark:bg-[#380A14] text-[#4A0E1B] dark:text-[#F4E7E5]">
                     {it.icon}
                   </span>
-                  <span className="pt-1 text-sm font-semibold text-[#3A342E]">{it.label}</span>
+                  <span className="pt-1 text-sm font-semibold text-[#3A342E] dark:text-[#F6F2EA]">{it.label}</span>
                 </li>
               ))}
             </ul>
@@ -245,7 +245,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
             <div className="flex shrink-0 flex-wrap gap-2.5">
               <button
                 onClick={() => onNavigate?.('selection')}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#D9C2A2] px-4 py-2.5 text-xs font-bold tracking-wide text-[#4A0E1B] dark:text-[#F4E7E5] transition-colors hover:bg-[#E4D2B6]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#D9C2A2] px-4 py-2.5 text-xs font-bold tracking-wide text-[#4A0E1B] transition-colors hover:bg-[#E4D2B6]"
               >
                 Explore resources <ArrowRight size={15} />
               </button>

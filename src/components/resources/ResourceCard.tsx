@@ -47,7 +47,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
             {subject}
           </span>
           {chapter && (
-            <span className="text-[12px] font-medium text-[#A89F91]">
+            <span className="text-[12px] font-medium text-[#A89F91] dark:text-[#C7BCAD]">
               {chapter}
             </span>
           )}
