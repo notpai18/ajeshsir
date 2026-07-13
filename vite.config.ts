@@ -19,7 +19,7 @@ export default defineConfig(() => {
       include: ['pdfjs-dist'],
     },
     worker: {
-      format: 'es',
+      format: 'es' as const,
     },
   };
 });
