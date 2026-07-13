@@ -83,22 +83,23 @@ export function NotesSection({
       ) : (
         <Table head={['Exam & subject', 'Title & chapter', 'Downloads', '']}>
           {notesFiltered.map((n) => (
-            <tr key={n.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
-              <td className="px-5 py-3.5">
+            <tr key={n.id} className="block md:table-row relative p-4 md:p-0 bg-white dark:bg-[#1A1817] md:bg-transparent rounded-2xl md:rounded-none border border-[#22201F]/10 dark:border-[#F6F2EA]/10 md:border-none shadow-sm md:shadow-none transition-colors hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] group">
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-2 md:mb-0">
                 <ExamChip course={n.course} label={examTitle(n.course)} />
-                <span className="mt-1 block"><SubjectBadge subject={n.subject} /></span>
+                <span className="mt-1.5 md:mt-1 block md:inline"><SubjectBadge subject={n.subject} /></span>
               </td>
-              <td className="px-5 py-3.5">
-                <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{n.title}</span>
-                <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{n.chapter}</span>
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-4 md:mb-0">
+                <div className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{n.title}</div>
+                <div className="mt-1 text-[13px] text-[#8A7E6F] dark:text-[#A89F91]">{n.chapter}</div>
               </td>
-              <td className="px-5 py-3.5">
-                <span className="dash-mono inline-flex items-center gap-1.5 text-sm font-medium tabular-nums text-[#4A443E]">
+              <td className="inline-block md:table-cell px-0 py-0 md:px-5 md:py-4 text-sm text-[#8A7E6F] dark:text-[#A89F91]">
+                <span className="md:hidden text-xs uppercase tracking-wider text-[#B3A996] mr-1">Downloads:</span>
+                <span className="dash-mono inline-flex items-center gap-1.5 text-sm font-medium tabular-nums text-[#4A443E] dark:text-[#D1C9BC]">
                   <Download size={13} className="text-[#8A6A16]" />
                   {n.downloadCount.toLocaleString()}
                 </span>
               </td>
-              <td className="px-5 py-3.5">
+              <td className="inline-block absolute bottom-3 right-4 md:static md:table-cell px-0 py-0 md:px-5 md:py-4">
                 <RowActions
                   onView={n.fileUrl ? () => openPDF({ title: n.title, fileUrl: n.fileUrl, fileSize: n.fileSize, entityType: 'note', entityId: n.id, isProfessor: true, downloadCount: n.downloadCount, onDelete: () => { askDelete('this note', () => onDeleteNote(n.id)); } }) : undefined}
                   onEdit={() => openEditNote(n)}

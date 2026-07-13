@@ -35,6 +35,7 @@ function DidYouKnowCard() {
 
   return (
     <PremiumCard padding="large" className="relative overflow-hidden !bg-[#4A0E1B] !border-[#7C2532] shadow-[0_24px_50px_rgba(34,32,31,0.4)] dark:shadow-[0_24px_50px_rgba(0,0,0,0.7)] h-full min-h-[300px] w-full flex flex-col justify-center text-[#F7F3EC]">
+      {/* Abstract Noise Overlay */}
       <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
       
       <div className="relative z-10 w-full h-full flex flex-col">

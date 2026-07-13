@@ -409,6 +409,7 @@ export default function ProfessorDashboard({
   onTogglePinAnnouncement
 }: ProfessorDashboardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<ModalKind>(null);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [quickAddOpen, setQuickAddOpen] = useState(false);
@@ -770,7 +771,83 @@ const resetDemoData = () => {
         <div className="grid gap-7 md:grid-cols-12">
           {/* ============ SIDEBAR ============ */}
           <aside className="md:col-span-4 lg:col-span-3">
-            <div className="md:sticky md:top-24 lg:top-28">
+            
+            {/* --- MOBILE COMPACT SWITCHER --- */}
+            <div className="md:hidden mb-6">
+              <button 
+                onClick={() => setIsMobileNavOpen(true)}
+                className="flex w-full min-h-[48px] items-center justify-between rounded-xl bg-white dark:bg-[#1A1817] border border-[#22201F]/20 dark:border-[#F6F2EA]/10 p-3.5 shadow-sm active:bg-[#F7F3EC] dark:active:bg-[#22201F] transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-[#4A0E1B] dark:text-[#E8CD82]">{NAV.find(n => n.id === activeTab)?.icon}</span>
+                  <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{NAV.find(n => n.id === activeTab)?.label}</span>
+                </div>
+                <ChevronDown size={18} className="text-[#22201F]/60 dark:text-[#F6F2EA]/60" />
+              </button>
+              
+              <div className="mt-3 flex items-center gap-2 rounded-xl border border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726] px-3.5 py-3 text-[11px] text-[#8A7E6F] dark:text-[#A89F91]">
+                <Check size={14} className="text-[#8A6A16]" />
+                Changes save automatically to this browser.
+              </div>
+            </div>
+
+            {/* --- MOBILE EXPANDED OVERLAY --- */}
+            {isMobileNavOpen && (
+              <div className="md:hidden fixed inset-0 z-50 flex flex-col justify-end">
+                <div 
+                  className="absolute inset-0 bg-[#22201F]/40 dark:bg-black/60 backdrop-blur-sm" 
+                  onClick={() => setIsMobileNavOpen(false)}
+                />
+                
+                <div className="relative bg-[#FBF7F0] dark:bg-[#1A1817] rounded-t-[24px] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-[slideUp_0.3s_ease-out_forwards]">
+                  <div className="p-4 border-b border-[#22201F]/10 dark:border-[#F6F2EA]/10 flex justify-between items-center bg-white dark:bg-[#2A2726]">
+                    <div className="flex items-center gap-3">
+                      {profile.name === 'Ajesh Joe' ? (
+                        <img src="/ajesh-joe.png" alt="Ajesh Joe" className="h-10 w-10 shrink-0 rounded-xl object-cover object-top border border-[#4A0E1B]/20 dark:border-[#F6F2EA]/10 shadow-sm" />
+                      ) : (
+                        <div className="dash-serif flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#4A0E1B] text-sm font-semibold text-[#D9C2A2]">
+                          {initials(profile.name)}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <h3 className="truncate text-sm font-bold text-[#22201F] dark:text-[#F6F2EA]">{profile.name}</h3>
+                        <span className="text-[11px] font-medium text-[#22201F] dark:text-[#F6F2EA]/60">{profile.role}</span>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setIsMobileNavOpen(false)} 
+                      className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-[#22201F]/60 dark:text-[#F6F2EA]/60 bg-[#22201F]/5 dark:bg-[#F6F2EA]/5 rounded-full"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+
+                  <div className="overflow-y-auto p-4 space-y-1 bg-[#FBF7F0] dark:bg-[#1A1817]">
+                    {NAV.map((item) => {
+                      const active = activeTab === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => { setActiveTab(item.id); setIsMobileNavOpen(false); }}
+                          className={`flex w-full min-h-[44px] items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                            active ? 'bg-[#4A0E1B]/10 text-[#4A0E1B]' : 'text-[#22201F] dark:text-[#F6F2EA]/80 active:bg-[#EAD9C0] dark:active:bg-[#2A2726]'
+                          }`}
+                        >
+                          <span className={active ? 'text-[#4A0E1B]' : 'text-[#4A0E1B]/60 dark:text-[#A89F91]'}>{item.icon}</span>
+                          <span className="flex-1 text-left">{item.label}</span>
+                          {!!item.badge && item.badge > 0 && (
+                            <span className="rounded-full bg-[#4A0E1B] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white">{item.badge}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* --- DESKTOP SIDEBAR --- */}
+            <div className="hidden md:block md:sticky md:top-24 lg:top-28">
               <PremiumCard padding="small">
                 {/* Profile */}
                 <div className="mb-3 flex items-center gap-3 rounded-xl bg-gradient-to-br from-[#4A0E1B]/8 to-[#C9A13B]/8 border border-[#22201F]/20 p-3">
@@ -824,7 +901,7 @@ const resetDemoData = () => {
           </aside>
 
           {/* ============ MAIN ============ */}
-          <main className="md:col-span-8 lg:col-span-9">
+          <main className="md:col-span-8 lg:col-span-9 min-w-0">
             
             {/* ---------- OVERVIEW ---------- */}
             {activeTab === 'overview' && (

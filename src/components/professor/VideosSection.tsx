@@ -80,19 +80,20 @@ export function VideosSection({
       ) : (
         <Table head={['Exam & subject', 'Lecture & chapter', 'Duration', '']}>
           {videosFiltered.map((v) => (
-            <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
-              <td className="px-5 py-3.5">
+            <tr key={v.id} className="block md:table-row relative p-4 md:p-0 bg-white dark:bg-[#1A1817] md:bg-transparent rounded-2xl md:rounded-none border border-[#22201F]/10 dark:border-[#F6F2EA]/10 md:border-none shadow-sm md:shadow-none transition-colors hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] group">
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-2 md:mb-0">
                 <ExamChip course={v.course} label={examTitle(v.course)} />
-                <span className="mt-1 block"><SubjectBadge subject={v.subject} /></span>
+                <span className="mt-1.5 md:mt-1 block md:inline"><SubjectBadge subject={v.subject} /></span>
               </td>
-              <td className="px-5 py-3.5">
-                <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{v.title}</span>
-                <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{v.chapter}</span>
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-4 md:mb-0">
+                <div className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{v.title}</div>
+                <div className="mt-1 text-[13px] text-[#8A7E6F] dark:text-[#A89F91]">{v.chapter}</div>
               </td>
-              <td className="px-5 py-3.5">
-                <span className="dash-mono text-sm tabular-nums text-[#4A443E]">{v.duration}</span>
+              <td className="inline-block md:table-cell px-0 py-0 md:px-5 md:py-4">
+                <span className="md:hidden text-xs uppercase tracking-wider text-[#B3A996] mr-1">Duration:</span>
+                <span className="dash-mono text-sm tabular-nums text-[#4A443E] dark:text-[#D1C9BC]">{v.duration}</span>
               </td>
-              <td className="px-5 py-3.5">
+              <td className="inline-block absolute bottom-3 right-4 md:static md:table-cell px-0 py-0 md:px-5 md:py-4">
                 <RowActions onEdit={() => openEditVideo(v)} onDelete={() => askDelete('this lecture', () => onDeleteVideo(v.id))} />
               </td>
             </tr>
