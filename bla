@@ -1,0 +1,25 @@
+TASK: Upgrade the exam-category cards (JEE Main, JEE Advanced, NEET Chemistry, CSIR NET, M.Sc Entrance) on the Resources landing/overview page to match the platform's "Professor's Study" premium design language.
+
+COMPONENT: Reuse PremiumCard.tsx if these aren't already using it — if they're a separate one-off component, refactor to use PremiumCard so styling stays consistent with Notes/Videos/PYQs cards elsewhere.
+
+CURRENT ISSUES TO FIX:
+1. Icon squares are flat solid black for every category — no visual distinction, no depth.
+2. Card borders are thin/flat with no shadow or hover elevation.
+3. "Resources" count badge (dark maroon pill, top-right) looks slightly disconnected from the rest of the card — tighten its integration.
+4. "EXPLORE →" is a plain text link with no visual weight — feels like an afterthought given it's the primary CTA of the card.
+5. No hover state currently visible — cards should feel interactive/clickable at a glance.
+
+CHANGES:
+- ICON TREATMENT: Replace solid black icon squares with a soft tinted background per category (e.g., light maroon/sand tint at ~10-15% opacity of #4A0E1B, or a distinct pastel per category — physical/JEE Main in maroon tint, JEE Advanced in a complementary accent, NEET in a teal/sage tint, CSIR NET and M.Sc in muted golds) — matching how Notes cards already color-code icon backgrounds (maroon vs green squares) rather than using flat black across all categories.
+- Icon itself: use the accent color (e.g., #4A0E1B) as the icon stroke/fill color instead of white-on-black, so it feels warmer and part of the palette rather than a generic dark UI icon.
+- CARD ELEVATION: Add a subtle box-shadow at rest (e.g., 0 1px 3px rgba(0,0,0,0.06)) and a stronger shadow + slight translateY(-4px) lift on hover, with a smooth transition (200-250ms ease), matching the hover-lift behavior already used on Notes cards.
+- BORDER: Add a very subtle 1px border in a warm neutral (sand-tinted) that becomes slightly more saturated/colored on hover — avoid a totally flat/borderless look.
+- RESOURCE COUNT BADGE: Keep the dark maroon pill but make sure padding/font-size feels proportionate to the card (currently reads slightly cramped) — same pill style as used elsewhere in the app (e.g., "TOTAL NOTES" badge on the Notes hero).
+- EXPLORE CTA: Convert from plain text+arrow into a proper button-like element — subtle background fill (sand or very light maroon tint), rounded corners, padding, with the arrow icon animating a few pixels rightward on hover (translateX(4px) transition). This should visually read as "click me," not just a caption.
+- TYPOGRAPHY: Increase weight/size contrast between the category title (bold, larger) and description text (lighter, muted gray) if not already — description currently competes visually with the title.
+- SPACING: Increase internal card padding slightly for breathing room; ensure consistent gap between icon row, title, description, and CTA across all 5 cards regardless of description text length (fixed-height card body, truncate description to 2 lines consistently — the current cards already vary slightly in visual density).
+- GRID: Ensure consistent card heights across the row (align to tallest card in each row via CSS Grid `align-items: stretch` or flex, since M.Sc Entrance/CSIR NET currently look slightly different in proportion from JEE Main/Advanced/NEET).
+
+CONSTRAINTS:
+- Reuse the design tokens already established (#4A0E1B maroon, charcoal, sand) — no new colors outside the existing palette; icon tint colors should be desaturated/lightened variants of the same tokens, not entirely new hues, unless you want distinct per-category color coding (confirm before introducing new hex values).
+- Keep dark mode compatibility — verify icon tints and card backgrounds have appropriate dark-mode equivalents (check "Original Dark" toggle still works correctly on this page).
