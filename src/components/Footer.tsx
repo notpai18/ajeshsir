@@ -35,7 +35,7 @@ export default function Footer({ onNavigate }: FooterProps) {
   return (
     <footer className="relative w-full bg-[#F7F3EC] dark:bg-[#1A1817] z-10 pt-8 pb-6 transition-colors duration-300">
       {/* Floating Lightweight Card Container */}
-      <div className="mx-auto w-[92%] max-w-7xl rounded-[24px] bg-[#4A0E1B] dark:bg-[#22201F] px-6 py-7 md:px-10 md:py-8 shadow-[0_8px_30px_rgba(34,32,31,0.15)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.15)] border border-[#7C2532]/30 dark:border-[#C9A13B]/8 relative transition-all duration-300">
+      <div className="mx-auto w-[92%] max-w-7xl rounded-[24px] bg-[#4A0E1B] dark:bg-[#2D0710] px-6 py-7 md:px-10 md:py-8 shadow-[0_8px_30px_rgba(34,32,31,0.15)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-[#7C2532]/30 dark:border-[#7C2532]/40 relative transition-all duration-300">
         
         {/* Row 1: Asymmetrical Top Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">

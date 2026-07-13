@@ -42,6 +42,7 @@ import { PDFViewer } from './pdf/PDFViewer';
 import type { PDFDocumentInfo } from './pdf/PDFContext';
 import { FileUpload } from './FileUpload';
 import { PremiumCard } from './PremiumCard';
+import { EXAM_STYLES, ExamChip } from './exam/ExamStyles';
 import {
   ExamType,
   ExamInfo,
@@ -70,16 +71,7 @@ const ROW_BTN =
   'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA]/80 transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817] hover:text-[#4A0E1B]';
 const ROW_BTN_DANGER =
   'inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-[#4A0E1B]/80 transition-colors hover:bg-[#4A0E1B]/8 hover:text-[#4A0E1B]';
-const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#F6F2EA]/60';
-
-const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
-  'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
-  'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
-};
-
+const MICRO = 'text-[10px] font-bold uppercase tracking-[0.14em] text-[#22201F] dark:text-[#A89F91]';
 const ANN_CAT: Record<AnnouncementCategory, { label: string; cls: string }> = {
   general: { label: 'General', cls: 'bg-[#EFE7D8] text-[#6E645A]' },
   exam: { label: 'Exam', cls: 'bg-[#F4E4E4] text-[#4A0E1B]' },
@@ -100,20 +92,6 @@ function SubjectBadge({ subject }: { subject: string }) {
     </span>
   );
 }
-
-/* ------------------------------------------------------------------ *
- * Small presentational helpers
- * ------------------------------------------------------------------ */
-function ExamChip({ course, label }: { course: string; label: string }) {
-  const s = EXAM_STYLES[course] ?? EXAM_STYLES['jee-main'];
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${s.bg} ${s.text}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {label}
-    </span>
-  );
-}
-
 function DifficultyChip({ level }: { level: 'Easy' | 'Medium' | 'Hard' }) {
   const map = {
     Easy: 'bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]',
@@ -164,10 +142,10 @@ function Bar({
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <span className="truncate text-sm font-semibold text-[#3A342E]">{label}</span>
+        <span className="truncate text-sm font-semibold text-[#3A342E] dark:text-[#C7BCAD]">{label}</span>
         <span className="dash-mono shrink-0 text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">{sub}</span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-[#F0E9DB]">
+      <div className="h-2.5 overflow-hidden rounded-full bg-[#F0E9DB] dark:bg-[#383330]">
         <div className={`h-full rounded-full ${barClass}`} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -827,7 +805,7 @@ const resetDemoData = () => {
                         }`}
                       >
                         {active && <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#4A0E1B]" />}
-                        <span className={active ? 'text-[#4A0E1B]' : 'text-[#4A0E1B]/60 group-hover:text-[#4A0E1B]'}>{item.icon}</span>
+                        <span className={active ? 'text-[#4A0E1B]' : 'text-[#4A0E1B]/60 dark:text-[#A89F91] group-hover:text-[#4A0E1B] dark:group-hover:text-[#E8CD82]'}>{item.icon}</span>
                         <span className="flex-1 text-left">{item.label}</span>
                         {!!item.badge && item.badge > 0 && (
                           <span className="rounded-full bg-[#4A0E1B] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white">{item.badge}</span>

@@ -8,6 +8,7 @@
 import React, { useMemo } from 'react';
 import { FileText, Video as VideoIcon, FileSpreadsheet, ClipboardList, TrendingUp, LayoutDashboard, Check, User, ArrowRight } from 'lucide-react';
 import { PremiumCard } from '../PremiumCard';
+import { EXAM_STYLES, ExamChip } from '../exam/ExamStyles';
 import type { ExamInfo, Note, Video, PYQ, PracticeSheet, Doubt } from '../../types';
 
 interface OverviewSectionProps {
@@ -20,23 +21,6 @@ interface OverviewSectionProps {
   onNavigateToDoubt: (id: string) => void;
 }
 
-const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
-  'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
-  'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
-};
-
-function ExamChip({ course, label }: { course: string; label: string }) {
-  const s = EXAM_STYLES[course] ?? EXAM_STYLES['jee-main'];
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${s.bg} ${s.text}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {label}
-    </span>
-  );
-}
 
 function StatCard({ icon, label, value, sub }: { icon: React.ReactNode; label: string; value: React.ReactNode; sub?: string; }) {
   return (
@@ -56,10 +40,10 @@ function Bar({ label, sub, value, max, barClass = 'bg-[#4A0E1B]' }: { label: str
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <span className="truncate text-sm font-semibold text-[#3A342E]">{label}</span>
+        <span className="truncate text-sm font-semibold text-[#3A342E] dark:text-[#C7BCAD]">{label}</span>
         <span className="dash-mono shrink-0 text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">{sub}</span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-[#F0E9DB]">
+      <div className="h-2.5 overflow-hidden rounded-full bg-[#F0E9DB] dark:bg-[#383330]">
         <div className={`h-full rounded-full ${barClass}`} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -156,7 +140,7 @@ export function OverviewSection({
               <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Most downloaded notes</h3>
               <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">What students reach for most</p>
             </div>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B] dark:text-[#F4E7E5]">
               <TrendingUp size={17} />
             </span>
           </div>
@@ -177,7 +161,7 @@ export function OverviewSection({
               <h3 className="dash-serif text-lg font-semibold text-[#22201F] dark:text-[#F6F2EA]">Library by exam</h3>
               <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">How your content is spread</p>
             </div>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16] dark:text-[#E8CD82]">
               <LayoutDashboard size={17} />
             </span>
           </div>
@@ -251,7 +235,7 @@ export function OverviewSection({
             <div className="space-y-1">
               {recentUploads.map((item, i) => (
                 <div key={i} className="flex items-center gap-3 border-b border-[#F2ECDF] dark:border-[#383330] py-2.5 last:border-0">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B]">{typeIcon[item.type]}</span>
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F4E7E5] dark:bg-[#38151A] text-[#4A0E1B] dark:text-[#F4E7E5]">{typeIcon[item.type]}</span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA]">{item.title}</p>
                     <p className="truncate text-xs text-[#8A7E6F] dark:text-[#A89F91]">{item.detail}</p>

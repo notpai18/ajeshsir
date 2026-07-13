@@ -11,24 +11,9 @@ import { SubjectBadge } from '../ui/SubjectBadge';
 import { PRIMARY_BTN, INPUT } from '../ui/tokens';
 import type { ExamInfo, PracticeSheet } from '../../types';
 import type { PDFDocumentInfo } from '../pdf/PDFContext';
+import { EXAM_STYLES, ExamChip } from '../exam/ExamStyles';
 
-const EXAM_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
-  'jee-main': { bg: 'bg-[#F4E7E5] dark:bg-[#38151A]', text: 'text-[#4A0E1B]', dot: 'bg-[#4A0E1B]' },
-  'jee-advanced': { bg: 'bg-[#F4E2E5]', text: 'text-[#7C2532]', dot: 'bg-[#7C2532]' },
-  neet: { bg: 'bg-[#F7EFD9] dark:bg-[#362A0D]', text: 'text-[#8A6A16]', dot: 'bg-[#C9A13B]' },
-  net: { bg: 'bg-[#ECE7E0]', text: 'text-[#22201F] dark:text-[#F6F2EA]', dot: 'bg-[#22201F]' },
-  'msc-entrance': { bg: 'bg-[#EFE7D8]', text: 'text-[#6E5A2E]', dot: 'bg-[#C4A87F]' }
-};
 
-function ExamChip({ course, label }: { course: string; label: string }) {
-  const s = EXAM_STYLES[course] ?? EXAM_STYLES['jee-main'];
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold ${s.bg} ${s.text}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {label}
-    </span>
-  );
-}
 
 interface SheetsSectionProps {
   exams: ExamInfo[];
