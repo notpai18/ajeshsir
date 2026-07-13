@@ -155,9 +155,9 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
 
         {/* Blockquote Section */}
         <div className="mt-8 md:mt-12 max-w-5xl mx-auto animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
-          <div className="relative overflow-hidden rounded-2xl border border-[#EAD9C0] bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] p-7 sm:p-10">
+          <div className="relative overflow-hidden rounded-2xl border border-[#EAD9C0] dark:border-[#7C2532]/40 bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] dark:from-[#2D0710] dark:to-[#4A0E1B] p-7 sm:p-10 shadow-[0_8px_30px_rgba(34,32,31,0.05)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
             <Quote className="pointer-events-none absolute -right-2 top-3 text-[#4A0E1B] dark:text-[#F4E7E5]/10" size={110} strokeWidth={1.5} />
-            <p className="dash-serif relative max-w-2xl text-xl leading-relaxed text-[#3A2A22] sm:text-2xl">
+            <p className="font-serif relative max-w-2xl text-xl leading-relaxed text-[#3A2A22] dark:text-[#F7F3EC] sm:text-2xl">
               “Academic excellence does not rely on memorising reactions, but on developing deep physical intuition and chemical logic. A chemistry problem is simply a mechanism waiting to be written in the elegant language of electrons — our role is to teach students its grammar, so they can write their own solutions.”
             </p>
             <div className="relative mt-6 flex items-center gap-3">
