@@ -2,17 +2,12 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import type { User, Session } from '@supabase/supabase-js';
 
-const AUTHORIZED_EMAILS = [
-  'vighneshskumar2006@gmail.com',
-  'pranav2@gmail.com',
-  'derinjosesanjith@gmail.com'
-];
-
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isAuthorizedProf: boolean;
   loading: boolean;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -21,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   isAuthorizedProf: false,
   loading: true,
+  login: async () => false,
   logout: async () => {},
 });
 
@@ -47,14 +43,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  const login = async (username: string, password: string) => {
+    // We map the simple 'admin' username to a hidden email for Supabase Auth
+    const email = `${username.toLowerCase()}@ajeshsir.com`;
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      console.error("Login failed:", error);
+      return false;
+    }
+    return true;
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
   };
 
-  const isAuthorizedProf = !!user?.email && AUTHORIZED_EMAILS.includes(user.email);
+  // If there is any logged in user, they are considered the authorized professor
+  // since students don't have accounts.
+  const isAuthorizedProf = !!user;
 
   return (
-    <AuthContext.Provider value={{ user, session, isAuthorizedProf, loading, logout }}>
+    <AuthContext.Provider value={{ user, session, isAuthorizedProf, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
