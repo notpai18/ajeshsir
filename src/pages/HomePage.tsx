@@ -35,6 +35,7 @@ function DidYouKnowCard() {
 
   return (
     <PremiumCard padding="large" className="relative overflow-hidden !bg-[#4A0E1B] !border-[#7C2532] shadow-[0_24px_50px_rgba(34,32,31,0.4)] dark:shadow-[0_24px_50px_rgba(0,0,0,0.7)] h-full min-h-[300px] w-full flex flex-col justify-center text-[#F7F3EC]">
+      {/* Abstract Noise Overlay */}
       <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
       
       <div className="relative z-10 w-full h-full flex flex-col">
@@ -162,11 +163,11 @@ export default function Hero({ onGetStarted, onNavigate }: HeroProps) {
         {/* Blockquote Section */}
         <div className="mt-8 md:mt-12 max-w-5xl mx-auto animate-[fadeInUp_0.8s_ease-out_forwards]" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
           <div className="relative overflow-hidden rounded-2xl border border-[#EAD9C0] dark:border-[#7C2532]/40 bg-gradient-to-br from-[#F6EBE6] to-[#F3EAD8] dark:from-[#2D0710] dark:to-[#4A0E1B] p-7 sm:p-10 shadow-[0_8px_30px_rgba(34,32,31,0.05)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
-            <Quote className="pointer-events-none absolute -right-2 top-3 text-[#4A0E1B] dark:text-[#F4E7E5]/10" size={110} strokeWidth={1.5} />
-            <p className="font-serif relative max-w-2xl text-xl leading-relaxed text-[#3A2A22] dark:text-[#F7F3EC] sm:text-2xl">
+            <Quote className="pointer-events-none absolute -right-2 top-3 z-0 text-[#4A0E1B]/10 lg:text-[#4A0E1B] dark:text-[#F4E7E5]/20 lg:dark:text-[#F4E7E5]/10" size={110} strokeWidth={1.5} />
+            <p className="font-serif relative z-10 max-w-2xl text-xl leading-relaxed text-[#3A2A22] dark:text-[#F7F3EC] sm:text-2xl">
               “Academic excellence does not rely on memorising reactions, but on developing deep physical intuition and chemical logic. A chemistry problem is simply a mechanism waiting to be written in the elegant language of electrons — our role is to teach students its grammar, so they can write their own solutions.”
             </p>
-            <div className="relative mt-6 flex items-center gap-3">
+            <div className="relative z-10 mt-6 flex items-center gap-3">
               <span className="h-px w-8 bg-[#4A0E1B]/40" />
               <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8A6A16] dark:text-[#E8CD82]">Ajesh Joe</span>
             </div>

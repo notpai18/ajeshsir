@@ -102,19 +102,20 @@ export function PYQSection({
       ) : (
         <Table head={['Exam & subject', 'Chapter & year', 'Difficulty', '']}>
           {pyqsFiltered.map((p) => (
-            <tr key={p.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
-              <td className="px-5 py-3.5">
+            <tr key={p.id} className="block md:table-row relative p-4 md:p-0 bg-white dark:bg-[#1A1817] md:bg-transparent rounded-2xl md:rounded-none border border-[#22201F]/10 dark:border-[#F6F2EA]/10 md:border-none shadow-sm md:shadow-none transition-colors hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] group">
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-2 md:mb-0">
                 <ExamChip course={p.course} label={examTitle(p.course)} />
-                <span className="mt-1 block"><SubjectBadge subject={p.subject} /></span>
+                <span className="mt-1.5 md:mt-1 block md:inline"><SubjectBadge subject={p.subject} /></span>
               </td>
-              <td className="px-5 py-3.5">
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-4 md:mb-0">
                 <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{p.chapter}</span>
-                <span className="dash-mono mt-0.5 block text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">Year {p.year}</span>
+                <span className="dash-mono mt-1 md:mt-0.5 block text-[13px] md:text-xs tabular-nums text-[#8A7E6F] dark:text-[#A89F91]">Year {p.year}</span>
               </td>
-              <td className="px-5 py-3.5">
+              <td className="inline-block md:table-cell px-0 py-0 md:px-5 md:py-4">
+                <span className="md:hidden text-xs uppercase tracking-wider text-[#B3A996] mr-1">Difficulty:</span>
                 <DifficultyChip level={p.difficulty as any} />
               </td>
-              <td className="px-5 py-3.5">
+              <td className="inline-block absolute bottom-3 right-4 md:static md:table-cell px-0 py-0 md:px-5 md:py-4">
                 <RowActions
                   onView={p.questionUrl ? () => openPDF({ title: `${p.chapter} · ${p.year} (Question)`, fileUrl: p.questionUrl, fileSize: p.questionSize, entityType: 'pyq', entityId: p.id, isProfessor: true, onDelete: () => { askDelete('this PYQ', () => onDeletePyq(p.id)); } }) : undefined}
                   onViewSecondary={p.solutionUrl ? () => openPDF({ title: `${p.chapter} · ${p.year} (Solution)`, fileUrl: p.solutionUrl, fileSize: p.solutionSize, entityType: 'pyq', entityId: p.id, isProfessor: true, onDelete: () => { askDelete('this PYQ', () => onDeletePyq(p.id)); } }) : undefined}

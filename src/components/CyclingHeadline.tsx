@@ -40,11 +40,16 @@ export function CyclingHeadline() {
   return (
     <section className="w-full pt-12 pb-4 md:pt-16 md:pb-6 overflow-hidden">
       <div className="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-        <h2 className="font-sans text-[22px] sm:text-3xl md:text-5xl font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] flex flex-nowrap justify-center items-center gap-x-2 whitespace-nowrap overflow-hidden w-full">
-          <span>Built for Every</span>
-          <div className="relative flex items-center justify-start text-[#4A0E1B] dark:text-[#E8CD82] min-w-[180px] sm:min-w-[280px] md:min-w-[480px] h-[48px] md:h-[72px]">
+        <h2 className="font-sans text-[22px] sm:text-3xl md:text-5xl font-bold tracking-tight text-[#22201F] dark:text-[#F6F2EA] w-full text-center md:flex md:flex-nowrap md:justify-center md:items-center md:gap-x-2 md:whitespace-nowrap md:overflow-hidden">
+          <span className="inline-block md:inline">Built for Every</span>
+          <span className="inline-block md:hidden">&nbsp;</span>
+          <span className="inline-grid text-[#4A0E1B] dark:text-[#E8CD82] md:relative md:flex md:items-center md:justify-start md:min-w-[480px] md:h-[72px]">
+            {/* Invisible longest word for mobile to reserve space and dictate wrapping */}
+            <span className="invisible col-start-1 row-start-1 md:hidden flex items-center justify-start whitespace-nowrap" aria-hidden="true">
+              Chemistry Student
+            </span>
             {shouldReduceMotion ? (
-              <span className="absolute inset-0 flex items-center justify-start">
+              <span className="col-start-1 row-start-1 flex items-center justify-start whitespace-nowrap md:absolute md:inset-0">
                 {HEADLINE_ITEMS[0]}
               </span>
             ) : (
@@ -55,13 +60,13 @@ export function CyclingHeadline() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="absolute inset-0 flex items-center justify-start whitespace-nowrap"
+                  className="col-start-1 row-start-1 flex items-center justify-start whitespace-nowrap md:absolute md:inset-0"
                 >
                   <BlurText text={currentItem} delay={25} animateBy="letters" className="inline-flex items-center" />
                 </motion.span>
               </AnimatePresence>
             )}
-          </div>
+          </span>
         </h2>
       </div>
     </section>
