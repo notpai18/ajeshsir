@@ -8,9 +8,9 @@ import { AttachmentViewer } from '../components/ui/AttachmentViewer';
 import { formatRelativeTime } from '../lib/formatRelativeTime';
 import type { Doubt, DoubtStatus } from '../types';
 
-interface DoubtDetailPageProps {
-  userRole: 'student' | 'professor' | null;
-}
+import { useAuth } from '../context/AuthContext';
+
+interface DoubtDetailPageProps {}
 
 function deriveStatus(doubt: Doubt): DoubtStatus {
   if (doubt.status) return doubt.status;
@@ -29,7 +29,7 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
 }
 
-export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
+export default function DoubtDetailPage({}: DoubtDetailPageProps) {
   const { doubtId } = useParams();
   const navigate = useNavigate();
   const { doubts, loading } = usePortalData();
@@ -41,10 +41,7 @@ export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
     window.scrollTo(0, 0);
   }, [doubtId]);
 
-  if (!userRole) {
-    return <Navigate to="/selection" replace />;
-  }
-
+  const { isAuthorizedProf } = useAuth();
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F6F2EA] dark:bg-[#1A1817]">
@@ -94,15 +91,18 @@ export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
   const mappedReplies = [
     ...(doubt.answerText ? [{
       id: 'legacy-answer',
-      authorName: userRole === 'professor' ? 'You' : 'Professor',
+      authorName: isAuthorizedProf ? 'You' : 'Professor',
       authorRole: 'professor' as const,
       message: doubt.answerText,
       createdAt: doubt.createdAt,
-      imageUrls: [] as string[]
+      imageUrls: [] as string[],
+      videoUrls: [] as string[],
+      audioUrls: [] as string[],
+      attachmentUrls: [] as string[]
     }] : []),
     ...(doubt.replies || []).map(r => ({
       id: r.id,
-      authorName: r.professor_id === 'student' ? doubt.name : (userRole === 'professor' ? 'You' : 'Professor'),
+      authorName: r.professor_id === 'student' ? doubt.name : (isAuthorizedProf ? 'You' : 'Professor'),
       authorRole: (r.professor_id === 'student' ? 'student' : 'professor') as 'student' | 'professor',
       message: r.reply_text || '',
       imageUrls: r.image_urls || [],

@@ -3,6 +3,7 @@ import { BrowserRouter, useLocation } from 'react-router-dom';
 import { AppNew } from './AppNew';
 import { PortalDataProvider } from './context/PortalDataContext';
 import { ImageViewerProvider } from './components/image-viewer';
+import { AuthProvider } from './context/AuthContext';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -32,11 +33,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <PortalDataProvider>
-        <ImageViewerProvider>
-          <AppNew theme={theme} toggleTheme={toggleTheme} />
-        </ImageViewerProvider>
-      </PortalDataProvider>
+      <AuthProvider>
+        <PortalDataProvider>
+          <ImageViewerProvider>
+            <AppNew theme={theme} toggleTheme={toggleTheme} />
+          </ImageViewerProvider>
+        </PortalDataProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
