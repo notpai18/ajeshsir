@@ -42,6 +42,7 @@ import { PDFViewer } from './pdf/PDFViewer';
 import type { PDFDocumentInfo } from './pdf/PDFContext';
 import { FileUpload } from './FileUpload';
 import { PremiumCard } from './PremiumCard';
+import { CustomSelect } from './ui/CustomSelect';
 import { EXAM_STYLES, ExamChip } from './exam/ExamStyles';
 import {
   ExamType,
@@ -205,7 +206,7 @@ function Modal({
             <X size={18} />
           </button>
         </div>
-        <div className="max-h-[72vh] overflow-y-auto px-6 py-5">{children}</div>
+        <div className="max-h-[72vh] overflow-y-auto px-6 py-5 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">{children}</div>
       </div>
     </div>
   );
@@ -838,7 +839,7 @@ const resetDemoData = () => {
                     </button>
                   </div>
 
-                  <div className="overflow-y-auto p-4 space-y-1 bg-[#FBF7F0] dark:bg-[#1A1817]">
+                  <div className="overflow-y-auto p-4 space-y-1 bg-[#FBF7F0] dark:bg-[#1A1817] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                     {NAV.map((item) => {
                       const active = activeTab === item.id;
                       return (
@@ -1038,16 +1039,10 @@ const resetDemoData = () => {
           <form onSubmit={handleNoteSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <Field label="Exam / course">
-                <select className={INPUT} value={noteForm.course} onChange={(e) => setNoteForm({ ...noteForm, course: e.target.value as ExamType })}>
-                  {exams.map((e) => (
-                    <option key={e.id} value={e.id}>{e.title}</option>
-                  ))}
-                </select>
+                <CustomSelect className={INPUT} value={noteForm.course} onChange={(val) => setNoteForm({ ...noteForm, course: val as ExamType })} options={exams.map(e => ({ value: e.id, label: e.title }))} placeholder="Select course..." />
               </Field>
               <Field label="Subject">
-                <select className={INPUT} required value={noteForm.subject} onChange={(e) => setNoteForm({ ...noteForm, subject: e.target.value })}>
-                  {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <CustomSelect className={INPUT} value={noteForm.subject} onChange={(val) => setNoteForm({ ...noteForm, subject: val })} options={SUBJECTS.map((s) => ({ value: s, label: s }))} placeholder="Select subject..." />
               </Field>
             </div>
             <Field label="Chapter">
@@ -1079,16 +1074,10 @@ const resetDemoData = () => {
           <form onSubmit={handleVideoSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <Field label="Exam / course">
-                <select className={INPUT} value={videoForm.course} onChange={(e) => setVideoForm({ ...videoForm, course: e.target.value as ExamType })}>
-                  {exams.map((e) => (
-                    <option key={e.id} value={e.id}>{e.title}</option>
-                  ))}
-                </select>
+                <CustomSelect className={INPUT} value={videoForm.course} onChange={(val) => setVideoForm({ ...videoForm, course: val as ExamType })} options={exams.map(e => ({ value: e.id, label: e.title }))} placeholder="Select course..." />
               </Field>
               <Field label="Subject">
-                <select className={INPUT} required value={videoForm.subject} onChange={(e) => setVideoForm({ ...videoForm, subject: e.target.value })}>
-                  {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <CustomSelect className={INPUT} value={videoForm.subject} onChange={(val) => setVideoForm({ ...videoForm, subject: val })} options={SUBJECTS.map((s) => ({ value: s, label: s }))} placeholder="Select subject..." />
               </Field>
             </div>
             <Field label="Chapter">
@@ -1120,16 +1109,10 @@ const resetDemoData = () => {
           <form onSubmit={handlePyqSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <Field label="Exam / course">
-                <select className={INPUT} value={pyqForm.course} onChange={(e) => setPyqForm({ ...pyqForm, course: e.target.value as ExamType })}>
-                  {exams.map((e) => (
-                    <option key={e.id} value={e.id}>{e.title}</option>
-                  ))}
-                </select>
+                <CustomSelect className={INPUT} value={pyqForm.course} onChange={(val) => setPyqForm({ ...pyqForm, course: val as ExamType })} options={exams.map(e => ({ value: e.id, label: e.title }))} placeholder="Select course..." />
               </Field>
               <Field label="Subject">
-                <select className={INPUT} required value={pyqForm.subject} onChange={(e) => setPyqForm({ ...pyqForm, subject: e.target.value })}>
-                  {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <CustomSelect className={INPUT} value={pyqForm.subject} onChange={(val) => setPyqForm({ ...pyqForm, subject: val })} options={SUBJECTS.map((s) => ({ value: s, label: s }))} placeholder="Select subject..." />
               </Field>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -1137,11 +1120,7 @@ const resetDemoData = () => {
                 <input className={INPUT} type="number" required value={pyqForm.year} onChange={(e) => setPyqForm({ ...pyqForm, year: Number(e.target.value) })} />
               </Field>
               <Field label="Difficulty">
-                <select className={INPUT} value={pyqForm.difficulty} onChange={(e) => setPyqForm({ ...pyqForm, difficulty: e.target.value as 'Easy' | 'Medium' | 'Hard' })}>
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
-                </select>
+                <CustomSelect className={INPUT} value={pyqForm.difficulty} onChange={(val) => setPyqForm({ ...pyqForm, difficulty: val as 'Easy' | 'Medium' | 'Hard' })} options={[{value: 'Easy', label: 'Easy'}, {value: 'Medium', label: 'Medium'}, {value: 'Hard', label: 'Hard'}]} placeholder="Select difficulty..." />
               </Field>
             </div>
             <Field label="Chapter">
@@ -1176,16 +1155,10 @@ const resetDemoData = () => {
           <form onSubmit={handleSheetSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <Field label="Exam / course">
-                <select className={INPUT} value={sheetForm.course} onChange={(e) => setSheetForm({ ...sheetForm, course: e.target.value as ExamType })}>
-                  {exams.map((e) => (
-                    <option key={e.id} value={e.id}>{e.title}</option>
-                  ))}
-                </select>
+                <CustomSelect className={INPUT} value={sheetForm.course} onChange={(val) => setSheetForm({ ...sheetForm, course: val as ExamType })} options={exams.map(e => ({ value: e.id, label: e.title }))} placeholder="Select course..." />
               </Field>
               <Field label="Subject">
-                <select className={INPUT} required value={sheetForm.subject} onChange={(e) => setSheetForm({ ...sheetForm, subject: e.target.value })}>
-                  {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <CustomSelect className={INPUT} value={sheetForm.subject} onChange={(val) => setSheetForm({ ...sheetForm, subject: val })} options={SUBJECTS.map((s) => ({ value: s, label: s }))} placeholder="Select subject..." />
               </Field>
             </div>
             <Field label="Chapter">
@@ -1219,12 +1192,7 @@ const resetDemoData = () => {
               <input className={INPUT} required value={annForm.title} onChange={(e) => setAnnForm({ ...annForm, title: e.target.value })} placeholder="New JEE Advanced notes are live" />
             </Field>
             <Field label="Category">
-              <select className={INPUT} value={annForm.category} onChange={(e) => setAnnForm({ ...annForm, category: e.target.value as AnnouncementCategory })}>
-                <option value="general">General</option>
-                <option value="exam">Exam</option>
-                <option value="resource">Resource</option>
-                <option value="schedule">Schedule</option>
-              </select>
+              <CustomSelect className={INPUT} value={annForm.category} onChange={(val) => setAnnForm({ ...annForm, category: val as AnnouncementCategory })} options={[ {value: 'general', label: 'General'}, {value: 'exam', label: 'Exam'}, {value: 'resource', label: 'Resource'}, {value: 'schedule', label: 'Schedule'} ]} placeholder="Select category..." />
             </Field>
             <Field label="Message">
               <textarea className={INPUT} required rows={4} value={annForm.body} onChange={(e) => setAnnForm({ ...annForm, body: e.target.value })} placeholder="Share the details students need to know…" />

@@ -4,6 +4,8 @@ This document is the single source of truth for the state of the project. It tra
 
 ## Change History
 
+*   **2026-07-25**:
+    *   **Custom Select Component Refactor**: Replaced native `<select>` dropdowns across the application with a newly created `CustomSelect.tsx` component for styling consistency. Updated `AskDoubtModal.tsx`, `ProfessorDashboard.tsx` forms, student `PYQSection.tsx`, and all professor section tables (`NotesSection.tsx`, `VideosSection.tsx`, `PYQSection.tsx`, `SheetsSection.tsx`, `DoubtsSection.tsx`).
 *   **2026-07-13**:
     *   **Professor Dashboard Responsive Tables**: Fixed a horizontal overflow issue on mobile devices caused by fixed-width tables. Restructured the `Table` component in `ui.tsx` and its usage across `NotesSection.tsx`, `VideosSection.tsx`, `PYQSection.tsx`, and `SheetsSection.tsx`. On mobile displays (below `md` breakpoint), rows now render as vertical stacked cards with absolute-positioned action buttons, while maintaining the traditional tabular layout on desktop. `RowActions` touch targets were also increased to a minimum of 44x44px on mobile for better accessibility.
     *   **Professor Dashboard Mobile Navigation**: Restructured the shared sidebar in `ProfessorDashboard.tsx` for mobile/tablet layouts. Replaced the full-height stacked navigation block with a compact, sticky-like section switcher (48px height) that expands into a bottom-sheet overlay. This prevents the navigation from pushing main content below the fold on mobile devices. Desktop and landscape tablet layouts remain unchanged as a fixed left column.

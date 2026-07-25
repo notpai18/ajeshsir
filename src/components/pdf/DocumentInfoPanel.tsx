@@ -36,7 +36,7 @@ export function DocumentInfoPanel() {
 
   return (
     <aside
-      className="hidden w-[240px] shrink-0 flex-col gap-4 overflow-y-auto border-l border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817] p-4 lg:flex"
+      className="hidden w-[240px] shrink-0 flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent border-l border-[#22201F]/20 bg-[#F7F3EC] dark:bg-[#1A1817] p-4 lg:flex"
       aria-label="Document information"
     >
       {/* Header */}

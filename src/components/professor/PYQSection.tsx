@@ -12,6 +12,7 @@ import { PRIMARY_BTN, INPUT } from '../ui/tokens';
 import type { ExamInfo, PYQ } from '../../types';
 import type { PDFDocumentInfo } from '../pdf/PDFContext';
 import { EXAM_STYLES, ExamChip } from '../exam/ExamStyles';
+import { CustomSelect } from '../ui/CustomSelect';
 
 
 
@@ -58,16 +59,10 @@ export function PYQSection({
 
   const examTitle = (id: string) => exams.find((e) => e.id === id)?.title ?? id;
 
-  const examOptions = (
-    <>
-      <option value="all">All exams</option>
-      {exams.map((e) => (
-        <option key={e.id} value={e.id}>
-          {e.title}
-        </option>
-      ))}
-    </>
-  );
+  const examOptions = [
+    { value: 'all', label: 'All exams' },
+    ...exams.map(e => ({ value: e.id, label: e.title }))
+  ];
 
   return (
     <ResourceSection
@@ -83,15 +78,8 @@ export function PYQSection({
           onQuery={setQuery}
           selects={
             <>
-              <select className={`${INPUT} sm:w-40`} value={examFilter} onChange={(e) => setExamFilter(e.target.value)}>
-                {examOptions}
-              </select>
-              <select className={`${INPUT} sm:w-36`} value={diffFilter} onChange={(e) => setDiffFilter(e.target.value)}>
-                <option value="all">All levels</option>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
+              <CustomSelect className={`${INPUT} sm:w-40`} value={examFilter} onChange={setExamFilter} options={examOptions} placeholder="All exams" />
+              <CustomSelect className={`${INPUT} sm:w-36`} value={diffFilter} onChange={setDiffFilter} options={[ {value: 'all', label: 'All levels'}, {value: 'Easy', label: 'Easy'}, {value: 'Medium', label: 'Medium'}, {value: 'Hard', label: 'Hard'} ]} placeholder="All levels" />
             </>
           }
         />

@@ -8,6 +8,7 @@ import {
 import type { Doubt, Note, ExamType } from '../../types';
 import { uploadDoubtAttachment } from '../../services/doubtsService';
 import { RichTextEditor } from '../ui/RichTextEditor';
+import { CustomSelect } from '../ui/CustomSelect';
 
 const EXAMINATIONS = [
   { id: 'jee-main', label: 'JEE Main' },
@@ -211,7 +212,7 @@ export function AskDoubtModal({
             </div>
 
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
               {error && (
                 <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-xl text-sm border border-red-100 dark:border-red-900/30">
                   {error}
@@ -221,23 +222,21 @@ export function AskDoubtModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-[13px] font-bold text-gray-700 dark:text-gray-300 mb-2">Examination <span className="text-red-500">*</span></label>
-                  <div className="relative">
-                    <select value={exam} onChange={e => setExam(e.target.value as ExamType)} className="w-full appearance-none rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#2A2726] px-4 py-3 text-[14px] font-medium text-gray-900 dark:text-[#F6F2EA] focus:outline-none focus:border-[#4A0E1B] focus:ring-1 focus:ring-[#4A0E1B] transition-all">
-                      <option value="" disabled>Select exam...</option>
-                      {EXAMINATIONS.map(ex => <option key={ex.id} value={ex.id}>{ex.label}</option>)}
-                    </select>
-                    <ChevronDown size={16} className="absolute right-4 top-3.5 text-gray-400 pointer-events-none" />
-                  </div>
+                    <CustomSelect 
+                      value={exam} 
+                      onChange={val => setExam(val as ExamType)} 
+                      options={EXAMINATIONS.map(ex => ({ value: ex.id, label: ex.label }))}
+                      placeholder="Select exam..."
+                    />
                 </div>
                 <div>
                   <label className="block text-[13px] font-bold text-gray-700 dark:text-gray-300 mb-2">Subject <span className="text-red-500">*</span></label>
-                  <div className="relative">
-                    <select value={subject} onChange={e => setSubject(e.target.value)} className="w-full appearance-none rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#2A2726] px-4 py-3 text-[14px] font-medium text-gray-900 dark:text-[#F6F2EA] focus:outline-none focus:border-[#4A0E1B] focus:ring-1 focus:ring-[#4A0E1B] transition-all">
-                      <option value="" disabled>Select subject...</option>
-                      {SUBJECTS.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                    <ChevronDown size={16} className="absolute right-4 top-3.5 text-gray-400 pointer-events-none" />
-                  </div>
+                    <CustomSelect 
+                      value={subject} 
+                      onChange={setSubject} 
+                      options={SUBJECTS.map(s => ({ value: s, label: s }))}
+                      placeholder="Select subject..."
+                    />
                 </div>
               </div>
 
@@ -254,7 +253,7 @@ export function AskDoubtModal({
                     className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#2A2726] px-4 py-3 text-[14px] font-medium text-gray-900 dark:text-[#F6F2EA] focus:outline-none focus:border-[#4A0E1B] focus:ring-1 focus:ring-[#4A0E1B] transition-all"
                   />
                   {topicSuggestionsOpen && chapters.length > 0 && (
-                    <ul className="absolute z-10 mt-1 w-full bg-white dark:bg-[#2A2726] rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden max-h-48 overflow-y-auto">
+                    <ul className="absolute z-10 mt-1 w-full bg-white dark:bg-[#2A2726] rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                       {chapters.filter(c => !topic || c.toLowerCase().includes(topic.toLowerCase())).map(c => (
                         <li key={c} onMouseDown={() => { setTopic(c); setTopicSuggestionsOpen(false); }} className="px-4 py-2.5 text-[14px] text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">{c}</li>
                       ))}

@@ -127,7 +127,7 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
           {/* Original Question Card */}
           <div className="bg-white dark:bg-[#22201F] rounded-2xl p-5 border border-[#22201F]/20 shadow-sm">
             <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">Student's Question</h4>

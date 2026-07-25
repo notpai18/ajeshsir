@@ -11,6 +11,7 @@ import { SubjectBadge } from '../ui/SubjectBadge';
 import { PRIMARY_BTN, INPUT } from '../ui/tokens';
 import type { ExamInfo, Video } from '../../types';
 import { EXAM_STYLES, ExamChip } from '../exam/ExamStyles';
+import { CustomSelect } from '../ui/CustomSelect';
 
 
 
@@ -44,16 +45,10 @@ export function VideosSection({
 
   const examTitle = (id: string) => exams.find((e) => e.id === id)?.title ?? id;
 
-  const examOptions = (
-    <>
-      <option value="all">All exams</option>
-      {exams.map((e) => (
-        <option key={e.id} value={e.id}>
-          {e.title}
-        </option>
-      ))}
-    </>
-  );
+  const examOptions = [
+    { value: 'all', label: 'All exams' },
+    ...exams.map(e => ({ value: e.id, label: e.title }))
+  ];
 
   return (
     <ResourceSection
@@ -68,9 +63,7 @@ export function VideosSection({
           query={query}
           onQuery={setQuery}
           selects={
-            <select className={`${INPUT} sm:w-44`} value={examFilter} onChange={(e) => setExamFilter(e.target.value)}>
-              {examOptions}
-            </select>
+            <CustomSelect className={`${INPUT} sm:w-44`} value={examFilter} onChange={setExamFilter} options={examOptions} placeholder="All exams" />
           }
         />
       }
