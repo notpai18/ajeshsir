@@ -57,6 +57,7 @@ import { EmptyState } from './ui/EmptyState';
 import { SubjectBadge } from './ui/SubjectBadge';
 import { DifficultyChip } from './ui/DifficultyChip';
 import { CARD, INPUT, PRIMARY_BTN, GHOST_BTN, MICRO, BACK_BTN, FIELD_LABEL, PILL_SOFT, PILL_GHOST, PILL_GOLD } from './ui/tokens';
+import { downloadFile } from '../lib/pdfUrl';
 import { NotesSection } from './student/NotesSection';
 import { VideosSection } from './student/VideosSection';
 import { PYQSection } from './student/PYQSection';
@@ -296,20 +297,13 @@ function StudentDashboardContent({
 
 
 
-  const handleDownloadFile = (noteId: string, fileName: string) => {
+  const handleDownloadFile = (noteId: string, url: string, originalFilename?: string) => {
     onIncrementNoteDownload(noteId);
-    triggerDownload(fileName);
+    triggerDownload(url, originalFilename);
   };
 
-  const triggerDownload = (fileName: string) => {
-    // Elegant simulation of a local PDF download
-    const element = document.createElement('a');
-    const file = new Blob([`Simulated academic repository download for: ${fileName}.`], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = fileName;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+  const triggerDownload = (url: string, originalFilename?: string) => {
+    downloadFile(url, originalFilename);
   };
 
   const sortedAnnouncements = useMemo(() => {

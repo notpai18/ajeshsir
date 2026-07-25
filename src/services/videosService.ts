@@ -33,8 +33,7 @@ export async function fetchVideos(): Promise<Video[]> {
   const { data, error } = await supabase
     .from('videos')
     .select('*')
-    .order('course', { ascending: true })
-    .order('title', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) throw new Error(`fetchVideos: ${error.message}`);
   return (data ?? []).map(rowToVideo);

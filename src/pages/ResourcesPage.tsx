@@ -16,6 +16,7 @@ export default function ResourcesPage() {
     handleAddPyq, handleEditPyq, handleDeletePyq,
     handleAddPracticeSheet, handleEditPracticeSheet, handleDeletePracticeSheet,
     handleAddDoubt, handleReplyDoubt, handleDeleteDoubt, handleMarkSeen,
+    handleApproveDoubt, handleRejectDoubt,
     handleAddAnnouncement, handleEditAnnouncement, handleDeleteAnnouncement, handleTogglePinAnnouncement,
   } = usePortalData();
 
@@ -93,6 +94,8 @@ export default function ResourcesPage() {
       onReplyDoubt={handleReplyDoubt}
       onDeleteDoubt={handleDeleteDoubt}
       onMarkSeen={handleMarkSeen}
+      onApproveDoubt={handleApproveDoubt}
+      onRejectDoubt={handleRejectDoubt}
       onAddAnnouncement={handleAddAnnouncement}
       onEditAnnouncement={handleEditAnnouncement}
       onDeleteAnnouncement={handleDeleteAnnouncement}

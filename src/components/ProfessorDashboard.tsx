@@ -335,6 +335,8 @@ interface ProfessorDashboardProps {
   onReplyDoubt: (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[]; }) => void;
   onDeleteDoubt: (id: string) => void;
   onMarkSeen?: (id: string) => Promise<void>;
+  onApproveDoubt?: (id: string) => Promise<void>;
+  onRejectDoubt?: (id: string, reason?: string) => Promise<void>;
   onAddAnnouncement: (a: Omit<Announcement, 'id' | 'createdAt'>) => void;
   onEditAnnouncement: (id: string, a: Partial<Announcement>) => void;
   onDeleteAnnouncement: (id: string) => void;
@@ -403,6 +405,8 @@ export default function ProfessorDashboard({
   onReplyDoubt,
   onDeleteDoubt,
   onMarkSeen,
+  onApproveDoubt,
+  onRejectDoubt,
   onAddAnnouncement,
   onEditAnnouncement,
   onDeleteAnnouncement,
@@ -450,7 +454,7 @@ export default function ProfessorDashboard({
   const [annForm, setAnnForm] = useState({ title: '', body: '', category: 'general' as AnnouncementCategory, pinned: false });
 
 /* ---------------- Helpers ---------------- */
-  const pendingDoubtsCount = doubts.filter((d) => !d.isAnswered).length;
+  const pendingDoubtsCount = doubts.filter((d) => d.status === 'pending_approval').length;
   const now = new Date();
   const greeting = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
   const today = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -540,15 +544,17 @@ export default function ProfessorDashboard({
     try {
       let finalUrl = noteForm.fileUrl || 'uploaded_document.pdf';
       let finalSize = noteForm.fileSize || '2.5 MB';
+      let finalOriginalName = noteForm.originalFilename;
       if (noteFile) {
         const res = await uploadFile(noteFile, 'notes-pdfs');
         finalUrl = res.url;
         finalSize = res.size;
+        finalOriginalName = res.originalFilename;
       }
       if (activeModal === 'add-note') {
-        onAddNote({ ...noteForm, fileUrl: finalUrl, fileSize: finalSize });
+        onAddNote({ ...noteForm, fileUrl: finalUrl, fileSize: finalSize, originalFilename: finalOriginalName });
       } else if (selectedItemId) {
-        onEditNote(selectedItemId, { ...noteForm, fileUrl: finalUrl, fileSize: finalSize });
+        onEditNote(selectedItemId, { ...noteForm, fileUrl: finalUrl, fileSize: finalSize, originalFilename: finalOriginalName });
       }
       closeModal();
     } catch (err: any) {
@@ -577,7 +583,7 @@ export default function ProfessorDashboard({
         ...videoForm,
         youtubeLink: videoForm.youtubeLink || 'https://youtube.com',
         thumbnail: autoThumbnail,
-        duration: videoForm.duration || '45:00'
+        duration: ''
       });
     } else if (selectedItemId) {
       onEditVideo(selectedItemId, { ...videoForm, thumbnail: autoThumbnail });
@@ -590,22 +596,26 @@ export default function ProfessorDashboard({
     try {
       let finalQUrl = pyqForm.questionUrl || 'uploaded_pyq_question.pdf';
       let finalQSize = pyqForm.questionSize || '1.2 MB';
+      let finalQOriginalName = pyqForm.questionOriginalFilename;
       if (pyqQuestionFile) {
         const res = await uploadFile(pyqQuestionFile, 'pyqs');
         finalQUrl = res.url;
         finalQSize = res.size;
+        finalQOriginalName = res.originalFilename;
       }
       let finalSUrl = pyqForm.solutionUrl || 'uploaded_pyq_solution.pdf';
       let finalSSize = pyqForm.solutionSize || '2.0 MB';
+      let finalSOriginalName = pyqForm.solutionOriginalFilename;
       if (pyqSolutionFile) {
         const res = await uploadFile(pyqSolutionFile, 'pyqs');
         finalSUrl = res.url;
         finalSSize = res.size;
+        finalSOriginalName = res.originalFilename;
       }
       if (activeModal === 'add-pyq') {
-        onAddPyq({ ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl });
+        onAddPyq({ ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl, questionOriginalFilename: finalQOriginalName, solutionOriginalFilename: finalSOriginalName });
       } else if (selectedItemId) {
-        onEditPyq(selectedItemId, { ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl, questionSize: finalQSize, solutionSize: finalSSize });
+        onEditPyq(selectedItemId, { ...pyqForm, year: Number(pyqForm.year), questionUrl: finalQUrl, solutionUrl: finalSUrl, questionSize: finalQSize, solutionSize: finalSSize, questionOriginalFilename: finalQOriginalName, solutionOriginalFilename: finalSOriginalName });
       }
       closeModal();
     } catch (err: any) {
@@ -628,15 +638,17 @@ export default function ProfessorDashboard({
     try {
       let finalUrl = sheetForm.fileUrl || 'uploaded_practice_sheet.pdf';
       let finalSize = sheetForm.fileSize || '1.5 MB';
+      let finalOriginalName = sheetForm.originalFilename;
       if (sheetFile) {
         const res = await uploadFile(sheetFile, 'practice-sheets');
         finalUrl = res.url;
         finalSize = res.size;
+        finalOriginalName = res.originalFilename;
       }
       if (activeModal === 'add-sheet') {
-        onAddPracticeSheet({ ...sheetForm, fileUrl: finalUrl });
+        onAddPracticeSheet({ ...sheetForm, fileUrl: finalUrl, originalFilename: finalOriginalName });
       } else if (selectedItemId) {
-        onEditPracticeSheet(selectedItemId, { ...sheetForm, fileUrl: finalUrl, fileSize: finalSize });
+        onEditPracticeSheet(selectedItemId, { ...sheetForm, fileUrl: finalUrl, fileSize: finalSize, originalFilename: finalOriginalName });
       }
       closeModal();
     } catch (err: any) {
@@ -741,27 +753,31 @@ const resetDemoData = () => {
           </div>
 
           <div className="relative">
-            <button className={PRIMARY_BTN} onClick={() => setQuickAddOpen((o) => !o)} id="quick-add-btn">
-              <Plus size={15} /> Add resource <ChevronDown size={14} className={`transition-transform ${quickAddOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {quickAddOpen && (
+            {activeTab === 'overview' && (
               <>
-                <button className="fixed inset-0 z-40 cursor-default" aria-hidden onClick={() => setQuickAddOpen(false)} />
-                <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-[#22201F]/20 bg-white dark:bg-[#22201F] p-1.5 shadow-soft-lg">
-                  {quickAdd.map((item) => (
-                    <button
-                      key={item.label}
-                      onClick={() => {
-                        item.fn();
-                        setQuickAddOpen(false);
-                      }}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817]"
-                    >
-                      <span className="text-[#8A6A16]">{item.icon}</span>
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+                <button className={PRIMARY_BTN} onClick={() => setQuickAddOpen((o) => !o)} id="quick-add-btn">
+                  <Plus size={15} /> Add resource <ChevronDown size={14} className={`transition-transform ${quickAddOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {quickAddOpen && (
+                  <>
+                    <button className="fixed inset-0 z-40 cursor-default" aria-hidden onClick={() => setQuickAddOpen(false)} />
+                    <div className="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-[#22201F]/20 bg-white dark:bg-[#22201F] p-1.5 shadow-soft-lg">
+                      {quickAdd.map((item) => (
+                        <button
+                          key={item.label}
+                          onClick={() => {
+                            item.fn();
+                            setQuickAddOpen(false);
+                          }}
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-colors hover:bg-[#F7F3EC] dark:bg-[#1A1817]"
+                        >
+                          <span className="text-[#8A6A16]">{item.icon}</span>
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -874,6 +890,7 @@ const resetDemoData = () => {
               <DoubtsSection 
                 doubts={doubts}
                 askDelete={askDelete} onDeleteDoubt={onDeleteDoubt} onReplyDoubt={onReplyDoubt} onMarkSeen={onMarkSeen}
+                onApproveDoubt={onApproveDoubt} onRejectDoubt={onRejectDoubt}
               />
             )}
 
@@ -997,14 +1014,9 @@ const resetDemoData = () => {
                 </select>
               </Field>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Chapter">
-                <input className={INPUT} required value={videoForm.chapter} onChange={(e) => setVideoForm({ ...videoForm, chapter: e.target.value })} placeholder="e.g. Optics" />
-              </Field>
-              <Field label="Duration">
-                <input className={INPUT} required value={videoForm.duration} onChange={(e) => setVideoForm({ ...videoForm, duration: e.target.value })} placeholder="e.g. 45:12" />
-              </Field>
-            </div>
+            <Field label="Chapter">
+              <input className={INPUT} required value={videoForm.chapter} onChange={(e) => setVideoForm({ ...videoForm, chapter: e.target.value })} placeholder="e.g. Optics" />
+            </Field>
             <Field label="Lecture title">
               <input className={INPUT} required value={videoForm.title} onChange={(e) => setVideoForm({ ...videoForm, title: e.target.value })} placeholder="Visualizing Gauss's Law" />
             </Field>

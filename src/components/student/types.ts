@@ -37,7 +37,7 @@ export interface NotesSectionProps extends SectionBaseProps {
   studiedNotes: Set<string>;
   toggleStudied: (id: string) => void;
   setActivePdfViewer: (v: { title: string; fileUrl: string } | null) => void;
-  handleDownloadFile: (noteId: string, fileName: string) => void;
+  handleDownloadFile: (noteId: string, url: string, originalFilename?: string) => void;
   notes: Note[];
 }
 
@@ -53,13 +53,13 @@ export interface PYQSectionProps extends SectionBaseProps {
   selectedYear: string;
   setSelectedYear: (y: string) => void;
   setActivePdfViewer: (v: { title: string; fileUrl: string } | null) => void;
-  triggerDownload: (fileName: string) => void;
+  triggerDownload: (url: string, originalFilename?: string) => void;
 }
 
 export interface SheetsSectionProps extends SectionBaseProps {
   filteredSheets: PracticeSheet[];
   setActivePdfViewer: (v: { title: string; fileUrl: string } | null) => void;
-  triggerDownload: (fileName: string) => void;
+  triggerDownload: (url: string, originalFilename?: string) => void;
 }
 
 export interface DoubtsSectionProps {
@@ -72,5 +72,5 @@ export interface DoubtsSectionProps {
 
 export interface ResourcesSectionProps {
   currentExamInfo: ExamInfo | undefined;
-  triggerDownload: (fileName: string) => void;
+  triggerDownload: (url: string, originalFilename?: string) => void;
 }

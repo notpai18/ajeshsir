@@ -15,7 +15,7 @@
  */
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  Search, Inbox, User, FileText, Plus, Trash2, Send, Eye, Filter
+  Search, Inbox, User, FileText, Plus, Trash2, Send, Eye, Filter, ShieldCheck
 } from 'lucide-react';
 import { PremiumCard } from '../PremiumCard';
 import { PRIMARY_BTN, INPUT, ROW_BTN_DANGER } from '../ui/tokens';
@@ -23,6 +23,7 @@ import { ProfEmptyState } from './ui';
 import { AnswerDoubtModal } from '../doubts/AnswerDoubtModal';
 import { DoubtStatusBadge } from '../doubts/DoubtStatusBadge';
 import { WaitTimeIndicator, waitTimeBorderColor } from '../doubts/WaitTimeIndicator';
+import { ModerationQueue } from './ModerationQueue';
 import type { Doubt, DoubtStatus } from '../../types';
 import { useImageViewer } from '../image-viewer';
 import { replyToDoubt } from '../../services/doubtsService';
@@ -46,6 +47,8 @@ interface DoubtsSectionProps {
     }
   ) => void;
   onMarkSeen?: (id: string) => Promise<void>;
+  onApproveDoubt?: (id: string) => Promise<void>;
+  onRejectDoubt?: (id: string, reason?: string) => Promise<void>;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -88,9 +91,10 @@ function stripHtml(html: string) {
 
 // ─── Tab config ───────────────────────────────────────────────────────────────
 
-type ProfTab = 'unanswered' | 'answered-today' | 'by-subject' | 'all';
+type ProfTab = 'moderation' | 'unanswered' | 'answered-today' | 'by-subject' | 'all';
 
 const TAB_LABELS: Record<ProfTab, string> = {
+  moderation: 'Pending Approvals',
   unanswered: 'Unanswered',
   'answered-today': 'Answered Today',
   'by-subject': 'By Subject',
@@ -105,11 +109,13 @@ export function DoubtsSection({
   onDeleteDoubt,
   onReplyDoubt,
   onMarkSeen,
+  onApproveDoubt,
+  onRejectDoubt,
 }: DoubtsSectionProps) {
   const { openViewer } = useImageViewer();
 
-  // Tab / filter state — default: unanswered (oldest first)
-  const [activeTab, setActiveTab] = useState<ProfTab>('unanswered');
+  // Tab / filter state — default: moderation queue (pending approvals first)
+  const [activeTab, setActiveTab] = useState<ProfTab>('moderation');
   const [query, setQuery] = useState('');
   const [subjectFilter, setSubjectFilter] = useState('All');
   const [replyingDoubtId, setReplyingDoubtId] = useState<string | null>(null);
@@ -122,10 +128,12 @@ export function DoubtsSection({
     return all;
   }, [doubts]);
 
-  // ── Filter & sort ─────────────────────────────────────────────────────────
+  // ── Filter & sort (exclude pending/rejected from regular tabs) ────────────
   const doubtsFiltered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let filtered = doubts.filter(d => {
+      // Exclude pending_approval and rejected from regular tabs
+      if (activeTab !== 'moderation' && (d.status === 'pending_approval' || d.status === 'rejected')) return false;
       if (activeTab === 'unanswered' && hasProfessorReply(d)) return false;
       if (activeTab === 'answered-today' && !isAnsweredToday(d)) return false;
       if (activeTab === 'by-subject' && subjectFilter !== 'All' && d.subject !== subjectFilter) return false;
@@ -144,10 +152,11 @@ export function DoubtsSection({
 
   // ── Tab counts ────────────────────────────────────────────────────────────
   const tabCounts = useMemo(() => ({
-    unanswered: doubts.filter(d => !hasProfessorReply(d)).length,
+    moderation: doubts.filter(d => d.status === 'pending_approval').length,
+    unanswered: doubts.filter(d => !hasProfessorReply(d) && d.status !== 'pending_approval' && d.status !== 'rejected').length,
     'answered-today': doubts.filter(d => isAnsweredToday(d)).length,
-    'by-subject': doubts.length,
-    all: doubts.length,
+    'by-subject': doubts.filter(d => d.status !== 'pending_approval').length,
+    all: doubts.filter(d => d.status !== 'pending_approval').length,
   }), [doubts]);
 
   // ── Open thread → auto-mark seen ─────────────────────────────────────────
@@ -168,18 +177,20 @@ export function DoubtsSection({
         <div className="flex gap-1 flex-wrap">
           {(Object.keys(TAB_LABELS) as ProfTab[]).map(tab => {
             const active = activeTab === tab;
+            const isPendingTab = tab === 'moderation';
             return (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4A0E1B]/20 ${
                   active
-                    ? 'bg-[#4A0E1B] text-white'
+                    ? isPendingTab ? 'bg-[#8A6A16] text-white' : 'bg-[#4A0E1B] text-white'
                     : 'border border-[#22201F]/12 bg-white dark:bg-[#22201F] text-[#6E645A] hover:text-[#22201F]'
                 }`}
               >
+                {isPendingTab && <ShieldCheck size={11} className="inline mr-1" />}
                 {TAB_LABELS[tab]}
-                <span className={`ml-1.5 ${active ? 'text-white/70' : 'text-[#A79A88]'}`}>
+                <span className={`ml-1.5 ${active ? 'text-white/70' : tabCounts[tab] > 0 && isPendingTab ? 'text-[#C9A13B] font-extrabold' : 'text-[#A79A88]'}`}>
                   ({tabCounts[tab]})
                 </span>
               </button>
@@ -198,25 +209,37 @@ export function DoubtsSection({
               {subjects.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           )}
-          <div className="relative sm:w-64">
-            <Search
-              size={14}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]"
-              aria-hidden="true"
-            />
-            <input
-              className={`${INPUT} pl-10 text-xs`}
-              placeholder="Search doubts…"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              aria-label="Search doubts"
-            />
-          </div>
+          {/* Hide search bar on moderation tab (has its own search) */}
+          {activeTab !== 'moderation' && (
+            <div className="relative sm:w-64">
+              <Search
+                size={14}
+                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]"
+                aria-hidden="true"
+              />
+              <input
+                className={`${INPUT} pl-10 text-xs`}
+                placeholder="Search doubts…"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                aria-label="Search doubts"
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Inbox zero */}
-      {doubtsFiltered.length === 0 ? (
+      {/* ── Moderation Queue (Pending Approvals tab) ── */}
+      {activeTab === 'moderation' && (
+        <ModerationQueue
+          doubts={doubts}
+          onApprove={onApproveDoubt ?? (() => Promise.resolve())}
+          onReject={onRejectDoubt ?? (() => Promise.resolve())}
+        />
+      )}
+
+      {/* Inbox — only shown for non-moderation tabs */}
+      {activeTab !== 'moderation' && doubtsFiltered.length === 0 ? (
         <ProfEmptyState
           icon={<Inbox size={22} />}
           title={activeTab === 'unanswered' ? 'Inbox zero' : 'Nothing to show'}
@@ -355,7 +378,8 @@ export function DoubtsSection({
                       View Details
                     </button>
                     {/* Answer */}
-                    {!profReplied && (
+                    {/* Only show Answer button for approved or answered doubts (not pending/rejected) */}
+                    {!profReplied && (doubt.status === 'approved' || doubt.status === 'answered' || doubt.status === 'submitted' || doubt.status === 'awaiting' || doubt.status === 'needs-followup' || !doubt.status) && (
                       <button
                         className={PRIMARY_BTN}
                         onClick={() => setReplyingDoubtId(doubt.id)}

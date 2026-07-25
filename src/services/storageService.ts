@@ -13,9 +13,13 @@ type Bucket = 'notes-pdfs' | 'practice-sheets' | 'pyqs';
 export async function uploadFile(
   file: File,
   bucket: Bucket
-): Promise<{ url: string; size: string }> {
+): Promise<{ url: string; size: string; originalFilename: string }> {
   const ext = file.name.split('.').pop() ?? 'pdf';
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  if (!supabase) {
+    throw new Error('Supabase client is not initialized. Check your environment variables.');
+  }
 
   const { error } = await supabase.storage
     .from(bucket)
@@ -40,7 +44,7 @@ export async function uploadFile(
     size = `${bytes} B`;
   }
 
-  return { url: data.publicUrl, size };
+  return { url: data.publicUrl, size, originalFilename: file.name };
 }
 
 /**
@@ -49,6 +53,10 @@ export async function uploadFile(
 export async function deleteFile(bucket: Bucket, path: string): Promise<void> {
   // Extract the filename from a public URL if a full URL was passed
   const filename = path.includes('/') ? path.split('/').pop()! : path;
+  if (!supabase) {
+    console.warn(`deleteFile [${bucket}/${filename}]: Supabase client not initialized`);
+    return;
+  }
   const { error } = await supabase.storage.from(bucket).remove([filename]);
   if (error) console.warn(`deleteFile [${bucket}/${filename}]: ${error.message}`);
 }

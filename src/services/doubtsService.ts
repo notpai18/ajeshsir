@@ -25,6 +25,12 @@ function rowToDoubt(row: any): Doubt {
     isAnswered: row.is_answered,
     status: deriveStatus(row),
     createdAt: row.created_at,
+    // Moderation audit fields
+    approvedAt: row.approved_at ?? undefined,
+    approvedBy: row.approved_by ?? undefined,
+    rejectedAt: row.rejected_at ?? undefined,
+    rejectedBy: row.rejected_by ?? undefined,
+    rejectionReason: row.rejection_reason ?? undefined,
     replies: row.doubt_replies ? row.doubt_replies.map((reply: any) => ({
       id: reply.id,
       doubt_id: reply.doubt_id,
@@ -82,7 +88,7 @@ export async function submitDoubt(
     attachment_name: doubt.attachmentName ?? null,
     attachment_url: doubt.attachmentUrl ?? null,
     is_answered: false,
-    status: doubt.status ?? 'submitted',
+    status: doubt.status ?? 'pending_approval',
   };
 
   let { data, error } = await supabase
@@ -124,6 +130,10 @@ export async function replyToDoubt(
     video_urls?: string[];
     audio_urls?: string[];
     attachment_urls?: string[];
+    image_names?: string[];
+    video_names?: string[];
+    audio_names?: string[];
+    attachment_names?: string[];
   }
 ): Promise<Doubt> {
   const { data: replyDataInsert, error: replyError } = await supabase
@@ -135,7 +145,11 @@ export async function replyToDoubt(
       image_urls: replyData.image_urls || [],
       video_urls: replyData.video_urls || [],
       audio_urls: replyData.audio_urls || [],
-      attachment_urls: replyData.attachment_urls || []
+      attachment_urls: replyData.attachment_urls || [],
+      image_names: replyData.image_names || [],
+      video_names: replyData.video_names || [],
+      audio_names: replyData.audio_names || [],
+      attachment_names: replyData.attachment_names || []
     });
 
   if (replyError) {
@@ -145,8 +159,8 @@ export async function replyToDoubt(
     throw new Error(`replyToDoubt: ${replyError.message}`);
   }
   
-  // Mark doubt as answered
-  await supabase.from('doubts').update({ is_answered: true }).eq('id', doubtId);
+  // Mark doubt as answered and update status
+  await supabase.from('doubts').update({ is_answered: true, status: 'answered' } as any).eq('id', doubtId);
   
   // Fetch and return the updated doubt
   const { data: doubtData, error: doubtError } = await supabase
@@ -158,6 +172,57 @@ export async function replyToDoubt(
   if (doubtError) throw new Error(`replyToDoubt (fetch): ${doubtError.message}`);
 
   return rowToDoubt(doubtData);
+}
+
+/**
+ * Approve a doubt — sets status to 'approved', making it publicly visible.
+ * Professor only.
+ */
+export async function approveDoubt(id: string): Promise<Doubt> {
+  const { error } = await supabase
+    .from('doubts')
+    .update({
+      status: 'approved',
+      approved_at: new Date().toISOString(),
+    } as any)
+    .eq('id', id);
+
+  if (error) throw new Error(`approveDoubt: ${error.message}`);
+
+  const { data, error: fetchError } = await supabase
+    .from('doubts')
+    .select('*, doubt_replies(*)')
+    .eq('id', id)
+    .single();
+
+  if (fetchError) throw new Error(`approveDoubt (fetch): ${fetchError.message}`);
+  return rowToDoubt(data);
+}
+
+/**
+ * Reject a doubt — sets status to 'rejected', hides it from the public.
+ * Professor only. Optional rejection reason shown to the student.
+ */
+export async function rejectDoubt(id: string, reason?: string): Promise<Doubt> {
+  const { error } = await supabase
+    .from('doubts')
+    .update({
+      status: 'rejected',
+      rejected_at: new Date().toISOString(),
+      rejection_reason: reason ?? null,
+    } as any)
+    .eq('id', id);
+
+  if (error) throw new Error(`rejectDoubt: ${error.message}`);
+
+  const { data, error: fetchError } = await supabase
+    .from('doubts')
+    .select('*, doubt_replies(*)')
+    .eq('id', id)
+    .single();
+
+  if (fetchError) throw new Error(`rejectDoubt (fetch): ${fetchError.message}`);
+  return rowToDoubt(data);
 }
 
 /** Delete a doubt by id (professor only). */
@@ -202,6 +267,10 @@ export async function markDoubtSeen(id: string, currentStatus: import('../types'
 export async function uploadDoubtAttachment(file: File, folder: string = 'files'): Promise<{ url: string; name: string }> {
   const ext = file.name.split('.').pop();
   const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  if (!supabase) {
+    throw new Error('Supabase client is not initialized. Check your environment variables.');
+  }
 
   const { error } = await supabase.storage
     .from('doubts')

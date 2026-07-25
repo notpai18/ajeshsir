@@ -70,7 +70,7 @@ export function SheetsSection({
                 {
                   icon: Download,
                   label: 'Download',
-                  onClick: () => triggerDownload(sheet.fileUrl)
+                  onClick: () => triggerDownload(sheet.fileUrl, sheet.originalFilename)
                 }
               ]}
             />

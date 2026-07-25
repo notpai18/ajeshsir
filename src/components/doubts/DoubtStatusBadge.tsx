@@ -1,10 +1,14 @@
 /**
- * DoubtStatusBadge — simplified status pill for Doubts & FAQ.
+ * DoubtStatusBadge — status pill for Doubts moderation workflow.
  *
- * Colors:
- *   Answered -> Soft green
- *   Waiting  -> Warm gold
- *   Closed   -> Gray
+ * Moderation states:
+ *   pending_approval → 🟡 Amber  — Waiting for Approval
+ *   approved         → 🔵 Blue   — Approved
+ *   rejected         → 🔴 Red    — Rejected
+ *   answered         → 🟢 Green  — Answered
+ *
+ * Legacy states (backward compat):
+ *   submitted / awaiting / needs-followup → treated as Waiting
  */
 import React from 'react';
 import type { DoubtStatus } from '../../types';
@@ -13,6 +17,32 @@ const STATUS_CONFIG: Record<
   DoubtStatus,
   { label: string; bg: string; text: string; dot: string }
 > = {
+  // ── New moderation states ──────────────────────────────
+  pending_approval: {
+    label: 'Waiting for Approval',
+    bg: 'bg-[#FBF3D9]',
+    text: 'text-[#8A6A16]',
+    dot: 'bg-[#C9A13B]',
+  },
+  approved: {
+    label: 'Approved',
+    bg: 'bg-[#EAF0FB]',
+    text: 'text-[#1A56B0]',
+    dot: 'bg-[#3B82F6]',
+  },
+  rejected: {
+    label: 'Rejected',
+    bg: 'bg-[#FDECEA]',
+    text: 'text-[#B91C1C]',
+    dot: 'bg-[#EF4444]',
+  },
+  answered: {
+    label: 'Answered',
+    bg: 'bg-[#E8F5E9]',
+    text: 'text-[#2E7D32]',
+    dot: 'bg-[#4CAF50]',
+  },
+  // ── Legacy states (backward compat) ───────────────────
   submitted: {
     label: 'Waiting',
     bg: 'bg-[#FBF3D9]',
@@ -30,12 +60,6 @@ const STATUS_CONFIG: Record<
     bg: 'bg-[#FBF3D9]',
     text: 'text-[#8A6A16]',
     dot: 'bg-[#C9A13B]',
-  },
-  answered: {
-    label: 'Answered',
-    bg: 'bg-[#E8F5E9]',
-    text: 'text-[#2E7D32]',
-    dot: 'bg-[#4CAF50]',
   },
 };
 

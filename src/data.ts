@@ -1290,8 +1290,8 @@ export const INITIAL_DOUBTS: Doubt[] = [
     subject: 'Physical Chemistry',
     topic: 'Ionic Equilibrium',
     question: 'Does buffer capacity change when we dilute a buffer? I expected the pH to remain constant after dilution but my textbook says it shifts slightly. What is the correct explanation?',
-    isAnswered: false,
-    status: 'awaiting',
+    isAnswered: true,
+    status: 'answered',
     createdAt: '2026-07-10T18:45:00Z',
     replies: []
   },
@@ -1305,7 +1305,7 @@ export const INITIAL_DOUBTS: Doubt[] = [
     attachmentName: 'thermo-question.jpg',
     attachmentUrl: '',
     isAnswered: false,
-    status: 'submitted',
+    status: 'approved',
     createdAt: '2026-07-12T17:20:00Z',
     replies: []
   },
@@ -1317,7 +1317,7 @@ export const INITIAL_DOUBTS: Doubt[] = [
     topic: 'SN1 vs SN2 Reactions',
     question: 'When we have a secondary substrate like 2-bromobutane, how do we predict whether it will undergo SN1 or SN2? The solvent polarity, nucleophile strength, and steric factors all seem to point in different directions in different problems.',
     isAnswered: false,
-    status: 'submitted',
+    status: 'approved',
     createdAt: '2026-07-12T19:05:00Z',
     replies: []
   }

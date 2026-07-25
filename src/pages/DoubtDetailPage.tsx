@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { ArrowLeft, BadgeCheck, FileText } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, FileText, Clock, XCircle } from 'lucide-react';
 import { usePortalData } from '../context/PortalDataContext';
 import { useImageViewer } from '../components/image-viewer';
 import { DoubtStatusBadge } from '../components/doubts/DoubtStatusBadge';
@@ -62,6 +62,8 @@ export default function DoubtDetailPage({}: DoubtDetailPageProps) {
   }
 
   const status = deriveStatus(doubt);
+  const isPendingOrRejected = status === 'pending_approval' || status === 'rejected';
+
 
   // Derive clean title and description from data model
   let displayTitle = doubt.topic || stripHtml(doubt.question) || doubt.subject;
@@ -178,8 +180,12 @@ export default function DoubtDetailPage({}: DoubtDetailPageProps) {
           )}
         </div>
 
-        {/* Professor Answer */}
-        {mainAnswer && (
+        {/* Moderation Banner — shown for pending/rejected doubts */}
+        <ModerationBanner status={status} rejectionReason={doubt.rejectionReason} />
+
+        {/* Professor Answer — only shown for approved/answered doubts */}
+        {mainAnswer && !isPendingOrRejected && (
+
           <div className="animate-[fadeInUp_0.7s_ease-out_forwards]" style={{ animationDelay: '100ms' }}>
             <div className="px-2 sm:px-10 mb-4 flex items-center gap-2">
               <BadgeCheck className="text-green-500" size={24} />

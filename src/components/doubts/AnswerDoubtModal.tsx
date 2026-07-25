@@ -18,6 +18,14 @@ interface AnswerDoubtModalProps {
   }) => Promise<void>;
 }
 
+function sanitizeHtml(html: string) {
+  if (!html) return '';
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+}
+
+
 export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModalProps) {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -72,6 +80,17 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
     }
   };
 
+  let displayTitle = doubt.topic || '';
+  let displayDescriptionHtml = doubt.question || '';
+
+  if (doubt.question) {
+    const strongMatch = doubt.question.match(/^<strong>(.*?)<\/strong>(?:<br\s*\/?>)?/i);
+    if (strongMatch) {
+      displayTitle = strongMatch[1];
+      displayDescriptionHtml = doubt.question.substring(strongMatch[0].length);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 dash-root">
       <motion.div
@@ -111,8 +130,16 @@ export function AnswerDoubtModal({ doubt, onClose, onPublish }: AnswerDoubtModal
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Original Question Card */}
           <div className="bg-white dark:bg-[#22201F] rounded-2xl p-5 border border-[#22201F]/20 shadow-sm">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">Student's Question</h4>
-            <p className="text-gray-800 whitespace-pre-wrap">{doubt.question}</p>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">Student's Question</h4>
+            
+            {displayTitle && (
+              <h5 className="text-lg font-bold text-gray-900 dark:text-[#F6F2EA] mb-2">{displayTitle}</h5>
+            )}
+            
+            <div 
+              className="text-gray-800 dark:text-gray-300 whitespace-pre-wrap font-serif"
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayDescriptionHtml) }}
+            />
             
             {doubt.attachmentUrl && (
               <div className="mt-4">

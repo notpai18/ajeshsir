@@ -8,7 +8,7 @@ import {
   Eye, Bookmark, BookmarkCheck, X, AlertTriangle
 } from 'lucide-react';
 import { usePDF } from './PDFContext';
-import { downloadPDF } from '../../lib/pdfUrl';
+import { downloadFile } from '../../lib/pdfUrl';
 import { PremiumCard } from '../PremiumCard';
 
 const GHOST_BTN = 'inline-flex items-center justify-center gap-2 rounded-full border border-[#22201F]/20 bg-white dark:bg-[#22201F] px-3 py-2 text-xs font-semibold text-[#22201F] dark:text-[#F6F2EA] transition-all hover:bg-[#F7F3EC] dark:bg-[#1A1817] duration-200 hover:-translate-y-0.5 shadow-sm';
@@ -26,7 +26,7 @@ export function DocumentInfoPanel() {
 
   if (!infoPanelOpen || !docInfo) return null;
 
-  const handleDownload = () => downloadPDF(docInfo.fileUrl, docInfo.title);
+  const handleDownload = () => downloadFile(docInfo.fileUrl, docInfo.originalFilename);
 
   const handleDelete = () => {
     docInfo.onDelete?.();

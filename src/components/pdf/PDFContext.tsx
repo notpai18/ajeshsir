@@ -10,6 +10,7 @@ export interface PDFDocumentInfo {
   fileSize?: string;
   uploadDate?: string;
   downloadCount?: number;
+  originalFilename?: string;
   isProfessor?: boolean;
   entityType?: 'note' | 'pyq' | 'sheet';
   entityId?: string;

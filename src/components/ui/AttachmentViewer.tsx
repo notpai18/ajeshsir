@@ -3,6 +3,7 @@ import { useImageViewer } from '../image-viewer';
 import { PDFViewer } from '../pdf/PDFViewer';
 import { FileText, Download, Play, Music } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { downloadFile, getFallbackFilename } from '../../lib/pdfUrl';
 
 export interface Attachment {
   url: string;
@@ -83,17 +84,17 @@ export function AttachmentViewer({ attachments, containerClassName = "mt-4" }: {
                 >
                   Preview
                 </button>
-                <a
-                  href={att.url}
-                  download
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const name = att.name || getFallbackFilename(att.url, 'Document');
+                    downloadFile(att.url, name, 'Document');
+                  }}
                   className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl transition-colors flex items-center justify-center"
                   title="Download PDF"
-                  onClick={(e) => e.stopPropagation()}
                 >
                   <Download size={20} />
-                </a>
+                </button>
               </div>
             </div>
           );
@@ -131,15 +132,16 @@ export function AttachmentViewer({ attachments, containerClassName = "mt-4" }: {
               <p className="text-[15px] font-bold text-gray-900 dark:text-gray-100 max-w-[200px] truncate">{att.name || 'File'}</p>
               <p className="text-[13px] text-gray-500">Unknown type</p>
             </div>
-            <a
-              href={att.url}
-              download
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const name = att.name || getFallbackFilename(att.url, 'File');
+                downloadFile(att.url, name, 'File');
+              }}
               className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors shrink-0 flex items-center gap-2"
             >
               Download
-            </a>
+            </button>
           </div>
         );
       })}
