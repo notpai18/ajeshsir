@@ -83,14 +83,16 @@ export function SheetsSection({
       ) : (
         <Table head={['Exam & subject', 'Title', 'Chapter', '']}>
           {sheetsFiltered.map((s) => (
-            <tr key={s.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
-              <td className="px-5 py-3.5">
+            <tr key={s.id} className="block md:table-row relative p-4 md:p-0 bg-white dark:bg-[#1A1817] md:bg-transparent rounded-2xl md:rounded-none border border-[#22201F]/10 dark:border-[#F6F2EA]/10 md:border-none shadow-sm md:shadow-none transition-colors hover:bg-[#FBF7F0] dark:hover:bg-[#2A2726] group">
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-2 md:mb-0">
                 <ExamChip course={s.course} label={examTitle(s.course)} />
-                <span className="mt-1 block"><SubjectBadge subject={s.subject} /></span>
+                <span className="mt-1.5 md:mt-1 block md:inline"><SubjectBadge subject={s.subject} /></span>
               </td>
-              <td className="px-5 py-3.5 font-semibold text-[#22201F] dark:text-[#F6F2EA]">{s.title}</td>
-              <td className="px-5 py-3.5 text-sm text-[#8A7E6F] dark:text-[#A89F91]">{s.chapter}</td>
-              <td className="px-5 py-3.5">
+              <td className="block md:table-cell px-0 py-0 md:px-5 md:py-4 mb-4 md:mb-0 font-semibold text-[#22201F] dark:text-[#F6F2EA]">{s.title}</td>
+              <td className="inline-block md:table-cell px-0 py-0 md:px-5 md:py-4 text-sm text-[#8A7E6F] dark:text-[#A89F91]">
+                <span className="md:hidden text-xs uppercase tracking-wider text-[#B3A996] mr-1">Chapter:</span> {s.chapter}
+              </td>
+              <td className="inline-block absolute bottom-3 right-4 md:static md:table-cell px-0 py-0 md:px-5 md:py-4">
                 <RowActions
                   onView={s.fileUrl ? () => openPDF({ title: s.title, fileUrl: s.fileUrl, fileSize: s.fileSize, entityType: 'sheet', entityId: s.id, isProfessor: true, onDelete: () => { askDelete('this sheet', () => onDeletePracticeSheet(s.id)); } }) : undefined}
                   onEdit={() => openEditSheet(s)}

@@ -70,38 +70,36 @@ export function Toolbar({
 
 export function Table({ head, children }: { head: string[]; children: React.ReactNode }) {
   return (
-    <PremiumCard padding="none" className="overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm border-collapse">
-          <thead>
-            <tr className="border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726]">
-              {head.map((h, i) => (
-                <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#F2ECDF]">{children}</tbody>
-        </table>
-      </div>
-    </PremiumCard>
+    <div className="overflow-x-visible md:overflow-x-auto rounded-[20px] md:border border-[#22201F]/10 dark:border-[#F6F2EA]/10 md:bg-white md:dark:bg-[#1A1817] md:shadow-soft-sm overflow-hidden">
+      <table className="block md:table w-full md:min-w-[640px] text-left text-sm border-collapse">
+        <thead className="hidden md:table-header-group">
+          <tr className="border-b border-[#22201F]/15 dark:border-[#F6F2EA]/10 bg-[#FBF7F0] dark:bg-[#2A2726]">
+            {head.map((h, i) => (
+              <th key={i} className={`px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A7E6F] dark:text-[#A89F91] ${i === head.length - 1 ? 'text-right' : ''}`}>
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="block md:table-row-group md:divide-y divide-[#F2ECDF] dark:divide-[#F6F2EA]/10 space-y-4 md:space-y-0">{children}</tbody>
+      </table>
+    </div>
   );
 }
 
 export function RowActions({ onView, onEdit, onDelete }: { onView?: () => void; onEdit: () => void; onDelete: () => void }) {
   return (
-    <div className="flex justify-end gap-1">
+    <div className="flex justify-end gap-1.5 md:gap-1">
       {onView && (
-        <button onClick={onView} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="View PDF">
-          <Eye size={15} />
+        <button onClick={onView} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:hover:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="View PDF">
+          <Eye size={17} className="md:w-[15px] md:h-[15px]" />
         </button>
       )}
-      <button onClick={onEdit} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="Edit">
-        <Pencil size={15} />
+      <button onClick={onEdit} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:hover:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="Edit">
+        <Pencil size={17} className="md:w-[15px] md:h-[15px]" />
       </button>
-      <button onClick={onDelete} className="rounded-lg p-2 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F6E5E1] hover:text-[#B23B2E]" aria-label="Delete">
-        <Trash2 size={15} />
+      <button onClick={onDelete} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F6E5E1] dark:hover:bg-[#38151A] hover:text-[#B23B2E] dark:hover:text-[#ff6b5c]" aria-label="Delete">
+        <Trash2 size={17} className="md:w-[15px] md:h-[15px]" />
       </button>
     </div>
   );
