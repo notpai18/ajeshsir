@@ -449,10 +449,10 @@ export default function ProfessorDashboard({
   }, [profile]);
 
   // Forms
-  const [noteForm, setNoteForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
+  const [noteForm, setNoteForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '', originalFilename: '' });
   const [videoForm, setVideoForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', youtubeLink: '', description: '', duration: '' });
-  const [pyqForm, setPyqForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium' as 'Easy' | 'Medium' | 'Hard', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '' });
-  const [sheetForm, setSheetForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
+  const [pyqForm, setPyqForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium' as 'Easy' | 'Medium' | 'Hard', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '', questionOriginalFilename: '', solutionOriginalFilename: '' });
+  const [sheetForm, setSheetForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '', originalFilename: '' });
   const [annForm, setAnnForm] = useState({ title: '', body: '', category: 'general' as AnnouncementCategory, pinned: false });
 
 /* ---------------- Helpers ---------------- */
@@ -479,13 +479,13 @@ export default function ProfessorDashboard({
 
   /* ---------------- Open helpers ---------------- */
   const openAddNote = () => {
-    setNoteForm({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
+    setNoteForm({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '', originalFilename: '' });
     setNoteFile(null);
     setActiveTab('notes');
     setActiveModal('add-note');
   };
   const openEditNote = (n: Note) => {
-    setNoteForm({ course: n.course, subject: n.subject, chapter: n.chapter, title: n.title, description: n.description, fileUrl: n.fileUrl, fileSize: n.fileSize || '' });
+    setNoteForm({ course: n.course, subject: n.subject, chapter: n.chapter, title: n.title, description: n.description, fileUrl: n.fileUrl, fileSize: n.fileSize || '', originalFilename: n.originalFilename || '' });
     setNoteFile(null);
     setSelectedItemId(n.id);
     setActiveModal('edit-note');
@@ -501,27 +501,27 @@ export default function ProfessorDashboard({
     setActiveModal('edit-video');
   };
   const openAddPyq = () => {
-    setPyqForm({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '' });
+    setPyqForm({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '', questionOriginalFilename: '', solutionOriginalFilename: '' });
     setPyqQuestionFile(null);
     setPyqSolutionFile(null);
     setActiveTab('pyqs');
     setActiveModal('add-pyq');
   };
   const openEditPyq = (p: PYQ) => {
-    setPyqForm({ course: p.course, subject: p.subject, chapter: p.chapter, year: p.year, difficulty: p.difficulty, questionUrl: p.questionUrl, solutionUrl: p.solutionUrl, questionSize: p.questionSize || '', solutionSize: p.solutionSize || '' });
+    setPyqForm({ course: p.course, subject: p.subject, chapter: p.chapter, year: p.year, difficulty: p.difficulty, questionUrl: p.questionUrl, solutionUrl: p.solutionUrl, questionSize: p.questionSize || '', solutionSize: p.solutionSize || '', questionOriginalFilename: p.questionOriginalFilename || '', solutionOriginalFilename: p.solutionOriginalFilename || '' });
     setPyqQuestionFile(null);
     setPyqSolutionFile(null);
     setSelectedItemId(p.id);
     setActiveModal('edit-pyq');
   };
   const openAddSheet = () => {
-    setSheetForm({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
+    setSheetForm({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '', originalFilename: '' });
     setSheetFile(null);
     setActiveTab('sheets');
     setActiveModal('add-sheet');
   };
   const openEditSheet = (s: PracticeSheet) => {
-    setSheetForm({ course: s.course, subject: s.subject, chapter: s.chapter, title: s.title, description: s.description, fileUrl: s.fileUrl, fileSize: s.fileSize || '' });
+    setSheetForm({ course: s.course, subject: s.subject, chapter: s.chapter, title: s.title, description: s.description, fileUrl: s.fileUrl, fileSize: s.fileSize || '', originalFilename: s.originalFilename || '' });
     setSheetFile(null);
     setSelectedItemId(s.id);
     setActiveModal('edit-sheet');

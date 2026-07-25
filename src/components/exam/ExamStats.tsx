@@ -1,7 +1,7 @@
 import React from 'react';
 import { Download, ArrowRight, Star, Clock, Trophy, FileText, PlayCircle } from 'lucide-react';
 import { Note, Video, PYQ, PracticeSheet, Announcement } from '../../types';
-import { SubjectBadge } from '../resources/ResourceCard';
+import { SubjectBadge } from '../ui/SubjectBadge';
 
 // Featured Content Component
 export function FeaturedResource({ item, onPreview, onDownload }: { item: any, onPreview: () => void, onDownload: () => void }) {
