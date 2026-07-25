@@ -7,7 +7,6 @@ import React from 'react';
 
 interface FooterProps {
   onNavigate: (view: string) => void;
-  userRole: 'student' | 'professor' | null;
 }
 
 interface BottomLinkProps {

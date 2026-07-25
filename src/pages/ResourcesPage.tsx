@@ -1,22 +1,16 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { usePortalData } from '../context/PortalDataContext';
+import { useAuth } from '../context/AuthContext';
 import StudentDashboard from '../components/StudentDashboard';
 import ProfessorDashboard from '../components/ProfessorDashboard';
 import { EXAMS, INITIAL_FAQS } from '../data';
 
-interface ResourcesPageProps {
-  userRole: 'student' | 'professor' | null;
-}
-
-export default function ResourcesPage({ userRole }: ResourcesPageProps) {
-  if (!userRole) {
-    return <Navigate to="/selection" replace />;
-  }
-
+export default function ResourcesPage() {
+  const { isAuthorizedProf, loading: authLoading } = useAuth();
   const {
     notes, videos, pyqs, practiceSheets, doubts, announcements,
-    loading, error, reload,
+    loading: dataLoading, error, reload,
     handleAddNote, handleEditNote, handleDeleteNote, handleIncrementNoteDownload,
     handleAddVideo, handleEditVideo, handleDeleteVideo,
     handleAddPyq, handleEditPyq, handleDeletePyq,
@@ -26,7 +20,7 @@ export default function ResourcesPage({ userRole }: ResourcesPageProps) {
     handleAddAnnouncement, handleEditAnnouncement, handleDeleteAnnouncement, handleTogglePinAnnouncement,
   } = usePortalData();
 
-  if (loading) {
+  if (authLoading || dataLoading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center bg-[#F7F3EC] dark:bg-[#1A1817]">
         <div className="text-center space-y-4">
@@ -59,7 +53,7 @@ export default function ResourcesPage({ userRole }: ResourcesPageProps) {
     );
   }
 
-  if (userRole === 'student') {
+  if (!isAuthorizedProf) {
     return (
       <StudentDashboard
         exams={EXAMS}
