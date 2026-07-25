@@ -16,6 +16,8 @@ function rowToPyq(row: {
   solution_url: string;
   question_size: string;
   solution_size: string;
+  question_original_filename?: string;
+  solution_original_filename?: string;
 }): PYQ {
   return {
     id: row.id,
@@ -28,6 +30,8 @@ function rowToPyq(row: {
     solutionUrl: row.solution_url,
     questionSize: row.question_size,
     solutionSize: row.solution_size,
+    questionOriginalFilename: row.question_original_filename,
+    solutionOriginalFilename: row.solution_original_filename,
   };
 }
 
@@ -35,8 +39,7 @@ export async function fetchPyqs(): Promise<PYQ[]> {
   const { data, error } = await supabase
     .from('pyqs')
     .select('*')
-    .order('year', { ascending: false })
-    .order('course', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) throw new Error(`fetchPyqs: ${error.message}`);
   return (data ?? []).map(rowToPyq);
@@ -57,6 +60,8 @@ export async function createPyq(
       solution_url: pyq.solutionUrl,
       question_size: '',
       solution_size: '',
+      question_original_filename: pyq.questionOriginalFilename || '',
+      solution_original_filename: pyq.solutionOriginalFilename || '',
     })
     .select()
     .single();
@@ -79,6 +84,8 @@ export async function updatePyq(
   if (fields.solutionUrl !== undefined) payload.solution_url = fields.solutionUrl;
   if (fields.questionSize !== undefined) payload.question_size = fields.questionSize;
   if (fields.solutionSize !== undefined) payload.solution_size = fields.solutionSize;
+  if (fields.questionOriginalFilename !== undefined) payload.question_original_filename = fields.questionOriginalFilename;
+  if (fields.solutionOriginalFilename !== undefined) payload.solution_original_filename = fields.solutionOriginalFilename;
 
   const { data, error } = await supabase
     .from('pyqs')

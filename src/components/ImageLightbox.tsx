@@ -23,6 +23,7 @@ import {
   ChevronRight,
   Maximize2,
 } from 'lucide-react';
+import { downloadFile, getFallbackFilename } from '../lib/pdfUrl';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -224,20 +225,12 @@ export function ImageLightbox({ images, initialIndex = 0, onClose }: ImageLightb
   // ── Download ──────────────────────────────────────────────────────────────
   const handleDownload = async () => {
     try {
-      const res = await fetch(current.src);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = current.name || `image-${index + 1}`;
-      a.click();
-      URL.revokeObjectURL(url);
+      const fileName = current.name || getFallbackFilename(current.src, `image-${index + 1}`);
+      await downloadFile(current.src, fileName, 'image');
     } catch {
       // fallback for data: URIs or CORS issues
-      const a = document.createElement('a');
-      a.href = current.src;
-      a.download = current.name || `image-${index + 1}`;
-      a.click();
+      const fileName = current.name || getFallbackFilename(current.src, `image-${index + 1}`);
+      await downloadFile(current.src, fileName, 'image');
     }
   };
 

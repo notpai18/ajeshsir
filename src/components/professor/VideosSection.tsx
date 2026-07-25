@@ -78,7 +78,7 @@ export function VideosSection({
       {videosFiltered.length === 0 ? (
         <ProfEmptyState icon={<VideoIcon size={22} />} title="No lectures here yet" message="Publish a video lecture or adjust the filters above." action={<button className={PRIMARY_BTN} onClick={openAddVideo}><Plus size={15} /> Add lecture</button>} />
       ) : (
-        <Table head={['Exam & subject', 'Lecture & chapter', 'Duration', '']}>
+        <Table head={['Exam & subject', 'Lecture & chapter', '']}>
           {videosFiltered.map((v) => (
             <tr key={v.id} className="transition-colors hover:bg-[#FBF7F0] dark:bg-[#2A2726] dark:hover:bg-[#2A2726] dark:bg-[#2A2726]">
               <td className="px-5 py-3.5">
@@ -88,9 +88,6 @@ export function VideosSection({
               <td className="px-5 py-3.5">
                 <span className="font-semibold text-[#22201F] dark:text-[#F6F2EA]">{v.title}</span>
                 <span className="mt-0.5 block text-xs text-[#8A7E6F] dark:text-[#A89F91]">{v.chapter}</span>
-              </td>
-              <td className="px-5 py-3.5">
-                <span className="dash-mono text-sm tabular-nums text-[#4A443E]">{v.duration}</span>
               </td>
               <td className="px-5 py-3.5">
                 <RowActions onEdit={() => openEditVideo(v)} onDelete={() => askDelete('this lecture', () => onDeleteVideo(v.id))} />

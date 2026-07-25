@@ -18,6 +18,7 @@ function rowToNote(row: {
   description: string;
   file_url: string;
   file_size: string;
+  original_filename?: string;
   download_count: number;
 }): Note {
   return {
@@ -29,6 +30,7 @@ function rowToNote(row: {
     description: row.description,
     fileUrl: row.file_url,
     fileSize: row.file_size,
+    originalFilename: row.original_filename,
     downloadCount: row.download_count,
   };
 }
@@ -40,8 +42,7 @@ export async function fetchNotes(): Promise<Note[]> {
   const { data, error } = await supabase
     .from('notes')
     .select('*')
-    .order('course', { ascending: true })
-    .order('title', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) throw new Error(`fetchNotes: ${error.message}`);
   return (data ?? []).map(rowToNote);
@@ -61,6 +62,7 @@ export async function createNote(
       description: note.description,
       file_url: note.fileUrl,
       file_size: note.fileSize,
+      original_filename: note.originalFilename || '',
       download_count: 0,
     })
     .select()
@@ -83,6 +85,7 @@ export async function updateNote(
   if (fields.description !== undefined) updatePayload.description = fields.description;
   if (fields.fileUrl !== undefined) updatePayload.file_url = fields.fileUrl;
   if (fields.fileSize !== undefined) updatePayload.file_size = fields.fileSize;
+  if (fields.originalFilename !== undefined) updatePayload.original_filename = fields.originalFilename;
   if (fields.downloadCount !== undefined) updatePayload.download_count = fields.downloadCount;
 
   const { data, error } = await supabase

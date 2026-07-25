@@ -14,6 +14,7 @@ function rowToSheet(row: {
   description: string;
   file_url: string;
   file_size: string;
+  original_filename?: string;
 }): PracticeSheet {
   return {
     id: row.id,
@@ -24,6 +25,7 @@ function rowToSheet(row: {
     description: row.description,
     fileUrl: row.file_url,
     fileSize: row.file_size,
+    originalFilename: row.original_filename,
   };
 }
 
@@ -31,8 +33,7 @@ export async function fetchPracticeSheets(): Promise<PracticeSheet[]> {
   const { data, error } = await supabase
     .from('practice_sheets')
     .select('*')
-    .order('course', { ascending: true })
-    .order('title', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) throw new Error(`fetchPracticeSheets: ${error.message}`);
   return (data ?? []).map(rowToSheet);
@@ -51,6 +52,7 @@ export async function createPracticeSheet(
       description: sheet.description,
       file_url: sheet.fileUrl,
       file_size: '',
+      original_filename: sheet.originalFilename || '',
     })
     .select()
     .single();
@@ -71,6 +73,7 @@ export async function updatePracticeSheet(
   if (fields.description !== undefined) payload.description = fields.description;
   if (fields.fileUrl !== undefined) payload.file_url = fields.fileUrl;
   if (fields.fileSize !== undefined) payload.file_size = fields.fileSize;
+  if (fields.originalFilename !== undefined) payload.original_filename = fields.originalFilename;
 
   const { data, error } = await supabase
     .from('practice_sheets')

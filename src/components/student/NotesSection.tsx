@@ -68,7 +68,7 @@ export function NotesSection({
                 {
                   icon: Download,
                   label: 'Download',
-                  onClick: () => handleDownloadFile(note.id, note.fileUrl)
+                  onClick: () => handleDownloadFile(note.id, note.fileUrl, note.originalFilename)
                 }
               ]}
             />

@@ -19,6 +19,7 @@ import {
   fetchPyqs, createPyq, updatePyq, deletePyq,
   fetchPracticeSheets, createPracticeSheet, updatePracticeSheet, deletePracticeSheet,
   fetchDoubts, submitDoubt, replyToDoubt, deleteDoubt, updateDoubtStatus, markDoubtSeen,
+  approveDoubt, rejectDoubt,
   fetchAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement, togglePinAnnouncement,
 } from '../services';
 
@@ -64,6 +65,8 @@ interface PortalDataContextValue extends PortalDataState {
   handleReplyDoubt: (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[] }) => Promise<void>;
   handleDeleteDoubt: (id: string) => Promise<void>;
   handleMarkSeen: (id: string) => Promise<void>;
+  handleApproveDoubt: (id: string) => Promise<void>;
+  handleRejectDoubt: (id: string, reason?: string) => Promise<void>;
 
   // Announcements
   handleAddAnnouncement: (ann: Omit<Announcement, 'id' | 'createdAt'>) => Promise<void>;
@@ -263,6 +266,54 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
     }
   }, [state.doubts]);
 
+  const handleApproveDoubt = useCallback(async (id: string) => {
+    // Optimistic update
+    setState(prev => ({
+      ...prev,
+      doubts: prev.doubts.map(d =>
+        d.id === id ? { ...d, status: 'approved' as const } : d
+      )
+    }));
+    try {
+      const updated = await approveDoubt(id);
+      setState(prev => ({ ...prev, doubts: prev.doubts.map(d => d.id === id ? updated : d) }));
+    } catch (e: any) {
+      console.error('Error approving doubt', e);
+      // Revert optimistic update
+      setState(prev => ({
+        ...prev,
+        doubts: prev.doubts.map(d =>
+          d.id === id ? { ...d, status: 'pending_approval' as const } : d
+        )
+      }));
+      alert(e.message);
+    }
+  }, []);
+
+  const handleRejectDoubt = useCallback(async (id: string, reason?: string) => {
+    // Optimistic update
+    setState(prev => ({
+      ...prev,
+      doubts: prev.doubts.map(d =>
+        d.id === id ? { ...d, status: 'rejected' as const, rejectionReason: reason } : d
+      )
+    }));
+    try {
+      const updated = await rejectDoubt(id, reason);
+      setState(prev => ({ ...prev, doubts: prev.doubts.map(d => d.id === id ? updated : d) }));
+    } catch (e: any) {
+      console.error('Error rejecting doubt', e);
+      // Revert optimistic update
+      setState(prev => ({
+        ...prev,
+        doubts: prev.doubts.map(d =>
+          d.id === id ? { ...d, status: 'pending_approval' as const } : d
+        )
+      }));
+      alert(e.message);
+    }
+  }, []);
+
   // ─── Announcements CRUD ────────────────────────────────────────────────────
   const handleAddAnnouncement = useCallback(async (newAnn: Omit<Announcement, 'id' | 'createdAt'>) => {
     const created = await createAnnouncement(newAnn);
@@ -295,6 +346,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       handleAddPyq, handleEditPyq, handleDeletePyq,
       handleAddPracticeSheet, handleEditPracticeSheet, handleDeletePracticeSheet,
       handleAddDoubt, handleReplyDoubt, handleDeleteDoubt, handleMarkSeen,
+      handleApproveDoubt, handleRejectDoubt,
       handleAddAnnouncement, handleEditAnnouncement, handleDeleteAnnouncement, handleTogglePinAnnouncement,
     }}>
       {children}

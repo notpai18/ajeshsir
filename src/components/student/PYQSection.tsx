@@ -90,6 +90,16 @@ export function PYQSection({
                   icon: Eye,
                   label: 'Solution',
                   onClick: () => setActivePdfViewer({ title: `PYQ Solution · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.solutionUrl })
+                },
+                {
+                  icon: Download,
+                  label: 'Question PDF',
+                  onClick: () => triggerDownload(pyq.questionUrl, pyq.questionOriginalFilename)
+                },
+                {
+                  icon: Download,
+                  label: 'Solution PDF',
+                  onClick: () => triggerDownload(pyq.solutionUrl, pyq.solutionOriginalFilename)
                 }
               ]}
             />

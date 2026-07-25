@@ -40,6 +40,7 @@ export interface Note {
   difficulty?: 'Easy' | 'Moderate' | 'Hard';
   year?: number;
   isAdvanced?: boolean;
+  originalFilename?: string;
 }
 
 export interface Video {
@@ -65,6 +66,8 @@ export interface PYQ {
   solutionUrl: string;
   questionSize: string;
   solutionSize: string;
+  questionOriginalFilename?: string;
+  solutionOriginalFilename?: string;
 }
 
 export interface PracticeSheet {
@@ -76,14 +79,27 @@ export interface PracticeSheet {
   description: string;
   fileUrl: string;
   fileSize: string;
+  originalFilename?: string;
 }
 
-/** 4-state explicit status model for doubts */
+/**
+ * Moderation-aware status model for doubts.
+ * Primary states (new moderation workflow):
+ *   pending_approval → approved → answered
+ *                    ↘ rejected
+ * Legacy states kept for backward compatibility:
+ *   submitted / awaiting / needs-followup
+ */
 export type DoubtStatus =
-  | 'submitted'       // just sent, not yet seen by professor
-  | 'awaiting'        // seen by prof, no reply yet
-  | 'answered'        // professor replied, student hasn't confirmed
-  | 'needs-followup'; // student replied again after an answer
+  // ── New moderation states ──
+  | 'pending_approval'  // submitted by student, awaiting professor review
+  | 'approved'          // professor approved; publicly visible
+  | 'rejected'          // professor rejected; only visible to submitter
+  | 'answered'          // approved + professor replied
+  // ── Legacy states (backward compat) ──
+  | 'submitted'         // old: just sent, not yet seen by professor
+  | 'awaiting'          // old: seen by prof, no reply yet
+  | 'needs-followup';   // old: student replied again after an answer
 
 export interface DoubtReply {
   id: string;
@@ -98,6 +114,10 @@ export interface DoubtReply {
   updated_at: string;
   is_edited: boolean;
   reply_order: number;
+  attachment_names?: string[];
+  image_names?: string[];
+  video_names?: string[];
+  audio_names?: string[];
 }
 
 export interface Doubt {
@@ -117,6 +137,12 @@ export interface Doubt {
   status?: DoubtStatus;
   createdAt: string;
   replies?: DoubtReply[];
+  /** Moderation audit fields */
+  approvedAt?: string;
+  approvedBy?: string;
+  rejectedAt?: string;
+  rejectedBy?: string;
+  rejectionReason?: string;
 }
 
 export interface FAQ {

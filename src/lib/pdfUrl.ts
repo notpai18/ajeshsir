@@ -26,6 +26,10 @@ export async function getPDFUrl(
     return fileUrl;
   }
 
+  if (!supabase) {
+    throw new Error('Supabase client is not initialized. Check your environment variables.');
+  }
+
   // Storage path — generate signed URL
   const { data, error } = await supabase.storage
     .from(bucket)
@@ -50,10 +54,31 @@ export function guessBucketFromUrl(fileUrl: string): Bucket {
 }
 
 /**
- * Download the PDF file with the correct filename.
+ * Helper to generate a clean filename if the original is lost.
+ * E.g. turns '1783620673833-afbjnuqohq8.pdf' into 'Document.pdf' based on prefix.
+ */
+export function getFallbackFilename(url: string, defaultName: string): string {
+  if (!url) return defaultName;
+  const parts = url.split('/');
+  const lastPart = parts[parts.length - 1];
+  
+  // If it's a Supabase timestamp-random hash (e.g., 1783620673833-afbjnuqohq8.pdf)
+  if (/^\d{13}-[a-z0-9]+\./.test(lastPart)) {
+    const ext = lastPart.split('.').pop();
+    // Sanitize the default name to be safe for filenames
+    const sanitized = defaultName.replace(/[^a-zA-Z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    return `${sanitized}.${ext || 'pdf'}`;
+  }
+  
+  // If it's something else, return the URL part or default name
+  return lastPart.includes('.') ? lastPart : defaultName;
+}
+
+/**
+ * Download the file with the correct filename.
  * Triggers a browser save dialog.
  */
-export async function downloadPDF(fileUrl: string, filename: string): Promise<void> {
+export async function downloadFile(fileUrl: string, originalFilename?: string, fallbackPrefix: string = 'Document'): Promise<void> {
   try {
     const url = fileUrl.startsWith('http') ? fileUrl : await getPDFUrl(fileUrl);
     const response = await fetch(url);
@@ -62,7 +87,14 @@ export async function downloadPDF(fileUrl: string, filename: string): Promise<vo
     const blobUrl = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = blobUrl;
-    a.download = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
+    let downloadName = originalFilename || getFallbackFilename(fileUrl, fallbackPrefix);
+    
+    // Ensure it has an extension based on original file if available
+    if (originalFilename && !downloadName.includes('.')) {
+      downloadName = `${downloadName}.pdf`; // Fallback to pdf if completely unknown
+    }
+
+    a.download = downloadName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

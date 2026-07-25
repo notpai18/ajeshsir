@@ -10,7 +10,7 @@ import {
   PanelRight, Bookmark, BookmarkCheck, Info, ExternalLink
 } from 'lucide-react';
 import { usePDF } from './PDFContext';
-import { downloadPDF } from '../../lib/pdfUrl';
+import { downloadFile } from '../../lib/pdfUrl';
 
 const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0, 4.0];
 
@@ -80,7 +80,7 @@ export function PDFToolbar({ onClose }: PDFToolbarProps) {
 
   const handleDownload = async () => {
     if (!docInfo) return;
-    await downloadPDF(docInfo.fileUrl, docInfo.title);
+    await downloadFile(docInfo.fileUrl, docInfo.originalFilename);
   };
 
   const handlePrint = () => {

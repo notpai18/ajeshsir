@@ -23,6 +23,7 @@ import React, {
   useCallback,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { downloadFile, getFallbackFilename } from '../../lib/pdfUrl';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PanInfo } from 'framer-motion';
 import type { ViewerImage } from './ImageViewerContext';
@@ -228,19 +229,11 @@ export function ImageViewer({ images, initialIndex = 0, onClose }: ImageViewerPr
   // ── Download ──────────────────────────────────────────────────────────────
   const handleDownload = async () => {
     try {
-      const res = await fetch(current.src);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = current.name || `image-${index + 1}`;
-      a.click();
-      URL.revokeObjectURL(url);
+      const fileName = current.name || getFallbackFilename(current.src, `image-${index + 1}`);
+      await downloadFile(current.src, fileName, 'image');
     } catch {
-      const a = document.createElement('a');
-      a.href = current.src;
-      a.download = current.name || `image-${index + 1}`;
-      a.click();
+      const fileName = current.name || getFallbackFilename(current.src, `image-${index + 1}`);
+      await downloadFile(current.src, fileName, 'image');
     }
   };
 

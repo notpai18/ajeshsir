@@ -142,21 +142,26 @@ export function AskDoubtModal({
         }
       }
 
+      // Persist student email for "My Doubts" identification
+      const studentEmail = 'student@portal.in';
+      try { localStorage.setItem('portal_student_email_v1', studentEmail); } catch {}
+
       await onSubmit({
         name: 'Student', // Auth context integration placeholder
-        email: 'student@portal.in',
+        email: studentEmail,
         subject,
         topic: title, // Use title as topic to fit DB constraints (may be stripped)
         question: `<strong>${title}</strong><br/>${questionHtml}`,
         attachmentName,
         attachmentUrl,
         attachmentDataUrl,
-        status: 'submitted',
+        status: 'pending_approval',
       });
 
       setIsSubmitting(false);
       onClose();
       if (onSuccess) onSuccess();
+
       
     } catch (err: any) {
       setError(err.message || 'Submission failed. Please try again.');

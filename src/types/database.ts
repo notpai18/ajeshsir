@@ -77,12 +77,16 @@ export type Database = {
           doubt_id: string
           id: string
           image_urls: string[] | null
+          image_names: string[] | null
           is_edited: boolean
           professor_id: string
           reply_order: number
           reply_text: string | null
           updated_at: string
           video_urls: string[] | null
+          video_names: string[] | null
+          audio_names: string[] | null
+          attachment_names: string[] | null
         }
         Insert: {
           attachment_urls?: string[] | null
@@ -91,12 +95,16 @@ export type Database = {
           doubt_id: string
           id?: string
           image_urls?: string[] | null
+          image_names?: string[] | null
           is_edited?: boolean
           professor_id: string
           reply_order?: number
           reply_text?: string | null
           updated_at?: string
           video_urls?: string[] | null
+          video_names?: string[] | null
+          audio_names?: string[] | null
+          attachment_names?: string[] | null
         }
         Update: {
           attachment_urls?: string[] | null
@@ -105,12 +113,16 @@ export type Database = {
           doubt_id?: string
           id?: string
           image_urls?: string[] | null
+          image_names?: string[] | null
           is_edited?: boolean
           professor_id?: string
           reply_order?: number
           reply_text?: string | null
           updated_at?: string
           video_urls?: string[] | null
+          video_names?: string[] | null
+          audio_names?: string[] | null
+          attachment_names?: string[] | null
         }
         Relationships: [
           {
@@ -173,6 +185,7 @@ export type Database = {
           download_count: number
           file_size: string
           file_url: string
+          original_filename: string
           id: string
           subject: string
           title: string
@@ -186,6 +199,7 @@ export type Database = {
           download_count?: number
           file_size?: string
           file_url?: string
+          original_filename?: string
           id?: string
           subject: string
           title: string
@@ -199,6 +213,7 @@ export type Database = {
           download_count?: number
           file_size?: string
           file_url?: string
+          original_filename?: string
           id?: string
           subject?: string
           title?: string
@@ -214,6 +229,7 @@ export type Database = {
           description: string
           file_size: string
           file_url: string
+          original_filename: string
           id: string
           subject: string
           title: string
@@ -226,6 +242,7 @@ export type Database = {
           description?: string
           file_size?: string
           file_url?: string
+          original_filename?: string
           id?: string
           subject: string
           title: string
@@ -238,6 +255,7 @@ export type Database = {
           description?: string
           file_size?: string
           file_url?: string
+          original_filename?: string
           id?: string
           subject?: string
           title?: string
@@ -278,8 +296,10 @@ export type Database = {
           id: string
           question_size: string
           question_url: string
+          question_original_filename: string
           solution_size: string
           solution_url: string
+          solution_original_filename: string
           subject: string
           updated_at: string
           year: number
@@ -292,8 +312,10 @@ export type Database = {
           id?: string
           question_size?: string
           question_url?: string
+          question_original_filename?: string
           solution_size?: string
           solution_url?: string
+          solution_original_filename?: string
           subject: string
           updated_at?: string
           year: number
@@ -306,8 +328,10 @@ export type Database = {
           id?: string
           question_size?: string
           question_url?: string
+          question_original_filename?: string
           solution_size?: string
           solution_url?: string
+          solution_original_filename?: string
           subject?: string
           updated_at?: string
           year?: number

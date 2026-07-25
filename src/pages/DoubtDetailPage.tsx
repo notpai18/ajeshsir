@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { ArrowLeft, BadgeCheck, FileText } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, FileText, Clock, XCircle } from 'lucide-react';
 import { usePortalData } from '../context/PortalDataContext';
 import { useImageViewer } from '../components/image-viewer';
 import { DoubtStatusBadge } from '../components/doubts/DoubtStatusBadge';
@@ -27,6 +27,47 @@ function sanitizeHtml(html: string) {
 function stripHtml(html: string) {
   if (!html) return '';
   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
+}
+
+/** Banner shown for pending/rejected doubts instead of the public view */
+function ModerationBanner({
+  status,
+  rejectionReason,
+}: {
+  status: DoubtStatus;
+  rejectionReason?: string;
+}) {
+  if (status === 'pending_approval') {
+    return (
+      <div className="flex items-start gap-3 rounded-2xl border border-[#C9A13B]/30 bg-[#FBF3D9] px-6 py-5 mb-8">
+        <Clock size={20} className="text-[#8A6A16] shrink-0 mt-0.5" />
+        <div>
+          <h3 className="text-base font-bold text-[#8A6A16] mb-1">This doubt is awaiting professor approval.</h3>
+          <p className="text-sm text-[#8A6A16]/80">
+            It is not yet visible to other students. You will be able to see the professor's answer once it is approved.
+          </p>
+        </div>
+      </div>
+    );
+  }
+  if (status === 'rejected') {
+    return (
+      <div className="flex items-start gap-3 rounded-2xl border border-[#EF4444]/20 bg-[#FDECEA] px-6 py-5 mb-8">
+        <XCircle size={20} className="text-[#B91C1C] shrink-0 mt-0.5" />
+        <div>
+          <h3 className="text-base font-bold text-[#B91C1C] mb-1">This doubt was not approved by the professor.</h3>
+          {rejectionReason ? (
+            <p className="text-sm text-[#B91C1C]/80">
+              <strong>Reason:</strong> {rejectionReason}
+            </p>
+          ) : (
+            <p className="text-sm text-[#B91C1C]/80">No reason was provided.</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+  return null;
 }
 
 export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
@@ -65,6 +106,8 @@ export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
   }
 
   const status = deriveStatus(doubt);
+  const isPendingOrRejected = status === 'pending_approval' || status === 'rejected';
+
 
   // Derive clean title and description from data model
   let displayTitle = doubt.topic || stripHtml(doubt.question) || doubt.subject;
@@ -178,8 +221,12 @@ export default function DoubtDetailPage({ userRole }: DoubtDetailPageProps) {
           )}
         </div>
 
-        {/* Professor Answer */}
-        {mainAnswer && (
+        {/* Moderation Banner — shown for pending/rejected doubts */}
+        <ModerationBanner status={status} rejectionReason={doubt.rejectionReason} />
+
+        {/* Professor Answer — only shown for approved/answered doubts */}
+        {mainAnswer && !isPendingOrRejected && (
+
           <div className="animate-[fadeInUp_0.7s_ease-out_forwards]" style={{ animationDelay: '100ms' }}>
             <div className="px-2 sm:px-10 mb-4 flex items-center gap-2">
               <BadgeCheck className="text-green-500" size={24} />
