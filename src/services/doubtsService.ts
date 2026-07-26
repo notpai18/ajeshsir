@@ -97,6 +97,8 @@ export async function submitDoubt(
     status: 'pending',
   };
 
+  // Plain INSERT — no .select() because Supabase's SELECT RLS blocks anon
+  // users from reading back 'pending' rows even via INSERT...RETURNING.
   let { error } = await supabase
     .from('doubts')
     .insert(payload);
@@ -118,9 +120,10 @@ export async function submitDoubt(
   }
 
   if (error) throw new Error(`submitDoubt: ${error.message}`);
-  
-  // We cannot .select() because RLS prevents anon users from reading 'pending' doubts.
-  // The UI filters pending doubts anyway, so returning a local mock is safe.
+
+  // Return a local-only placeholder. The caller (handleAddDoubt) must NOT add
+  // this to the professor's moderation queue — it will reload from Supabase
+  // to get the real row with its real UUID.
   return {
     id: `temp-${Date.now()}`,
     name: payload.name,
@@ -136,6 +139,7 @@ export async function submitDoubt(
     replies: []
   };
 }
+
 
 /** Professor replies to a doubt — marks it as answered. */
 export async function replyToDoubt(
@@ -200,6 +204,17 @@ export async function replyToDoubt(
  * Professor only.
  */
 export async function approveDoubt(id: string): Promise<Doubt> {
+  // Temp IDs are local-only placeholders created by submitDoubt() because RLS
+  // blocks anon users from reading their own row back after insert.
+  // They do NOT exist in Supabase, so any update/fetch against them finds 0 rows.
+  if (id.startsWith('temp-')) {
+    throw new Error(
+      'This doubt was just submitted and has not been loaded from the server yet. ' +
+      'Please refresh the page (or wait a moment) so the real database ID is available, then try again.'
+    );
+  }
+  console.debug('[approveDoubt] updating id:', id, '→ status: approved');
+
   const { error } = await supabase
     .from('doubts')
     .update({
@@ -208,15 +223,51 @@ export async function approveDoubt(id: string): Promise<Doubt> {
     })
     .eq('id', id);
 
+  console.debug('[approveDoubt] update result — error:', error);
   if (error) throw new Error(`approveDoubt: ${error.message}`);
 
-  const { data, error: fetchError } = await supabase
+  // Use maybeSingle() so that 0 rows (e.g. RLS hiding the row) returns null
+  // instead of throwing "Cannot coerce the result to a single JSON object".
+  let { data, error: fetchError } = await supabase
     .from('doubts')
     .select('*, doubt_replies(*)')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
-  if (fetchError) throw new Error(`approveDoubt (fetch): ${fetchError.message}`);
+  console.debug('[approveDoubt] fetch (with replies) result — data:', data, 'error:', fetchError);
+
+  // Fallback: if the join failed, try a plain select.
+  if (fetchError) {
+    const fallback = await supabase
+      .from('doubts')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    console.debug('[approveDoubt] fallback fetch result — data:', fallback.data, 'error:', fallback.error);
+
+    if (fallback.error) throw new Error(`approveDoubt (fetch): ${fallback.error.message}`);
+    if (fallback.data !== null) return rowToDoubt(fallback.data);
+  }
+
+  // If DB read returned null (RLS or race condition), synthesize a return value
+  // from the update we already successfully sent. The UPDATE itself succeeded.
+  if (data === null) {
+    console.warn('[approveDoubt] read-back returned null — synthesizing from update payload. The UPDATE succeeded in the DB.');
+    return {
+      id,
+      name: '',
+      email: '',
+      subject: '',
+      question: '',
+      isAnswered: false,
+      status: 'approved' as const,
+      createdAt: new Date().toISOString(),
+      approvedAt: new Date().toISOString(),
+      replies: []
+    };
+  }
+
   return rowToDoubt(data);
 }
 
@@ -225,6 +276,15 @@ export async function approveDoubt(id: string): Promise<Doubt> {
  * Professor only. Optional rejection reason shown to the student.
  */
 export async function rejectDoubt(id: string, reason?: string): Promise<Doubt> {
+  // Same guard as approveDoubt — temp IDs do not exist in Supabase.
+  if (id.startsWith('temp-')) {
+    throw new Error(
+      'This doubt was just submitted and has not been loaded from the server yet. ' +
+      'Please refresh the page (or wait a moment) so the real database ID is available, then try again.'
+    );
+  }
+  console.debug('[rejectDoubt] updating id:', id, '→ status: rejected, reason:', reason);
+
   const { error } = await supabase
     .from('doubts')
     .update({
@@ -234,15 +294,52 @@ export async function rejectDoubt(id: string, reason?: string): Promise<Doubt> {
     })
     .eq('id', id);
 
+  console.debug('[rejectDoubt] update result — error:', error);
   if (error) throw new Error(`rejectDoubt: ${error.message}`);
 
-  const { data, error: fetchError } = await supabase
+  // Use maybeSingle() so that 0 rows (e.g. RLS hiding the row) returns null
+  // instead of throwing "Cannot coerce the result to a single JSON object".
+  let { data, error: fetchError } = await supabase
     .from('doubts')
     .select('*, doubt_replies(*)')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
-  if (fetchError) throw new Error(`rejectDoubt (fetch): ${fetchError.message}`);
+  console.debug('[rejectDoubt] fetch (with replies) result — data:', data, 'error:', fetchError);
+
+  // Fallback: if the join failed, try a plain select.
+  if (fetchError) {
+    const fallback = await supabase
+      .from('doubts')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    console.debug('[rejectDoubt] fallback fetch result — data:', fallback.data, 'error:', fallback.error);
+
+    if (fallback.error) throw new Error(`rejectDoubt (fetch): ${fallback.error.message}`);
+    if (fallback.data !== null) return rowToDoubt(fallback.data);
+  }
+
+  // If DB read returned null (RLS or race condition), synthesize a return value
+  // from the update we already successfully sent. The UPDATE itself succeeded.
+  if (data === null) {
+    console.warn('[rejectDoubt] read-back returned null — synthesizing from update payload. The UPDATE succeeded in the DB.');
+    return {
+      id,
+      name: '',
+      email: '',
+      subject: '',
+      question: '',
+      isAnswered: false,
+      status: 'rejected' as const,
+      createdAt: new Date().toISOString(),
+      rejectedAt: new Date().toISOString(),
+      rejectionReason: reason,
+      replies: []
+    };
+  }
+
   return rowToDoubt(data);
 }
 

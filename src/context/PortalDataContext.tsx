@@ -96,22 +96,10 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   const reload = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
-    const badTitles = ['Projectile Motion on Inclined Planes', 'Limits, Continuity, and Differentiability', 'dfv', 'df'];
-    const NEW_CARDS: Note[] = [
-      { id: 'custom-card-1', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Thermodynamics', title: 'First and Second Law Applications', description: 'Enthalpy, entropy, and Gibbs free energy derivations with worked numerical problems on spontaneity and heat engines.', fileUrl: 'sample.pdf', fileSize: '1.2 MB', downloadCount: 50, tags: [] },
-      { id: 'custom-card-2', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Equilibrium', title: 'Chemical and Ionic Equilibrium', description: "Le Chatelier's principle, equilibrium constant relations, buffer solutions, and pH calculations for competitive-exam problem types.", fileUrl: 'sample.pdf', fileSize: '1.5 MB', downloadCount: 75, tags: [] },
-      { id: 'custom-card-3', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Electrochemistry', title: 'Cells, EMF, and Nernst Equation', description: 'Galvanic and electrolytic cells, standard electrode potentials, and Nernst equation applications with previous year question patterns.', fileUrl: 'sample.pdf', fileSize: '1.3 MB', downloadCount: 60, tags: [] },
-      { id: 'custom-card-4', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Kinetics', title: 'Rate Laws and Reaction Order', description: 'Integrated rate equations, half-life derivations, and Arrhenius equation problems with graphical interpretation.', fileUrl: 'sample.pdf', fileSize: '1.4 MB', downloadCount: 85, tags: [] },
-    ];
-
     // No Supabase configured → use local seed data
     if (!hasSupabase) {
-      let filteredNotes = INITIAL_NOTES.filter(n => !badTitles.includes(n.title));
-      const existingTitles = filteredNotes.map(n => n.title);
-      filteredNotes = [...filteredNotes, ...NEW_CARDS.filter(c => !existingTitles.includes(c.title))];
-
       setState({
-        notes: filteredNotes,
+        notes: INITIAL_NOTES,
         videos: INITIAL_VIDEOS,
         pyqs: INITIAL_PYQS,
         practiceSheets: INITIAL_PRACTICE_SHEETS,
@@ -128,12 +116,8 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
         fetchNotes(), fetchVideos(), fetchPyqs(), fetchPracticeSheets(), fetchDoubts(), fetchAnnouncements(),
       ]);
 
-      let filteredNotes = notes.filter(n => !badTitles.includes(n.title));
-      const existingTitles = filteredNotes.map(n => n.title);
-      filteredNotes = [...filteredNotes, ...NEW_CARDS.filter(c => !existingTitles.includes(c.title))];
-
       setState({
-        notes: filteredNotes.map(n => ({ ...n, subject: normaliseSubject(n.subject) })),
+        notes: notes.map(n => ({ ...n, subject: normaliseSubject(n.subject) })),
         videos: videos.map(v => ({ ...v, subject: normaliseSubject(v.subject) })),
         pyqs: pyqs.map(p => ({ ...p, subject: normaliseSubject(p.subject) })),
         practiceSheets: practiceSheets.map(s => ({ ...s, subject: normaliseSubject(s.subject) })),
@@ -222,9 +206,16 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
 
   // ─── Doubts ────────────────────────────────────────────────────────────────
   const handleAddDoubt = useCallback(async (newDoubt: Omit<Doubt, 'id' | 'isAnswered' | 'createdAt'>) => {
-    const created = await submitDoubt(newDoubt);
-    setState(prev => ({ ...prev, doubts: [created, ...prev.doubts] }));
-  }, []);
+    // Submit to Supabase. After success, reload all doubts so the professor's
+    // pending badge count and moderation queue update immediately without
+    // requiring a manual page refresh.
+    // Note: submitDoubt() returns a temp-ID placeholder — we discard it and
+    // rely on reload() to get the real row with its UUID from the DB.
+    await submitDoubt(newDoubt);
+    // Reload in the background — don't await so the student modal closes fast
+    reload().catch(err => console.warn('[handleAddDoubt] background reload failed:', err));
+  }, [reload]);
+
 
   const handleReplyDoubt = useCallback(async (id: string, replyData: { reply_text?: string; image_urls?: string[]; video_urls?: string[]; audio_urls?: string[]; attachment_urls?: string[] }) => {
     try {
@@ -249,31 +240,37 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleApproveDoubt = useCallback(async (id: string) => {
-    // Optimistic update
+    // Temp IDs don't exist in Supabase — handleAddDoubt now reloads from the
+    // DB after submit, so this guard only fires in edge cases (e.g. extremely
+    // fast approve before the background reload finishes).
+    if (id.startsWith('temp-')) {
+      alert('This doubt is still syncing. Please wait a moment and try again.');
+      return;
+    }
+    // Optimistic update.
     setState(prev => ({
       ...prev,
-      doubts: prev.doubts.map(d =>
-        d.id === id ? { ...d, status: 'approved' as const } : d
-      )
+      doubts: prev.doubts.map(d => d.id === id ? { ...d, status: 'approved' as const } : d)
     }));
     try {
       const updated = await approveDoubt(id);
       setState(prev => ({ ...prev, doubts: prev.doubts.map(d => d.id === id ? updated : d) }));
     } catch (e: any) {
       console.error('Error approving doubt', e);
-      // Revert optimistic update
       setState(prev => ({
         ...prev,
-        doubts: prev.doubts.map(d =>
-          d.id === id ? { ...d, status: 'pending' as const } : d
-        )
+        doubts: prev.doubts.map(d => d.id === id ? { ...d, status: 'pending' as const } : d)
       }));
       alert(e.message);
     }
   }, []);
 
   const handleRejectDoubt = useCallback(async (id: string, reason?: string) => {
-    // Optimistic update
+    if (id.startsWith('temp-')) {
+      alert('This doubt is still syncing. Please wait a moment and try again.');
+      return;
+    }
+    // Optimistic update.
     setState(prev => ({
       ...prev,
       doubts: prev.doubts.map(d =>
@@ -285,7 +282,6 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       setState(prev => ({ ...prev, doubts: prev.doubts.map(d => d.id === id ? updated : d) }));
     } catch (e: any) {
       console.error('Error rejecting doubt', e);
-      // Revert optimistic update
       setState(prev => ({
         ...prev,
         doubts: prev.doubts.map(d =>
