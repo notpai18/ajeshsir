@@ -107,9 +107,12 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
     setIsOpen(false);
   };
 
-  const baseTriggerClasses = "flex items-center justify-between w-full appearance-none bg-gray-50 dark:bg-[#2A2726] text-[14px] font-medium text-gray-900 dark:text-[#F6F2EA] focus:outline-none focus:border-[#4A0E1B] focus:ring-1 focus:ring-[#4A0E1B] transition-all text-left";
-  // Default to AskDoubtModal styling if no className is provided
-  const triggerClasses = className || `${baseTriggerClasses} rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-3`;
+  const baseLayout = "flex items-center justify-between w-full appearance-none text-left transition-all";
+  const defaultStyles = "bg-gray-50 dark:bg-[#2A2726] text-[14px] font-medium text-gray-900 dark:text-[#F6F2EA] focus:outline-none focus:border-[#4A0E1B] focus:ring-1 focus:ring-[#4A0E1B] rounded-xl border border-gray-200 dark:border-gray-700 px-4 py-3";
+  
+  const triggerClasses = className 
+    ? `${baseLayout} ${className}` 
+    : `${baseLayout} ${defaultStyles}`;
 
   return (
     <div 
