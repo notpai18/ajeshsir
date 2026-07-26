@@ -9,10 +9,13 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
+const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined)?.trim();
 
-export const hasSupabase = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+export const hasSupabase = !!(
+  SUPABASE_URL && SUPABASE_URL !== 'undefined' &&
+  SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'undefined'
+);
 
 if (!hasSupabase) {
   console.warn(
