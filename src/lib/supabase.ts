@@ -20,7 +20,6 @@ if (!hasSupabase) {
   );
 }
 
-export const supabase = createClient<Database>(
-  SUPABASE_URL || '',
-  SUPABASE_ANON_KEY || ''
-);
+export const supabase = hasSupabase
+  ? createClient<Database>(SUPABASE_URL as string, SUPABASE_ANON_KEY as string)
+  : (null as unknown as SupabaseClient<Database>);
