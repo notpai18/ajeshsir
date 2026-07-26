@@ -1,14 +1,11 @@
 /**
  * DoubtStatusBadge — status pill for Doubts moderation workflow.
  *
- * Moderation states:
- *   pending_approval → 🟡 Amber  — Waiting for Approval
- *   approved         → 🔵 Blue   — Approved
- *   rejected         → 🔴 Red    — Rejected
- *   answered         → 🟢 Green  — Answered
- *
- * Legacy states (backward compat):
- *   submitted / awaiting / needs-followup → treated as Waiting
+ * States:
+ *   pending  → 🟡 Amber  — Pending Review
+ *   approved → 🔵 Blue   — Approved
+ *   rejected → 🔴 Red    — Rejected
+ *   answered → 🟢 Green  — Answered
  */
 import React from 'react';
 import type { DoubtStatus } from '../../types';
@@ -17,9 +14,8 @@ const STATUS_CONFIG: Record<
   DoubtStatus,
   { label: string; bg: string; text: string; dot: string }
 > = {
-  // ── New moderation states ──────────────────────────────
-  pending_approval: {
-    label: 'Waiting for Approval',
+  pending: {
+    label: 'Pending Review',
     bg: 'bg-[#FBF3D9]',
     text: 'text-[#8A6A16]',
     dot: 'bg-[#C9A13B]',
@@ -42,25 +38,6 @@ const STATUS_CONFIG: Record<
     text: 'text-[#2E7D32]',
     dot: 'bg-[#4CAF50]',
   },
-  // ── Legacy states (backward compat) ───────────────────
-  submitted: {
-    label: 'Waiting',
-    bg: 'bg-[#FBF3D9]',
-    text: 'text-[#8A6A16]',
-    dot: 'bg-[#C9A13B]',
-  },
-  awaiting: {
-    label: 'Waiting',
-    bg: 'bg-[#FBF3D9]',
-    text: 'text-[#8A6A16]',
-    dot: 'bg-[#C9A13B]',
-  },
-  'needs-followup': {
-    label: 'Waiting',
-    bg: 'bg-[#FBF3D9]',
-    text: 'text-[#8A6A16]',
-    dot: 'bg-[#C9A13B]',
-  },
 };
 
 interface DoubtStatusBadgeProps {
@@ -69,8 +46,7 @@ interface DoubtStatusBadgeProps {
 }
 
 export function DoubtStatusBadge({ status, className = '' }: DoubtStatusBadgeProps) {
-  const cfg = STATUS_CONFIG[status];
-  if (!cfg) return null;
+  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG['pending'];
 
   return (
     <span

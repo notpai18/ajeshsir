@@ -1,31 +1,28 @@
 /**
- * doubtStatus.ts — derives and describes the 5-state doubt model.
+ * doubtStatus.ts — derives and describes the 4-state doubt moderation model.
  *
- * State machine rules:
- *  submitted      → awaiting (prof sees it)
- *  awaiting       → answered (prof replies)
- *  answered       → resolved (student confirms) | needs-followup (student replies)
- *  needs-followup → answered (prof replies again)
- *  resolved       = terminal (but prof can re-open in theory)
+ * State machine:
+ *  pending  → approved → answered
+ *           ↘ rejected
  *
- * Invariant enforced here:
- *  - "resolved" requires at least one professor reply.
+ * Pending doubts are NOT publicly visible.
+ * Rejected doubts are NEVER publicly visible.
+ * Approved and Answered doubts are publicly visible.
  */
 
 import type { Doubt, DoubtStatus } from '../types';
 
 /** Derive the effective status from a Doubt record */
 export function deriveDoubtStatus(doubt: Doubt): DoubtStatus {
-  // If an explicit status is stored, use it (but enforce the invariant)
   if (doubt.status) {
     return doubt.status;
   }
 
-  // Fallback: derive from legacy binary isAnswered
+  // Fallback: derive from legacy isAnswered boolean
   if (doubt.isAnswered || hasProfessorReply(doubt)) {
     return 'answered';
   }
-  return 'submitted';
+  return 'pending';
 }
 
 /** Returns true if at least one reply is from the professor */
@@ -34,10 +31,10 @@ export function hasProfessorReply(doubt: Doubt): boolean {
   return (doubt.replies || []).some(r => r.professor_id !== 'student');
 }
 
-/** Returns true if the student is allowed to mark as resolved */
-export function canStudentResolve(doubt: Doubt): boolean {
-  const status = deriveDoubtStatus(doubt);
-  return (status === 'answered' || status === 'needs-followup') && hasProfessorReply(doubt);
+/** Returns true if this doubt should appear on the public page */
+export function isPubliclyVisible(doubt: Doubt): boolean {
+  const s = deriveDoubtStatus(doubt);
+  return s === 'approved' || s === 'answered';
 }
 
 /** Visual config for each status badge */
@@ -52,16 +49,8 @@ export const STATUS_CONFIG: Record<
     urgency: number; // 0 = low, 1 = medium, 2 = high (for triage colour)
   }
 > = {
-  submitted: {
-    label: 'Submitted',
-    icon: 'Clock',
-    badgeBg: 'bg-[#F0EFEE]',
-    badgeText: 'text-[#6E645A]',
-    borderColor: 'border-[#D9C2A2]',
-    urgency: 0,
-  },
-  pending_approval: {
-    label: 'Pending Approval',
+  pending: {
+    label: 'Pending',
     icon: 'ShieldAlert',
     badgeBg: 'bg-[#FEF9C3]',
     badgeText: 'text-[#854D0E]',
@@ -84,14 +73,6 @@ export const STATUS_CONFIG: Record<
     borderColor: 'border-[#EF4444]',
     urgency: 0
   },
-  awaiting: {
-    label: 'Awaiting Response',
-    icon: 'Hourglass',
-    badgeBg: 'bg-[#FBF3DF]',
-    badgeText: 'text-[#8A6A16]',
-    borderColor: 'border-[#C9A13B]',
-    urgency: 1,
-  },
   answered: {
     label: 'Answered',
     icon: 'MessageCircle',
@@ -99,15 +80,6 @@ export const STATUS_CONFIG: Record<
     badgeText: 'text-[#7C2532]',
     borderColor: 'border-[#7C2532]',
     urgency: 0,
-  },
-
-  'needs-followup': {
-    label: 'Needs Follow-up',
-    icon: 'RefreshCw',
-    badgeBg: 'bg-[#FBF3DF]',
-    badgeText: 'text-[#8A6A16]',
-    borderColor: 'border-[#C9A13B]',
-    urgency: 2,
   },
 };
 

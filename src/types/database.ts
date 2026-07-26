@@ -140,39 +140,67 @@ export type Database = {
           attachment_name: string | null
           attachment_url: string | null
           created_at: string
+          updated_at: string
           email: string
           id: string
           is_answered: boolean
           name: string
           question: string
           subject: string
-          updated_at: string
+          topic: string | null
+          // Moderation workflow columns
+          status: string
+          approved_at: string | null
+          approved_by: string | null
+          rejected_at: string | null
+          rejected_by: string | null
+          rejection_reason: string | null
+          answered_at: string | null
+          answered_by: string | null
         }
         Insert: {
           answer_text?: string | null
           attachment_name?: string | null
           attachment_url?: string | null
           created_at?: string
+          updated_at?: string
           email: string
           id?: string
           is_answered?: boolean
           name: string
           question: string
           subject: string
-          updated_at?: string
+          topic?: string | null
+          status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          answered_at?: string | null
+          answered_by?: string | null
         }
         Update: {
           answer_text?: string | null
           attachment_name?: string | null
           attachment_url?: string | null
           created_at?: string
+          updated_at?: string
           email?: string
           id?: string
           is_answered?: boolean
           name?: string
           question?: string
           subject?: string
-          updated_at?: string
+          topic?: string | null
+          status?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          rejected_at?: string | null
+          rejected_by?: string | null
+          rejection_reason?: string | null
+          answered_at?: string | null
+          answered_by?: string | null
         }
         Relationships: []
       }

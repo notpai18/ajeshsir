@@ -14,7 +14,7 @@ interface DoubtDetailPageProps {}
 
 function deriveStatus(doubt: Doubt): DoubtStatus {
   if (doubt.status) return doubt.status;
-  return doubt.isAnswered ? 'answered' : 'submitted';
+  return doubt.isAnswered ? 'answered' : 'pending';
 }
 
 function sanitizeHtml(html: string) {
@@ -25,7 +25,7 @@ function sanitizeHtml(html: string) {
 }
 
 function ModerationBanner({ status, rejectionReason }: { status: DoubtStatus; rejectionReason?: string }) {
-  if (status === 'pending_approval' || status === 'submitted') {
+  if (status === 'pending') {
     return (
       <div className="bg-[#FEF9C3] dark:bg-[#422006] text-[#854D0E] dark:text-[#FDE047] p-4 rounded-xl mb-8 flex items-start gap-3 border border-[#FDE047] dark:border-[#854D0E]">
         <Clock className="shrink-0 mt-0.5" size={20} />
@@ -95,7 +95,7 @@ export default function DoubtDetailPage({}: DoubtDetailPageProps) {
   }
 
   const status = deriveStatus(doubt);
-  const isPendingOrRejected = status === 'pending_approval' || status === 'rejected';
+  const isPendingOrRejected = status === 'pending' || status === 'rejected';
 
 
   // Derive clean title and description from data model

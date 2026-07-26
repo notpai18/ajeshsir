@@ -244,27 +244,9 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
 
 
   const handleMarkSeen = useCallback(async (id: string) => {
-    const doubt = state.doubts.find(d => d.id === id);
-    if (!doubt || doubt.status !== 'submitted') return;
-    // Optimistic update
-    setState(prev => ({
-      ...prev,
-      doubts: prev.doubts.map(d =>
-        d.id === id ? { ...d, status: 'awaiting' as const } : d
-      )
-    }));
-    try {
-      await markDoubtSeen(id, 'submitted');
-    } catch {
-      // Silently revert — not critical
-      setState(prev => ({
-        ...prev,
-        doubts: prev.doubts.map(d =>
-          d.id === id ? { ...d, status: 'submitted' as const } : d
-        )
-      }));
-    }
-  }, [state.doubts]);
+    // No-op: 'awaiting' is no longer a valid status. Moderation uses pending/approved/rejected/answered.
+    // This handler is kept for API compatibility but does nothing in the new workflow.
+  }, []);
 
   const handleApproveDoubt = useCallback(async (id: string) => {
     // Optimistic update
@@ -283,7 +265,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       setState(prev => ({
         ...prev,
         doubts: prev.doubts.map(d =>
-          d.id === id ? { ...d, status: 'pending_approval' as const } : d
+          d.id === id ? { ...d, status: 'pending' as const } : d
         )
       }));
       alert(e.message);
@@ -307,7 +289,7 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
       setState(prev => ({
         ...prev,
         doubts: prev.doubts.map(d =>
-          d.id === id ? { ...d, status: 'pending_approval' as const } : d
+          d.id === id ? { ...d, status: 'pending' as const } : d
         )
       }));
       alert(e.message);

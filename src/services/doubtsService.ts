@@ -8,8 +8,14 @@ import type { Doubt, DoubtReply } from '../types';
 function rowToDoubt(row: any): Doubt {
   // Derive status: prefer explicit DB status column; fall back to isAnswered boolean
   const deriveStatus = (row: any): import('../types').DoubtStatus => {
-    if (row.status) return row.status;
-    return row.is_answered ? 'answered' : 'submitted';
+    if (row.status) {
+      // Normalise any legacy status values that may still exist in the DB
+      if (row.status === 'pending_approval' || row.status === 'submitted' || row.status === 'awaiting' || row.status === 'needs-followup') {
+        return row.is_answered ? 'answered' : 'pending';
+      }
+      return row.status;
+    }
+    return row.is_answered ? 'answered' : 'pending';
   };
 
   return {
@@ -88,7 +94,7 @@ export async function submitDoubt(
     attachment_name: doubt.attachmentName ?? null,
     attachment_url: doubt.attachmentUrl ?? null,
     is_answered: false,
-    status: doubt.status ?? 'pending_approval',
+    status: 'pending',
   };
 
   let { data, error } = await supabase
@@ -159,8 +165,12 @@ export async function replyToDoubt(
     throw new Error(`replyToDoubt: ${replyError.message}`);
   }
   
-  // Mark doubt as answered and update status
-  await supabase.from('doubts').update({ is_answered: true, status: 'answered' } as any).eq('id', doubtId);
+  // Mark doubt as answered and update status + answered_at
+  await supabase.from('doubts').update({
+    is_answered: true,
+    status: 'answered',
+    answered_at: new Date().toISOString()
+  }).eq('id', doubtId);
   
   // Fetch and return the updated doubt
   const { data: doubtData, error: doubtError } = await supabase
@@ -184,7 +194,7 @@ export async function approveDoubt(id: string): Promise<Doubt> {
     .update({
       status: 'approved',
       approved_at: new Date().toISOString(),
-    } as any)
+    })
     .eq('id', id);
 
   if (error) throw new Error(`approveDoubt: ${error.message}`);
@@ -210,7 +220,7 @@ export async function rejectDoubt(id: string, reason?: string): Promise<Doubt> {
       status: 'rejected',
       rejected_at: new Date().toISOString(),
       rejection_reason: reason ?? null,
-    } as any)
+    })
     .eq('id', id);
 
   if (error) throw new Error(`rejectDoubt: ${error.message}`);
@@ -239,25 +249,21 @@ export async function updateDoubtStatus(
   status: import('../types').DoubtStatus,
   hasReplies: boolean
 ): Promise<void> {
-  const isAnswered = status === 'answered' || status === 'needs-followup';
+  const isAnswered = status === 'answered';
   const { error } = await supabase
     .from('doubts')
-    .update({ status, is_answered: isAnswered } as any)
+    .update({ status, is_answered: isAnswered })
     .eq('id', id);
   if (error) throw new Error(`updateDoubtStatus: ${error.message}`);
 }
 
 /**
- * Mark a doubt as seen by a professor — transitions 'submitted' → 'awaiting'.
- * Safe to call even if already past 'submitted' (no-op in that case).
+ * No-op: legacy function kept for API compatibility.
+ * The new moderation workflow (pending/approved/rejected/answered) does not
+ * need a 'submitted → awaiting' transition.
  */
-export async function markDoubtSeen(id: string, currentStatus: import('../types').DoubtStatus): Promise<void> {
-  if (currentStatus !== 'submitted') return; // already progressed
-  const { error } = await supabase
-    .from('doubts')
-    .update({ status: 'awaiting' } as any)
-    .eq('id', id);
-  if (error) throw new Error(`markDoubtSeen: ${error.message}`);
+export async function markDoubtSeen(id: string, _currentStatus: import('../types').DoubtStatus): Promise<void> {
+  // No-op in the new workflow
 }
 
 /**

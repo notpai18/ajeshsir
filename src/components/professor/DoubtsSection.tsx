@@ -56,7 +56,7 @@ interface DoubtsSectionProps {
 
 function deriveStatus(doubt: Doubt): DoubtStatus {
   if (doubt.status) return doubt.status;
-  return doubt.isAnswered ? 'answered' : 'submitted';
+  return doubt.isAnswered ? 'answered' : 'pending';
 }
 
 function hasProfessorReply(doubt: Doubt): boolean {
@@ -133,8 +133,8 @@ export function DoubtsSection({
   const doubtsFiltered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let filtered = doubts.filter(d => {
-      // Exclude pending_approval and rejected from regular tabs
-      if (activeTab !== 'moderation' && (d.status === 'pending_approval' || d.status === 'rejected')) return false;
+      // Exclude pending and rejected from regular tabs
+      if (activeTab !== 'moderation' && (d.status === 'pending' || d.status === 'rejected')) return false;
       if (activeTab === 'unanswered' && hasProfessorReply(d)) return false;
       if (activeTab === 'answered-today' && !isAnsweredToday(d)) return false;
       if (activeTab === 'by-subject' && subjectFilter !== 'All' && d.subject !== subjectFilter) return false;
@@ -153,20 +153,17 @@ export function DoubtsSection({
 
   // ── Tab counts ────────────────────────────────────────────────────────────
   const tabCounts = useMemo(() => ({
-    moderation: doubts.filter(d => d.status === 'pending_approval').length,
-    unanswered: doubts.filter(d => !hasProfessorReply(d) && d.status !== 'pending_approval' && d.status !== 'rejected').length,
+    moderation: doubts.filter(d => d.status === 'pending').length,
+    unanswered: doubts.filter(d => !hasProfessorReply(d) && d.status !== 'pending' && d.status !== 'rejected').length,
     'answered-today': doubts.filter(d => isAnsweredToday(d)).length,
-    'by-subject': doubts.filter(d => d.status !== 'pending_approval').length,
-    all: doubts.filter(d => d.status !== 'pending_approval').length,
+    'by-subject': doubts.filter(d => d.status !== 'pending').length,
+    all: doubts.filter(d => d.status !== 'pending').length,
   }), [doubts]);
 
-  // ── Open thread → auto-mark seen ─────────────────────────────────────────
+  // ── Open thread ──────────────────────────────────────────────────────────
   const openThread = useCallback(async (doubt: Doubt) => {
     navigate(`/resources/doubts/${doubt.id}`);
-    if (onMarkSeen && deriveStatus(doubt) === 'submitted') {
-      await onMarkSeen(doubt.id);
-    }
-  }, [onMarkSeen, navigate]);
+  }, [navigate]);
 
   const fmtDate = (iso: string) =>
     new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -379,7 +376,7 @@ export function DoubtsSection({
                     </button>
                     {/* Answer */}
                     {/* Only show Answer button for approved or answered doubts (not pending/rejected) */}
-                    {!profReplied && (doubt.status === 'approved' || doubt.status === 'answered' || doubt.status === 'submitted' || doubt.status === 'awaiting' || doubt.status === 'needs-followup' || !doubt.status) && (
+                    {!profReplied && (doubt.status === 'approved' || doubt.status === 'answered') && (
                       <button
                         className={PRIMARY_BTN}
                         onClick={() => setReplyingDoubtId(doubt.id)}

@@ -1,19 +1,19 @@
 /**
- * DoubtsSection (Student view) — Moderation-aware public feed + My Doubts.
+ * DoubtsSection (Student / Public view)
  *
  * Public feed: only shows approved + answered doubts.
- * My Doubts: shows ALL of the student's own doubts (pending/rejected/approved/answered)
- * Student identity: keyed by email stored in localStorage after submission.
+ * Students submit anonymously — NO student identity tracking.
+ * Filter tabs: All / Answered / Waiting (approved but not yet answered)
  *
  * @license Apache-2.0
  */
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  Plus, Search, Clock, CheckCircle2, XCircle, AlertCircle
+  Plus, Search, Clock, CheckCircle2
 } from 'lucide-react';
 import { EmptyState } from '../ui/EmptyState';
 import type { DoubtsSectionProps } from './types';
-import type { Doubt, DoubtStatus } from '../../types';
+import type { Doubt } from '../../types';
 import { AskDoubtModal } from '../doubts/AskDoubtModal';
 import { useNavigate } from 'react-router-dom';
 import { ResourceCard } from '../resources/ResourceCard';
@@ -28,45 +28,27 @@ function hasProfessorReply(doubt: Doubt): boolean {
   );
 }
 
-function deriveStatus(doubt: Doubt): DoubtStatus {
-  if (doubt.status) return doubt.status;
-  return doubt.isAnswered ? 'answered' : 'submitted';
-}
-
 function stripHtml(html: string) {
   if (!html) return '';
   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
 }
 
-// ─── Student identity helpers ─────────────────────────────────────────────────
-
-const STUDENT_EMAIL_KEY = 'portal_student_email_v1';
-
-function getStoredStudentEmail(): string | null {
-  try { return localStorage.getItem(STUDENT_EMAIL_KEY); } catch { return null; }
+/** Only approved and answered doubts are visible publicly */
+function isPublicDoubt(doubt: Doubt): boolean {
+  return doubt.status === 'approved' || doubt.status === 'answered';
 }
 
 // ─── Filter tab definitions ───────────────────────────────────────────────────
 
-type FilterTab = 'All' | 'Answered' | 'Waiting' | 'My Doubts';
+type FilterTab = 'All' | 'Answered' | 'Waiting';
 
-const FILTER_TABS: FilterTab[] = ['All', 'Answered', 'Waiting', 'My Doubts'];
+const FILTER_TABS: FilterTab[] = ['All', 'Answered', 'Waiting'];
 
-/** Is this doubt visible in the public feed? Only approved + answered + legacy. */
-function isPublicDoubt(doubt: Doubt): boolean {
-  const s = deriveStatus(doubt);
-  return s === 'approved' || s === 'answered'
-    // Legacy compat: old doubts with submitted/awaiting/needs-followup treated as public
-    || s === 'submitted' || s === 'awaiting' || s === 'needs-followup';
-}
-
-function tabMatchesDoubt(tab: FilterTab, doubt: Doubt, myEmail: string | null): boolean {
-  const status = deriveStatus(doubt);
+function tabMatchesDoubt(tab: FilterTab, doubt: Doubt): boolean {
   switch (tab) {
-    case 'Waiting': return status === 'awaiting' || status === 'submitted' || status === 'needs-followup' || status === 'approved';
-    case 'Answered': return status === 'answered';
-    case 'My Doubts': return myEmail ? doubt.email?.toLowerCase() === myEmail.toLowerCase() : false;
-    default: return true; // 'All' — only public doubts (filtered before this)
+    case 'Waiting': return doubt.status === 'approved' && !hasProfessorReply(doubt);
+    case 'Answered': return doubt.status === 'answered';
+    default: return true; // 'All'
   }
 }
 
@@ -84,24 +66,12 @@ export function DoubtsSection({
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState('');
 
-  // Student identity — email stored in localStorage after submitting
-  const myEmail = getStoredStudentEmail();
-
-  // ── Filter & sort ─────────────────────────────────────────────────────────
+  // ── Public doubts only ────────────────────────────────────────────────────
   const filteredDoubts = useMemo(() => {
-    const valid = doubts.filter(d => {
-      const sub = d.subject.toLowerCase();
-      if (sub === 'dfv' || sub === 'cv' || sub === 'sdsdv') return false;
-      return true;
-    });
+    // Only approved or answered doubts are publicly visible
+    const publicDoubts = doubts.filter(d => isPublicDoubt(d));
 
-    // For 'My Doubts' tab: show ALL of the student's doubts (including pending/rejected)
-    // For all other tabs: only show public (approved/answered/legacy) doubts
-    const scope = activeTab === 'My Doubts'
-      ? valid
-      : valid.filter(d => isPublicDoubt(d));
-
-    const byTab = scope.filter(d => tabMatchesDoubt(activeTab, d, myEmail));
+    const byTab = publicDoubts.filter(d => tabMatchesDoubt(activeTab, d));
 
     const bySearch = searchQuery
       ? byTab.filter(d =>
@@ -111,16 +81,16 @@ export function DoubtsSection({
       )
       : byTab;
 
-    // Waiting → oldest first (triage queue); others → newest first
+    // Answered → newest first; Waiting → oldest first (triage)
     return [...bySearch].sort((a, b) => {
       if (activeTab === 'Waiting') {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       }
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
-  }, [doubts, activeTab, searchQuery, myEmail]);
+  }, [doubts, activeTab, searchQuery]);
 
-  // Public doubt count (for hero subtitle)
+  // Public count (for hero subtitle)
   const publicDoubtsCount = useMemo(() =>
     doubts.filter(d => isPublicDoubt(d)).length,
     [doubts]
@@ -134,7 +104,7 @@ export function DoubtsSection({
     <div className="max-w-[1200px] mx-auto pb-20 animate-[fadeInUp_0.4s_ease-out_forwards]">
       <ResourceHero
         themeGradient="from-[#4A0E1B] to-[#7C2532]"
-        title="Doubts & Discussion"
+        title="Doubts &amp; Discussion"
         description="Ask academic questions and receive verified answers from the professor."
         totalLabel="Total Questions"
         totalCount={publicDoubtsCount}
@@ -158,16 +128,6 @@ export function DoubtsSection({
         }
       />
 
-      {/* My Doubts — info banner if student has no email set */}
-      {activeTab === 'My Doubts' && !myEmail && (
-        <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-[#C9A13B]/30 bg-[#FBF3D9] px-4 py-3">
-          <AlertCircle size={16} className="text-[#8A6A16] shrink-0 mt-0.5" />
-          <p className="text-sm text-[#8A6A16]">
-            Submit a doubt first to track your submissions here. Your doubts will be identified by the email you use when submitting.
-          </p>
-        </div>
-      )}
-
       {/* QUESTION CARDS */}
       {filteredDoubts.length === 0 ? (
         <EmptyState
@@ -175,8 +135,8 @@ export function DoubtsSection({
             ? 'No doubts match your search.'
             : activeTab === 'Answered'
             ? 'No answered doubts yet.'
-            : activeTab === 'My Doubts'
-            ? myEmail ? "You haven't submitted any doubts yet." : 'Submit a doubt to see it here.'
+            : activeTab === 'Waiting'
+            ? 'No doubts awaiting an answer.'
             : 'No doubts yet — ask your first question!'
           }
           action={
@@ -194,7 +154,6 @@ export function DoubtsSection({
       ) : (
         <div className="grid gap-[24px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredDoubts.map((doubt) => {
-            const status = deriveStatus(doubt);
             const hasProfReply = hasProfessorReply(doubt);
             let parsedTitle = '';
             let parsedDesc = '';
@@ -210,19 +169,14 @@ export function DoubtsSection({
               parsedTitle = `Attachment: ${doubt.attachmentName}`;
             }
 
-            // For My Doubts tab: show status-aware action label
-            const actionLabel = activeTab === 'My Doubts'
-              ? status === 'pending_approval' ? 'View (Pending Approval)'
-              : status === 'rejected' ? 'View (Rejected)'
-              : hasProfReply ? 'Read Answer' : 'View Details'
-              : hasProfReply ? 'Read Answer' : 'View Details';
+            const actionLabel = hasProfReply ? 'Read Answer' : 'View Details';
 
             return (
               <ResourceCard
                 key={doubt.id}
                 title={parsedTitle}
                 description={parsedDesc || 'No additional details provided.'}
-                chapter={status}
+                chapter={doubt.status}
                 subject={doubt.subject}
                 actions={[
                   {
@@ -254,7 +208,7 @@ export function DoubtsSection({
         onSubmit={onAddDoubt}
         onOpenThread={openThread}
         onSuccess={() => {
-          setToastMessage('Your doubt has been submitted and is awaiting professor approval.');
+          setToastMessage('Your doubt has been submitted and is pending professor review.');
           setTimeout(() => setToastMessage(''), 6000);
         }}
       />

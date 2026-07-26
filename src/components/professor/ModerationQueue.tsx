@@ -161,7 +161,7 @@ function ModerationCard({
           </div>
         </div>
         <div className="flex flex-col items-end gap-1.5 shrink-0">
-          <DoubtStatusBadge status={doubt.status ?? 'pending_approval'} />
+          <DoubtStatusBadge status={doubt.status ?? 'pending'} />
           <span className="text-[10px] text-[#A79A88]" title={fmtDate(doubt.createdAt)}>
             <Clock size={10} className="inline mr-0.5" />{getRelativeTime(doubt.createdAt)}
           </span>
@@ -278,7 +278,7 @@ export function ModerationQueue({ doubts, onApprove, onReject }: ModerationQueue
 
   // Split doubts into moderation buckets
   const pending = useMemo(() =>
-    doubts.filter(d => d.status === 'pending_approval'),
+    doubts.filter(d => d.status === 'pending'),
     [doubts]
   );
   const approved = useMemo(() =>

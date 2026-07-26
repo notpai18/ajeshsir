@@ -156,7 +156,7 @@ export function AskDoubtModal({
         attachmentName,
         attachmentUrl,
         attachmentDataUrl,
-        status: 'pending_approval',
+        status: 'pending',
       });
 
       setIsSubmitting(false);

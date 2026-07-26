@@ -84,22 +84,15 @@ export interface PracticeSheet {
 
 /**
  * Moderation-aware status model for doubts.
- * Primary states (new moderation workflow):
- *   pending_approval → approved → answered
- *                    ↘ rejected
- * Legacy states kept for backward compatibility:
- *   submitted / awaiting / needs-followup
+ * Primary states (moderation workflow):
+ *   pending → approved → answered
+ *           ↘ rejected
  */
 export type DoubtStatus =
-  // ── New moderation states ──
-  | 'pending_approval'  // submitted by student, awaiting professor review
+  | 'pending'           // submitted by student, awaiting professor review
   | 'approved'          // professor approved; publicly visible
-  | 'rejected'          // professor rejected; only visible to submitter
-  | 'answered'          // approved + professor replied
-  // ── Legacy states (backward compat) ──
-  | 'submitted'         // old: just sent, not yet seen by professor
-  | 'awaiting'          // old: seen by prof, no reply yet
-  | 'needs-followup';   // old: student replied again after an answer
+  | 'rejected'          // professor rejected; never shown publicly
+  | 'answered';         // approved + professor replied; publicly visible
 
 export interface DoubtReply {
   id: string;

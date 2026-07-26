@@ -456,7 +456,7 @@ export default function ProfessorDashboard({
   const [annForm, setAnnForm] = useState({ title: '', body: '', category: 'general' as AnnouncementCategory, pinned: false });
 
 /* ---------------- Helpers ---------------- */
-  const pendingDoubtsCount = doubts.filter((d) => d.status === 'pending_approval').length;
+  const pendingDoubtsCount = doubts.filter((d) => d.status === 'pending').length;
   const now = new Date();
   const greeting = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
   const today = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });

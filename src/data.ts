@@ -1223,7 +1223,7 @@ export const INITIAL_DOUBTS: Doubt[] = [
     topic: 'Diels–Alder Reaction',
     question: "How do we predict the major product in a Diels–Alder reaction when the diene isn't symmetric? Do we use FMO (frontier molecular orbital) theory or resonance arguments to assign regio-selectivity?",
     isAnswered: true,
-    status: 'needs-followup',
+    status: 'answered',
     createdAt: '2026-07-08T09:15:00Z',
     replies: [
       {
