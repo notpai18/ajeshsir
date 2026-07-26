@@ -24,6 +24,34 @@ function sanitizeHtml(html: string) {
     .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
 }
 
+function ModerationBanner({ status, rejectionReason }: { status: DoubtStatus; rejectionReason?: string }) {
+  if (status === 'pending_approval') {
+    return (
+      <div className="mb-8 rounded-2xl border border-[#E8CD82]/40 bg-[#FBF7F0] dark:bg-[#2A2726] p-4 text-[#8A6A16] flex items-center gap-3">
+        <Clock size={20} className="shrink-0" />
+        <div>
+          <h4 className="font-bold text-sm">Under Review</h4>
+          <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">This doubt is currently pending professor approval before it is published.</p>
+        </div>
+      </div>
+    );
+  }
+  if (status === 'rejected') {
+    return (
+      <div className="mb-8 rounded-2xl border border-[#B23B2E]/30 bg-[#FDF2F2] dark:bg-[#38151A] p-4 text-[#B23B2E] flex items-center gap-3">
+        <XCircle size={20} className="shrink-0" />
+        <div>
+          <h4 className="font-bold text-sm">Doubt Not Approved</h4>
+          <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">
+            {rejectionReason || 'This doubt was not approved for publication.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
 function stripHtml(html: string) {
   if (!html) return '';
   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');

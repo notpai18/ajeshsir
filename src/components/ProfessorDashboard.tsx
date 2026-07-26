@@ -448,10 +448,10 @@ export default function ProfessorDashboard({
   }, [profile]);
 
   // Forms
-  const [noteForm, setNoteForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
+  const [noteForm, setNoteForm] = useState<{ course: ExamType; subject: string; chapter: string; title: string; description: string; fileUrl: string; fileSize: string; originalFilename?: string }>({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '', originalFilename: '' });
   const [videoForm, setVideoForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', youtubeLink: '', description: '', duration: '' });
-  const [pyqForm, setPyqForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium' as 'Easy' | 'Medium' | 'Hard', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '' });
-  const [sheetForm, setSheetForm] = useState({ course: 'jee-main' as ExamType, subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '' });
+  const [pyqForm, setPyqForm] = useState<{ course: ExamType; subject: string; chapter: string; year: number; difficulty: 'Easy' | 'Medium' | 'Hard'; questionUrl: string; solutionUrl: string; questionSize: string; solutionSize: string; questionOriginalFilename?: string; solutionOriginalFilename?: string }>({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', year: new Date().getFullYear() - 1, difficulty: 'Medium', questionUrl: '', solutionUrl: '', questionSize: '', solutionSize: '', questionOriginalFilename: '', solutionOriginalFilename: '' });
+  const [sheetForm, setSheetForm] = useState<{ course: ExamType; subject: string; chapter: string; title: string; description: string; fileUrl: string; fileSize: string; originalFilename?: string }>({ course: 'jee-main', subject: 'Physical Chemistry', chapter: '', title: '', description: '', fileUrl: '', fileSize: '', originalFilename: '' });
   const [annForm, setAnnForm] = useState({ title: '', body: '', category: 'general' as AnnouncementCategory, pinned: false });
 
 /* ---------------- Helpers ---------------- */

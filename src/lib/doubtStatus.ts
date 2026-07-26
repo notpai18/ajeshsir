@@ -85,6 +85,30 @@ export const STATUS_CONFIG: Record<
     borderColor: 'border-[#C9A13B]',
     urgency: 2,
   },
+  pending_approval: {
+    label: 'Pending Approval',
+    icon: 'Clock',
+    badgeBg: 'bg-[#FBF3DF]',
+    badgeText: 'text-[#8A6A16]',
+    borderColor: 'border-[#C9A13B]',
+    urgency: 1,
+  },
+  approved: {
+    label: 'Approved',
+    icon: 'CheckCircle',
+    badgeBg: 'bg-[#E8F5E9]',
+    badgeText: 'text-[#2E7D32]',
+    borderColor: 'border-[#4CAF50]',
+    urgency: 0,
+  },
+  rejected: {
+    label: 'Rejected',
+    icon: 'XCircle',
+    badgeBg: 'bg-[#FDF2F2]',
+    badgeText: 'text-[#B23B2E]',
+    borderColor: 'border-[#B23B2E]',
+    urgency: 0,
+  },
 };
 
 /**
