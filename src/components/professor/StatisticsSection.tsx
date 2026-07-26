@@ -4,33 +4,28 @@ import { PremiumCard } from '../PremiumCard';
 
 export function StatisticsSection() {
   const metrics = [
-    { label: 'Total Active Students', value: '1,492', change: '+12%', trend: 'up', icon: <Users size={20} className="text-[#4A0E1B]" /> },
-    { label: 'Avg. Session Duration', value: '42m', change: '+5%', trend: 'up', icon: <Clock size={20} className="text-[#8A6A16]" /> },
-    { label: 'Resources Accessed', value: '8,341', change: '+24%', trend: 'up', icon: <BookOpen size={20} className="text-[#7C2532]" /> },
-    { label: 'Bounce Rate', value: '12%', change: '-2%', trend: 'down', icon: <Activity size={20} className="text-[#6E5A2E]" /> }
+    { label: 'Total Active Students', value: '0', change: '0%', trend: 'up', icon: <Users size={20} className="text-[#4A0E1B]" /> },
+    { label: 'Avg. Session Duration', value: '0m', change: '0%', trend: 'up', icon: <Clock size={20} className="text-[#8A6A16]" /> },
+    { label: 'Resources Accessed', value: '0', change: '0%', trend: 'up', icon: <BookOpen size={20} className="text-[#7C2532]" /> },
+    { label: 'Bounce Rate', value: '0%', change: '0%', trend: 'down', icon: <Activity size={20} className="text-[#6E5A2E]" /> }
   ];
 
   const weeklyData = [
-    { day: 'Mon', hours: 420 },
-    { day: 'Tue', hours: 550 },
-    { day: 'Wed', hours: 480 },
-    { day: 'Thu', hours: 610 },
-    { day: 'Fri', hours: 590 },
-    { day: 'Sat', hours: 820 },
-    { day: 'Sun', hours: 750 }
+    { day: 'Mon', hours: 0 },
+    { day: 'Tue', hours: 0 },
+    { day: 'Wed', hours: 0 },
+    { day: 'Thu', hours: 0 },
+    { day: 'Fri', hours: 0 },
+    { day: 'Sat', hours: 0 },
+    { day: 'Sun', hours: 0 }
   ];
-  const maxHours = Math.max(...weeklyData.map(d => d.hours));
+  const maxHours = 1; // Avoid divide by zero
 
-  const topResources = [
-    { name: 'JEE Advanced Rotational Dynamics', views: 1245, color: 'bg-[#4A0E1B]' },
-    { name: 'Coordination Compounds PYQs', views: 982, color: 'bg-[#7C2532]' },
-    { name: 'Electromagnetism Master Notes', views: 845, color: 'bg-[#C9A13B]' },
-    { name: 'Quantum Chemistry Concepts', views: 720, color: 'bg-[#8A6A16]' }
-  ];
-  const maxViews = Math.max(...topResources.map(r => r.views));
+  const topResources: Array<{ name: string; views: number; color: string }> = [];
+  const maxViews = 1;
 
   // Generate mock heatmap data (last 4 weeks, 7 days)
-  const heatmapData = Array.from({ length: 28 }, () => Math.floor(Math.random() * 5));
+  const heatmapData = Array.from({ length: 28 }, () => 0);
 
   return (
     <div className="space-y-6 animate-[fadeInUp_0.8s_ease-out_forwards]">
