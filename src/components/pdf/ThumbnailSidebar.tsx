@@ -71,7 +71,7 @@ export function ThumbnailSidebar({ pdfUrl }: ThumbnailSidebarProps) {
 
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto overflow-x-hidden py-2"
+        className="flex-1 overflow-y-auto overflow-x-hidden py-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent"
         role="list"
         aria-label="PDF page thumbnails"
       >

@@ -1,18 +1,7 @@
 import React from 'react';
 import { Download, ArrowRight, Star, Clock, Trophy, FileText, PlayCircle } from 'lucide-react';
 import { Note, Video, PYQ, PracticeSheet, Announcement } from '../../types';
-import { SUBJECT_BADGE, normaliseSubject } from '../../constants/subjects';
-
-function SubjectBadge({ subject }: { subject: string }) {
-  const norm = normaliseSubject(subject);
-  const cfg = SUBJECT_BADGE[norm];
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${cfg.bg} ${cfg.text}`}>
-      <span>{cfg.emoji}</span>
-      <span>{cfg.label}</span>
-    </span>
-  );
-}
+import { SubjectBadge } from '../ui/SubjectBadge';
 
 // Featured Content Component
 export function FeaturedResource({ item, onPreview, onDownload }: { item: any, onPreview: () => void, onDownload: () => void }) {

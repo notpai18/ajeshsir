@@ -60,6 +60,30 @@ export const STATUS_CONFIG: Record<
     borderColor: 'border-[#D9C2A2]',
     urgency: 0,
   },
+  pending_approval: {
+    label: 'Pending Approval',
+    icon: 'ShieldAlert',
+    badgeBg: 'bg-[#FEF9C3]',
+    badgeText: 'text-[#854D0E]',
+    borderColor: 'border-[#EAB308]',
+    urgency: 1
+  },
+  approved: {
+    label: 'Approved',
+    icon: 'ShieldCheck',
+    badgeBg: 'bg-[#DCFCE7]',
+    badgeText: 'text-[#166534]',
+    borderColor: 'border-[#22C55E]',
+    urgency: 0
+  },
+  rejected: {
+    label: 'Rejected',
+    icon: 'ShieldX',
+    badgeBg: 'bg-[#FEE2E2]',
+    badgeText: 'text-[#991B1B]',
+    borderColor: 'border-[#EF4444]',
+    urgency: 0
+  },
   awaiting: {
     label: 'Awaiting Response',
     icon: 'Hourglass',
@@ -84,30 +108,6 @@ export const STATUS_CONFIG: Record<
     badgeText: 'text-[#8A6A16]',
     borderColor: 'border-[#C9A13B]',
     urgency: 2,
-  },
-  pending_approval: {
-    label: 'Pending Approval',
-    icon: 'Clock',
-    badgeBg: 'bg-[#FBF3DF]',
-    badgeText: 'text-[#8A6A16]',
-    borderColor: 'border-[#C9A13B]',
-    urgency: 1,
-  },
-  approved: {
-    label: 'Approved',
-    icon: 'CheckCircle',
-    badgeBg: 'bg-[#E8F5E9]',
-    badgeText: 'text-[#2E7D32]',
-    borderColor: 'border-[#4CAF50]',
-    urgency: 0,
-  },
-  rejected: {
-    label: 'Rejected',
-    icon: 'XCircle',
-    badgeBg: 'bg-[#FDF2F2]',
-    badgeText: 'text-[#B23B2E]',
-    borderColor: 'border-[#B23B2E]',
-    urgency: 0,
   },
 };
 

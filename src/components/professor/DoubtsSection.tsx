@@ -20,6 +20,7 @@ import {
 import { PremiumCard } from '../PremiumCard';
 import { PRIMARY_BTN, INPUT, ROW_BTN_DANGER } from '../ui/tokens';
 import { ProfEmptyState } from './ui';
+import { CustomSelect } from '../ui/CustomSelect';
 import { AnswerDoubtModal } from '../doubts/AnswerDoubtModal';
 import { DoubtStatusBadge } from '../doubts/DoubtStatusBadge';
 import { WaitTimeIndicator, waitTimeBorderColor } from '../doubts/WaitTimeIndicator';
@@ -200,14 +201,13 @@ export function DoubtsSection({
         <div className="flex items-center gap-2">
           {/* Subject filter (By Subject tab only) */}
           {activeTab === 'by-subject' && (
-            <select
+            <CustomSelect
               value={subjectFilter}
-              onChange={e => setSubjectFilter(e.target.value)}
-              className="rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] px-3 py-2 text-xs text-[#22201F] focus:outline-none focus:border-[#4A0E1B]/40 transition"
-              aria-label="Filter by subject"
-            >
-              {subjects.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
+              onChange={setSubjectFilter}
+              className="rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] px-3 py-2 text-xs text-[#22201F] focus:outline-none focus:border-[#4A0E1B]/40 transition min-w-[150px]"
+              options={subjects.map(s => ({ value: s, label: s }))}
+              placeholder="Select subject"
+            />
           )}
           {/* Hide search bar on moderation tab (has its own search) */}
           {activeTab !== 'moderation' && (

@@ -1,72 +1,37 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Lock, Mail } from 'lucide-react';
-import { supabase, hasSupabase } from '../lib/supabase';
+import { X, Lock, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { AUTHORIZED_EMAILS, DEFAULT_PROF_PASSWORD } from '../constants/auth';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const [email, setEmail] = useState('');
+export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setDemoAuth } = useAuth();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     
-    const cleanEmail = email.trim().toLowerCase();
-    const isAuthEmail = AUTHORIZED_EMAILS.map(e => e.toLowerCase()).includes(cleanEmail);
+    const success = await login(username, password);
     
-    if (!isAuthEmail) {
-      setError('Unauthorized email address. Access restricted to professor accounts.');
+    if (success) {
       setLoading(false);
-      return;
+      onClose();
+      onSuccess?.();
+    } else {
+      setError('Invalid username/email or password.');
+      setLoading(false);
     }
-
-    let loggedIn = false;
-
-    // 1. Try Supabase auth first if available
-    if (hasSupabase && supabase?.auth) {
-      try {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password,
-        });
-
-        if (!signInError) {
-          loggedIn = true;
-        }
-      } catch (err) {
-        console.warn('Supabase auth attempt failed:', err);
-      }
-    }
-
-    // 2. Fallback / Default Credentials login
-    if (!loggedIn) {
-      if (password === DEFAULT_PROF_PASSWORD || password === 'AjeshSir@2026!') {
-        try {
-          localStorage.setItem('prof_demo_auth', 'true');
-        } catch {}
-        setDemoAuth(true);
-        loggedIn = true;
-      } else {
-        setError('Invalid login credentials. Please check your password.');
-        setLoading(false);
-        return;
-      }
-    }
-
-    setLoading(false);
-    onClose();
   };
 
   if (typeof document === 'undefined') return null;
@@ -108,16 +73,16 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
               )}
               
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91] mb-2">Email Address</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#8A7E6F] dark:text-[#A89F91] mb-2">Username</label>
                 <div className="relative">
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#2A2726] text-gray-900 dark:text-[#F6F2EA] focus:ring-1 focus:ring-[#4A0E1B] focus:border-[#4A0E1B] outline-none transition-all"
                     required
                   />
-                  <Mail size={18} className="absolute left-3 top-3.5 text-gray-400" />
+                  <User size={18} className="absolute left-3 top-3.5 text-gray-400" />
                 </div>
               </div>
               

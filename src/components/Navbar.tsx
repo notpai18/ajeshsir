@@ -244,7 +244,11 @@ export default function Navbar({
         )}
       </nav>
 
-      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
+      <LoginModal 
+        isOpen={loginModalOpen} 
+        onClose={() => setLoginModalOpen(false)} 
+        onSuccess={() => handleNavClick('professor')}
+      />
     </>
   );
 }

@@ -91,13 +91,13 @@ export function RowActions({ onView, onViewSecondary, onEdit, onDelete }: { onVi
   return (
     <div className="flex justify-end gap-1.5 md:gap-1">
       {onView && (
-        <button onClick={onView} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:hover:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="View Question PDF">
+        <button onClick={onView} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:hover:bg-[#38151A] hover:text-[#4A0E1B]" title="View Question" aria-label="View Question PDF">
           <Eye size={17} className="md:w-[15px] md:h-[15px]" />
         </button>
       )}
       {onViewSecondary && (
-        <button onClick={onViewSecondary} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F7EFD9] dark:hover:bg-[#362A0D] hover:text-[#8A6A16]" aria-label="View Solution PDF">
-          <Eye size={17} className="md:w-[15px] md:h-[15px]" />
+        <button onClick={onViewSecondary} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F7EFD9] dark:hover:bg-[#362A0D] hover:text-[#8A6A16]" title="View Solution" aria-label="View Solution PDF">
+          <Eye size={17} className="md:w-[15px] md:h-[15px] opacity-80" />
         </button>
       )}
       <button onClick={onEdit} className="flex items-center justify-center rounded-lg p-3 md:p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 text-[#8A7E6F] dark:text-[#A89F91] transition-colors hover:bg-[#F4E7E5] dark:hover:bg-[#38151A] hover:text-[#4A0E1B]" aria-label="Edit">

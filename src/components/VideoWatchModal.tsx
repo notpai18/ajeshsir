@@ -193,7 +193,7 @@ export function VideoWatchModal({
         {/* ── Body (player + sidebar) ─────────────────────────────────────── */}
         <div className="flex min-h-0 flex-1 overflow-hidden">
           {/* Player column */}
-          <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+          <div className="flex min-w-0 flex-1 flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
             {/* Player wrapper */}
             <div className="relative bg-[#0f0f0f]">
               {videoId ? (
@@ -310,7 +310,7 @@ export function VideoWatchModal({
 
           {/* ── Sidebar playlist ─────────────────────────────────────────── */}
           <aside
-            className={`shrink-0 overflow-y-auto border-l border-[#22201F]/20 bg-white dark:bg-[#22201F] transition-all duration-300 ${
+            className={`shrink-0 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent border-l border-[#22201F]/20 bg-white dark:bg-[#22201F] transition-all duration-300 ${
               sidebarOpen ? 'w-72 xl:w-80' : 'w-0 overflow-hidden border-0'
             }`}
           >

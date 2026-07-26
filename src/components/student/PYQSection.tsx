@@ -3,6 +3,7 @@ import { Download, Eye } from 'lucide-react';
 import { EmptyState } from '../ui/EmptyState';
 import { ResourceCard } from '../resources/ResourceCard';
 import { ResourceHero, ResourceToolbar } from '../resources/ResourcePageLayout';
+import { CustomSelect } from '../ui/CustomSelect';
 import type { PYQSectionProps } from './types';
 
 export function PYQSection({
@@ -53,18 +54,28 @@ export function PYQSection({
         onViewModeChange={setViewMode}
         extraFilters={
           <>
-            <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className="h-[46px] rounded-full border border-transparent bg-[#F9F7F5] dark:bg-[#1A1817] px-4 text-[14px] text-[#22201F] dark:text-[#F6F2EA] outline-none transition-all focus:bg-white dark:focus:bg-[#22201F] focus:border-[#4A0E1B]/20">
-              <option value="All">All difficulties</option>
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-            </select>
-            <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="h-[46px] rounded-full border border-transparent bg-[#F9F7F5] dark:bg-[#1A1817] px-4 text-[14px] text-[#22201F] dark:text-[#F6F2EA] outline-none transition-all focus:bg-white dark:focus:bg-[#22201F] focus:border-[#4A0E1B]/20">
-              <option value="All">All Years</option>
-              {Array.from({length: 10}, (_, i) => new Date().getFullYear() - i).map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
+            <CustomSelect 
+              value={selectedDifficulty} 
+              onChange={setSelectedDifficulty} 
+              className="h-[46px] rounded-full border border-transparent bg-[#F9F7F5] dark:bg-[#1A1817] px-4 text-[14px] text-[#22201F] dark:text-[#F6F2EA] outline-none transition-all focus:bg-white dark:focus:bg-[#22201F] focus:border-[#4A0E1B]/20 flex justify-between items-center w-40"
+              options={[
+                { value: 'All', label: 'All difficulties' },
+                { value: 'Easy', label: 'Easy' },
+                { value: 'Medium', label: 'Medium' },
+                { value: 'Hard', label: 'Hard' }
+              ]} 
+              placeholder="All difficulties" 
+            />
+            <CustomSelect 
+              value={selectedYear} 
+              onChange={setSelectedYear} 
+              className="h-[46px] rounded-full border border-transparent bg-[#F9F7F5] dark:bg-[#1A1817] px-4 text-[14px] text-[#22201F] dark:text-[#F6F2EA] outline-none transition-all focus:bg-white dark:focus:bg-[#22201F] focus:border-[#4A0E1B]/20 flex justify-between items-center w-36"
+              options={[
+                { value: 'All', label: 'All Years' },
+                ...Array.from({length: 10}, (_, i) => new Date().getFullYear() - i).map(year => ({ value: year.toString(), label: year.toString() }))
+              ]} 
+              placeholder="All Years" 
+            />
           </>
         }
       />

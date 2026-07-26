@@ -25,30 +25,35 @@ function sanitizeHtml(html: string) {
 }
 
 function ModerationBanner({ status, rejectionReason }: { status: DoubtStatus; rejectionReason?: string }) {
-  if (status === 'pending_approval') {
+  if (status === 'pending_approval' || status === 'submitted') {
     return (
-      <div className="mb-8 rounded-2xl border border-[#E8CD82]/40 bg-[#FBF7F0] dark:bg-[#2A2726] p-4 text-[#8A6A16] flex items-center gap-3">
-        <Clock size={20} className="shrink-0" />
+      <div className="bg-[#FEF9C3] dark:bg-[#422006] text-[#854D0E] dark:text-[#FDE047] p-4 rounded-xl mb-8 flex items-start gap-3 border border-[#FDE047] dark:border-[#854D0E]">
+        <Clock className="shrink-0 mt-0.5" size={20} />
         <div>
-          <h4 className="font-bold text-sm">Under Review</h4>
-          <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">This doubt is currently pending professor approval before it is published.</p>
+          <h4 className="font-bold">Pending Review</h4>
+          <p className="text-sm mt-1">This doubt has been submitted and is waiting for professor approval before it becomes publicly visible.</p>
         </div>
       </div>
     );
   }
+
   if (status === 'rejected') {
     return (
-      <div className="mb-8 rounded-2xl border border-[#B23B2E]/30 bg-[#FDF2F2] dark:bg-[#38151A] p-4 text-[#B23B2E] flex items-center gap-3">
-        <XCircle size={20} className="shrink-0" />
+      <div className="bg-[#FEE2E2] dark:bg-[#450A0A] text-[#991B1B] dark:text-[#FCA5A5] p-4 rounded-xl mb-8 flex items-start gap-3 border border-[#FECACA] dark:border-[#7F1D1D]">
+        <XCircle className="shrink-0 mt-0.5" size={20} />
         <div>
-          <h4 className="font-bold text-sm">Doubt Not Approved</h4>
-          <p className="text-xs text-[#8A7E6F] dark:text-[#A89F91]">
-            {rejectionReason || 'This doubt was not approved for publication.'}
-          </p>
+          <h4 className="font-bold">Doubt Rejected</h4>
+          <p className="text-sm mt-1 mb-2">This doubt was reviewed by the professor and will not be published to the public feed.</p>
+          {rejectionReason && (
+            <div className="bg-white/50 dark:bg-black/20 p-3 rounded-lg text-sm border border-red-200 dark:border-red-900/30">
+              <strong>Reason:</strong> {rejectionReason}
+            </div>
+          )}
         </div>
       </div>
     );
   }
+
   return null;
 }
 
