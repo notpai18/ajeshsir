@@ -315,8 +315,29 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   const handleTogglePinAnnouncement = useCallback(async (id: string) => {
     const current = state.announcements.find(a => a.id === id);
     if (!current) return;
-    const updated = await togglePinAnnouncement(id, current.pinned);
-    setState(prev => ({ ...prev, announcements: prev.announcements.map(a => a.id === id ? updated : a) }));
+    
+    // Optimistic update
+    setState(prev => ({
+      ...prev,
+      announcements: prev.announcements.map(a => 
+        a.id === id ? { ...a, pinned: !a.pinned } : a
+      )
+    }));
+
+    try {
+      const updated = await togglePinAnnouncement(id, current.pinned);
+      setState(prev => ({ ...prev, announcements: prev.announcements.map(a => a.id === id ? updated : a) }));
+    } catch (e: any) {
+      console.error('Error toggling pin status', e);
+      // Revert optimistic update
+      setState(prev => ({
+        ...prev,
+        announcements: prev.announcements.map(a => 
+          a.id === id ? { ...a, pinned: current.pinned } : a
+        )
+      }));
+      alert(e.message);
+    }
   }, [state.announcements]);
 
   return (
