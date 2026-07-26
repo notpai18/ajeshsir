@@ -71,7 +71,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
                   e.stopPropagation();
                   action.onClick(e);
                 }}
-                className="inline-flex items-center justify-center gap-[6px] rounded-[8px] border border-[#E3D8C5] dark:border-[#4A4541] bg-transparent px-[14px] h-[34px] text-[14px] font-medium text-[#6B5D54] dark:text-[#A89F91] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726] hover:text-[#22201F] dark:hover:text-[#F6F2EA] hover:scale-[1.03]"
+                className="cursor-pointer inline-flex items-center justify-center gap-[6px] rounded-[8px] border border-[#E3D8C5] dark:border-[#4A4541] bg-transparent px-[14px] h-[34px] text-[14px] font-medium text-[#6B5D54] dark:text-[#A89F91] transition-all hover:bg-[#F9F7F5] dark:hover:bg-[#2A2726] hover:text-[#22201F] dark:hover:text-[#F6F2EA] hover:scale-[1.03] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ActionIcon size={14} /> {action.label}
               </button>

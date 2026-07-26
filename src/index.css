@@ -602,3 +602,20 @@
     to { opacity: 1; }
   }
 }
+
+@layer base {
+  button, 
+  [role="button"], 
+  a, 
+  input[type="submit"], 
+  input[type="button"], 
+  input[type="reset"] {
+    cursor: pointer;
+  }
+  
+  button:disabled,
+  [role="button"]:disabled,
+  input:disabled {
+    cursor: not-allowed;
+  }
+}
