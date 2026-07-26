@@ -339,7 +339,7 @@ export function DoubtsSection({
                           Your response
                         </p>
                         <p className="mt-1 text-sm leading-relaxed text-[#3A342E] dark:text-[#C7BCAD] line-clamp-2">
-                          {firstProfReply.reply_text}
+                          {stripHtml(firstProfReply.reply_text || '')}
                         </p>
                         {(firstProfReply.image_urls?.length > 0 || firstProfReply.video_urls?.length > 0 || firstProfReply.audio_urls?.length > 0 || firstProfReply.attachment_urls?.length > 0) && (
                           <div className="mt-2">
@@ -361,7 +361,7 @@ export function DoubtsSection({
                 {doubt.answerText && !doubt.replies?.length && (
                   <div className="mt-3 rounded-xl border border-[#F7EFD9] bg-[#FBF6EA] px-3.5 py-3">
                     <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#8A6A16]">Your response (Legacy)</p>
-                    <p className="mt-1 text-sm leading-relaxed text-[#3A342E] dark:text-[#C7BCAD] line-clamp-2">{doubt.answerText}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#3A342E] dark:text-[#C7BCAD] line-clamp-2">{stripHtml(doubt.answerText || '')}</p>
                   </div>
                 )}
 
