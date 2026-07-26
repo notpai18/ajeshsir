@@ -96,10 +96,22 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   const reload = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
+    const badTitles = ['Projectile Motion on Inclined Planes', 'Limits, Continuity, and Differentiability', 'dfv', 'df'];
+    const NEW_CARDS: Note[] = [
+      { id: 'custom-card-1', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Thermodynamics', title: 'First and Second Law Applications', description: 'Enthalpy, entropy, and Gibbs free energy derivations with worked numerical problems on spontaneity and heat engines.', fileUrl: 'sample.pdf', fileSize: '1.2 MB', downloadCount: 50, tags: [] },
+      { id: 'custom-card-2', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Equilibrium', title: 'Chemical and Ionic Equilibrium', description: "Le Chatelier's principle, equilibrium constant relations, buffer solutions, and pH calculations for competitive-exam problem types.", fileUrl: 'sample.pdf', fileSize: '1.5 MB', downloadCount: 75, tags: [] },
+      { id: 'custom-card-3', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Electrochemistry', title: 'Cells, EMF, and Nernst Equation', description: 'Galvanic and electrolytic cells, standard electrode potentials, and Nernst equation applications with previous year question patterns.', fileUrl: 'sample.pdf', fileSize: '1.3 MB', downloadCount: 60, tags: [] },
+      { id: 'custom-card-4', course: 'jee-main', subject: 'Physical Chemistry', chapter: 'Kinetics', title: 'Rate Laws and Reaction Order', description: 'Integrated rate equations, half-life derivations, and Arrhenius equation problems with graphical interpretation.', fileUrl: 'sample.pdf', fileSize: '1.4 MB', downloadCount: 85, tags: [] },
+    ];
+
     // No Supabase configured → use local seed data
     if (!hasSupabase) {
+      let filteredNotes = INITIAL_NOTES.filter(n => !badTitles.includes(n.title));
+      const existingTitles = filteredNotes.map(n => n.title);
+      filteredNotes = [...filteredNotes, ...NEW_CARDS.filter(c => !existingTitles.includes(c.title))];
+
       setState({
-        notes: INITIAL_NOTES,
+        notes: filteredNotes,
         videos: INITIAL_VIDEOS,
         pyqs: INITIAL_PYQS,
         practiceSheets: INITIAL_PRACTICE_SHEETS,
@@ -116,8 +128,12 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
         fetchNotes(), fetchVideos(), fetchPyqs(), fetchPracticeSheets(), fetchDoubts(), fetchAnnouncements(),
       ]);
 
+      let filteredNotes = notes.filter(n => !badTitles.includes(n.title));
+      const existingTitles = filteredNotes.map(n => n.title);
+      filteredNotes = [...filteredNotes, ...NEW_CARDS.filter(c => !existingTitles.includes(c.title))];
+
       setState({
-        notes: notes.map(n => ({ ...n, subject: normaliseSubject(n.subject) })),
+        notes: filteredNotes.map(n => ({ ...n, subject: normaliseSubject(n.subject) })),
         videos: videos.map(v => ({ ...v, subject: normaliseSubject(v.subject) })),
         pyqs: pyqs.map(p => ({ ...p, subject: normaliseSubject(p.subject) })),
         practiceSheets: practiceSheets.map(s => ({ ...s, subject: normaliseSubject(s.subject) })),
@@ -311,29 +327,8 @@ export function PortalDataProvider({ children }: { children: ReactNode }) {
   const handleTogglePinAnnouncement = useCallback(async (id: string) => {
     const current = state.announcements.find(a => a.id === id);
     if (!current) return;
-    
-    // Optimistic update
-    setState(prev => ({
-      ...prev,
-      announcements: prev.announcements.map(a => 
-        a.id === id ? { ...a, pinned: !a.pinned } : a
-      )
-    }));
-
-    try {
-      const updated = await togglePinAnnouncement(id, current.pinned);
-      setState(prev => ({ ...prev, announcements: prev.announcements.map(a => a.id === id ? updated : a) }));
-    } catch (e: any) {
-      console.error('Error toggling pin status', e);
-      // Revert optimistic update
-      setState(prev => ({
-        ...prev,
-        announcements: prev.announcements.map(a => 
-          a.id === id ? { ...a, pinned: current.pinned } : a
-        )
-      }));
-      alert(e.message);
-    }
+    const updated = await togglePinAnnouncement(id, current.pinned);
+    setState(prev => ({ ...prev, announcements: prev.announcements.map(a => a.id === id ? updated : a) }));
   }, [state.announcements]);
 
   return (
