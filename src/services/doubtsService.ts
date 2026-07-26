@@ -97,11 +97,9 @@ export async function submitDoubt(
     status: 'pending',
   };
 
-  let { data, error } = await supabase
+  let { error } = await supabase
     .from('doubts')
-    .insert(payload)
-    .select()
-    .single();
+    .insert(payload);
 
   let retries = 0;
   while (error && error.message.includes("Could not find the") && retries < 5) {
@@ -111,10 +109,7 @@ export async function submitDoubt(
       delete payload[missingColumn];
       const retry = await supabase
         .from('doubts')
-        .insert(payload)
-        .select()
-        .single();
-      data = retry.data;
+        .insert(payload);
       error = retry.error;
       retries++;
     } else {
@@ -123,7 +118,23 @@ export async function submitDoubt(
   }
 
   if (error) throw new Error(`submitDoubt: ${error.message}`);
-  return rowToDoubt(data);
+  
+  // We cannot .select() because RLS prevents anon users from reading 'pending' doubts.
+  // The UI filters pending doubts anyway, so returning a local mock is safe.
+  return {
+    id: `temp-${Date.now()}`,
+    name: payload.name,
+    email: payload.email,
+    subject: payload.subject,
+    topic: payload.topic || undefined,
+    question: payload.question,
+    attachmentName: payload.attachment_name || undefined,
+    attachmentUrl: payload.attachment_url || undefined,
+    isAnswered: false,
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+    replies: []
+  };
 }
 
 /** Professor replies to a doubt — marks it as answered. */
