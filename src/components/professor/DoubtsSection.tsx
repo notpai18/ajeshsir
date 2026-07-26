@@ -92,13 +92,13 @@ function stripHtml(html: string) {
 
 // ─── Tab config ───────────────────────────────────────────────────────────────
 
-type ProfTab = 'moderation' | 'unanswered' | 'answered-today' | 'by-subject' | 'all';
+type ProfTab = 'moderation' | 'unanswered' | 'answered-today' | 'rejected' | 'all';
 
 const TAB_LABELS: Record<ProfTab, string> = {
   moderation: 'Pending Approvals',
   unanswered: 'Unanswered',
   'answered-today': 'Answered Today',
-  'by-subject': 'By Subject',
+  rejected: 'Rejected',
   all: 'All',
 };
 
@@ -133,18 +133,27 @@ export function DoubtsSection({
   const doubtsFiltered = useMemo(() => {
     const q = query.trim().toLowerCase();
     let filtered = doubts.filter(d => {
-      // Exclude pending and rejected from regular tabs
-      if (activeTab !== 'moderation' && (d.status === 'pending' || d.status === 'rejected')) return false;
+      // Isolate pending and rejected to their specific tabs
+      if (activeTab === 'moderation' && d.status !== 'pending') return false;
+      if (activeTab === 'rejected' && d.status !== 'rejected') return false;
+      if (activeTab !== 'moderation' && activeTab !== 'rejected' && (d.status === 'pending' || d.status === 'rejected')) return false;
+      
+      // Regular tab logic
       if (activeTab === 'unanswered' && hasProfessorReply(d)) return false;
       if (activeTab === 'answered-today' && !isAnsweredToday(d)) return false;
-      if (activeTab === 'by-subject' && subjectFilter !== 'All' && d.subject !== subjectFilter) return false;
+      
+      // Global subject filter
+      if (subjectFilter !== 'All' && d.subject !== subjectFilter) return false;
+      
+      // Global search
       if (q && !([d.name, d.subject, d.question, d.email, d.topic || ''].some(f => f.toLowerCase().includes(q)))) return false;
+      
       return true;
     });
 
-    // Sort: unanswered tab → oldest first (triage); others → newest first
+    // Sort: unanswered / pending / rejected → oldest first (triage); others → newest first
     return filtered.sort((a, b) => {
-      if (activeTab === 'unanswered') {
+      if (activeTab === 'unanswered' || activeTab === 'moderation' || activeTab === 'rejected') {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       }
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -156,8 +165,8 @@ export function DoubtsSection({
     moderation: doubts.filter(d => d.status === 'pending').length,
     unanswered: doubts.filter(d => !hasProfessorReply(d) && d.status !== 'pending' && d.status !== 'rejected').length,
     'answered-today': doubts.filter(d => isAnsweredToday(d)).length,
-    'by-subject': doubts.filter(d => d.status !== 'pending').length,
-    all: doubts.filter(d => d.status !== 'pending').length,
+    rejected: doubts.filter(d => d.status === 'rejected').length,
+    all: doubts.filter(d => d.status !== 'pending' && d.status !== 'rejected').length,
   }), [doubts]);
 
   // ── Open thread ──────────────────────────────────────────────────────────
@@ -196,58 +205,56 @@ export function DoubtsSection({
           })}
         </div>
         <div className="flex items-center gap-2">
-          {/* Subject filter (By Subject tab only) */}
-          {activeTab === 'by-subject' && (
-            <CustomSelect
-              value={subjectFilter}
-              onChange={setSubjectFilter}
-              className="rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] px-3 py-2 text-xs text-[#22201F] focus:outline-none focus:border-[#4A0E1B]/40 transition min-w-[150px]"
-              options={subjects.map(s => ({ value: s, label: s }))}
-              placeholder="Select subject"
+          {/* Subject filter (Always visible) */}
+          <CustomSelect
+            value={subjectFilter}
+            onChange={setSubjectFilter}
+            className="rounded-xl border border-[#E3D8C5] bg-[#FBF7F0] px-3 py-2 text-xs text-[#22201F] focus:outline-none focus:border-[#4A0E1B]/40 transition min-w-[150px]"
+            options={subjects.map(s => ({ value: s, label: s }))}
+            placeholder="Select subject"
+          />
+          {/* Search bar (Always visible) */}
+          <div className="relative sm:w-64">
+            <Search
+              size={14}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]"
+              aria-hidden="true"
             />
-          )}
-          {/* Hide search bar on moderation tab (has its own search) */}
-          {activeTab !== 'moderation' && (
-            <div className="relative sm:w-64">
-              <Search
-                size={14}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]"
-                aria-hidden="true"
-              />
-              <input
-                className={`${INPUT} pl-10 text-xs`}
-                placeholder="Search doubts…"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                aria-label="Search doubts"
-              />
-            </div>
-          )}
+            <input
+              className={`${INPUT} pl-10 text-xs`}
+              placeholder="Search doubts…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              aria-label="Search doubts"
+            />
+          </div>
         </div>
       </div>
 
-      {/* ── Moderation Queue (Pending Approvals tab) ── */}
-      {activeTab === 'moderation' && (
+      {/* ── Moderation / Rejected Queue ── */}
+      {(activeTab === 'moderation' || activeTab === 'rejected') && (
         <ModerationQueue
-          doubts={doubts}
+          doubts={doubtsFiltered}
+          mode={activeTab === 'moderation' ? 'pending' : 'rejected'}
           onApprove={onApproveDoubt ?? (() => Promise.resolve())}
           onReject={onRejectDoubt ?? (() => Promise.resolve())}
         />
       )}
 
       {/* Inbox — only shown for non-moderation tabs */}
-      {activeTab !== 'moderation' && doubtsFiltered.length === 0 ? (
-        <ProfEmptyState
-          icon={<Inbox size={22} />}
-          title={activeTab === 'unanswered' ? 'Inbox zero' : 'Nothing to show'}
-          message={
-            activeTab === 'unanswered'
-              ? 'All doubts have been answered. Beautifully done.'
-              : 'No doubts match this view.'
-          }
-        />
-      ) : (
-        <div className="space-y-3">
+      {activeTab !== 'moderation' && activeTab !== 'rejected' && (
+        doubtsFiltered.length === 0 ? (
+          <ProfEmptyState
+            icon={<Inbox size={22} />}
+            title={activeTab === 'unanswered' ? 'Inbox zero' : 'Nothing to show'}
+            message={
+              activeTab === 'unanswered'
+                ? 'All doubts have been answered. Beautifully done.'
+                : 'No doubts match this view.'
+            }
+          />
+        ) : (
+          <div className="space-y-3">
           {doubtsFiltered.map((doubt) => {
             const status = deriveStatus(doubt);
             const profReplied = hasProfessorReply(doubt);
@@ -411,6 +418,7 @@ export function DoubtsSection({
             );
           })}
         </div>
+        )
       )}
 
     </div>

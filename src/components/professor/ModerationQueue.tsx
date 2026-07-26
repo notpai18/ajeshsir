@@ -26,6 +26,7 @@ import { INPUT } from '../ui/tokens';
 
 interface ModerationQueueProps {
   doubts: Doubt[];
+  mode: 'pending' | 'rejected';
   onApprove: (id: string) => Promise<void>;
   onReject: (id: string, reason?: string) => Promise<void>;
 }
@@ -272,141 +273,50 @@ function ModerationCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function ModerationQueue({ doubts, onApprove, onReject }: ModerationQueueProps) {
-  const [activeTab, setActiveTab] = useState<ModerationTab>('pending');
-  const [query, setQuery] = useState('');
-
-  // Split doubts into moderation buckets
-  const pending = useMemo(() =>
-    doubts.filter(d => d.status === 'pending'),
-    [doubts]
-  );
-  const approved = useMemo(() =>
-    doubts.filter(d => d.status === 'approved'),
-    [doubts]
-  );
-  const rejected = useMemo(() =>
-    doubts.filter(d => d.status === 'rejected'),
-    [doubts]
-  );
-
-  const tabDoubts: Record<ModerationTab, Doubt[]> = { pending, approved, rejected };
-
-  // Apply search filter
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return tabDoubts[activeTab];
-    return tabDoubts[activeTab].filter(d =>
-      [d.name, d.subject, d.question, d.email, d.topic || ''].some(f =>
-        f.toLowerCase().includes(q)
-      )
+export function ModerationQueue({ doubts, mode, onApprove, onReject }: ModerationQueueProps) {
+  if (doubts.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] px-6 py-14 text-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
+          <Inbox size={22} />
+        </div>
+        <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F] dark:text-[#F6F2EA]">
+          {mode === 'pending' ? 'No pending doubts' : 'No rejected doubts'}
+        </h4>
+        <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91]">
+          {mode === 'pending' 
+            ? 'All submitted doubts have been reviewed.' 
+            : 'Rejected doubts will appear here.'}
+        </p>
+      </div>
     );
-  }, [doubts, activeTab, query, pending, approved, rejected]);
-
-  // Sorted: pending → oldest first (triage); others → newest first
-  const sorted = useMemo(() =>
-    [...filtered].sort((a, b) =>
-      activeTab === 'pending'
-        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    ),
-    [filtered, activeTab]
-  );
-
-  const TAB_CONFIG: { id: ModerationTab; label: string; count: number; dotColor: string }[] = [
-    { id: 'pending',  label: 'Pending Approvals', count: pending.length,  dotColor: 'bg-[#C9A13B]' },
-    { id: 'approved', label: 'Approved',           count: approved.length, dotColor: 'bg-[#3B82F6]' },
-    { id: 'rejected', label: 'Rejected',           count: rejected.length, dotColor: 'bg-[#EF4444]' },
-  ];
-
-  const emptyMessage: Record<ModerationTab, { title: string; message: string }> = {
-    pending:  { title: 'No pending doubts', message: 'All submitted doubts have been reviewed.' },
-    approved: { title: 'No approved doubts', message: 'Approved doubts will appear here.' },
-    rejected: { title: 'No rejected doubts', message: 'Rejected doubts will appear here.' },
-  };
+  }
 
   return (
-    <div className="space-y-5">
-      {/* ── Top bar: tabs + search ── */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* Tabs */}
-        <div className="flex gap-1.5 flex-wrap">
-          {TAB_CONFIG.map(tab => {
-            const active = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4A0E1B]/20 ${
-                  active
-                    ? 'bg-[#4A0E1B] text-white'
-                    : 'border border-[#22201F]/12 bg-white dark:bg-[#22201F] text-[#6E645A] hover:text-[#22201F]'
-                }`}
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${tab.dotColor} ${active ? 'opacity-80' : ''}`} />
-                {tab.label}
-                <span className={`ml-0.5 ${active ? 'text-white/70' : 'text-[#A79A88]'}`}>
-                  ({tab.count})
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Search */}
-        <div className="relative sm:w-64">
-          <Search
-            size={14}
-            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#B3A996]"
-            aria-hidden="true"
-          />
-          <input
-            className={`${INPUT} pl-10 text-xs`}
-            placeholder="Search doubts…"
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            aria-label="Search doubts"
-          />
-        </div>
-      </div>
-
+    <div className="space-y-4">
       {/* ── Pending alert banner ── */}
-      {activeTab === 'pending' && pending.length > 0 && (
+      {mode === 'pending' && (
         <div className="flex items-center gap-2.5 rounded-xl border border-[#C9A13B]/30 bg-[#FBF3D9] px-4 py-3">
           <AlertCircle size={16} className="text-[#8A6A16] shrink-0" />
           <p className="text-sm text-[#8A6A16] font-medium">
-            <strong>{pending.length}</strong> doubt{pending.length !== 1 ? 's' : ''} awaiting your review.
+            <strong>{doubts.length}</strong> doubt{doubts.length !== 1 ? 's' : ''} awaiting your review.
             Approve to make public · Reject to hide from students.
           </p>
         </div>
       )}
 
       {/* ── Card list ── */}
-      {sorted.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0D5C2] bg-[#FBF7F0] dark:bg-[#2A2726] px-6 py-14 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7EFD9] dark:bg-[#362A0D] text-[#8A6A16]">
-            <Inbox size={22} />
-          </div>
-          <h4 className="dash-serif mt-4 text-base font-semibold text-[#22201F] dark:text-[#F6F2EA]">
-            {emptyMessage[activeTab].title}
-          </h4>
-          <p className="mt-1 max-w-sm text-sm text-[#8A7E6F] dark:text-[#A89F91]">
-            {emptyMessage[activeTab].message}
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {sorted.map(doubt => (
-            <ModerationCard
-              key={doubt.id}
-              doubt={doubt}
-              tab={activeTab}
-              onApprove={() => onApprove(doubt.id)}
-              onReject={(reason) => onReject(doubt.id, reason)}
-            />
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        {doubts.map(doubt => (
+          <ModerationCard
+            key={doubt.id}
+            doubt={doubt}
+            tab={mode}
+            onApprove={() => onApprove(doubt.id)}
+            onReject={(reason) => onReject(doubt.id, reason)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
