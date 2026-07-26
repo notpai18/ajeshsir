@@ -61,7 +61,7 @@ export const ResourceCard: React.FC<ResourceCardProps> = ({
           {description}
         </p>
         
-        <div className="mt-auto flex items-center justify-end gap-[8px]">
+        <div className="mt-auto flex items-center justify-end gap-[8px] flex-wrap">
           {actions.map((action, idx) => {
             const ActionIcon = action.icon;
             return (

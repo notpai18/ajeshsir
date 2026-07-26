@@ -94,7 +94,7 @@ export function PYQSection({
               actions={[
                 {
                   icon: Eye,
-                  label: 'Paper',
+                  label: 'Question',
                   onClick: () => setActivePdfViewer({ title: `PYQ Question · ${pyq.chapter} (${pyq.year})`, fileUrl: pyq.questionUrl })
                 },
                 {
@@ -104,12 +104,12 @@ export function PYQSection({
                 },
                 {
                   icon: Download,
-                  label: 'Question PDF',
+                  label: 'Q. PDF',
                   onClick: () => triggerDownload(pyq.questionUrl, pyq.questionOriginalFilename)
                 },
                 {
                   icon: Download,
-                  label: 'Solution PDF',
+                  label: 'Sol. PDF',
                   onClick: () => triggerDownload(pyq.solutionUrl, pyq.solutionOriginalFilename)
                 }
               ]}
